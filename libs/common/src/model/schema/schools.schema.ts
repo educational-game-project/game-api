@@ -26,7 +26,7 @@ export class Schools extends AbstractDocument {
     deletedAt?: Date;
 
     //================================== Relations ======================================
-    @Prop({ type: [{ type: Types.ObjectId, ref: Users.name, default: null }] })
+    @Prop({ type: [{ type: Types.ObjectId, ref: "Users", default: null }] })
     admins: Users[];
 }
 
