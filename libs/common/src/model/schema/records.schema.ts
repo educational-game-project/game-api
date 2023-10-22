@@ -1,25 +1,32 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Types } from "mongoose";
-import { AbstractDocument } from "./abstract.schema";
-import { Images } from "./subtype/images.subtype";
-import { Users } from "./users.schema";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
+import { AbstractDocument } from './abstract.schema';
+import { Images } from './subtype/images.subtype';
+import { Users } from './users.schema';
 
 @Schema({ timestamps: true })
 export class Records extends AbstractDocument {
-    //================================== Attributes =======================================
+  //================================== Attributes =======================================
 
+  @Prop({ type: Date, default: null })
+  deletedAt?: Date;
 
-    @Prop({ type: Date, default: null })
-    deletedAt?: Date;
-
-    //================================== Relations ======================================
-    @Prop({ type: Types.ObjectId, ref: Users.name, default: null })
-    user: Users;
+  //================================== Relations ======================================
+  @Prop({ type: Types.ObjectId, ref: Users.name, default: null })
+  user: Users;
 }
 
 export const RecordsSchema = SchemaFactory.createForClass(Records);
 
-RecordsSchema.pre('find', function () { this.where({ deletedAt: null }); });
-RecordsSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
-RecordsSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
-RecordsSchema.pre('count', function () { this.where({ deletedAt: null }); });
+RecordsSchema.pre('find', function () {
+  this.where({ deletedAt: null });
+});
+RecordsSchema.pre('findOne', function () {
+  this.where({ deletedAt: null });
+});
+RecordsSchema.pre('findOneAndUpdate', function () {
+  this.where({ deletedAt: null });
+});
+RecordsSchema.pre('count', function () {
+  this.where({ deletedAt: null });
+});

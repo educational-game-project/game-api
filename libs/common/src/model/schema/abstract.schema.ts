@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 
 @Schema()
 export class AbstractDocument {
-    _id?: Types.ObjectId;
-    updatedAt?: Date
-    createdAt?: Date
+  _id?: Types.ObjectId;
+  updatedAt?: Date;
+  createdAt?: Date;
 }
