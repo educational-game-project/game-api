@@ -1,8 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { Request } from 'express';
+import { InjectModel } from '@nestjs/mongoose';
+import mongoose, { Model, PipelineStage, Types, isValidObjectId } from 'mongoose';
 import { CreateReportDto, UpdateReportDto } from '@app/common/dto/report.dto';
+import { Users } from '@app/common/model/schema/users.schema';
 
 @Injectable()
 export class ReportService {
+  constructor(
+    @InjectModel(Users.name) private usersModel: Model<Users>,
+  ) { }
+
+  private readonly logger = new Logger(ReportService.name)
+
   create(createReportDto: CreateReportDto) {
     return 'This action adds a new report';
   }

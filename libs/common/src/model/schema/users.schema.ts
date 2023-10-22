@@ -3,6 +3,7 @@ import { Types } from "mongoose";
 import { AbstractDocument } from "./abstract.schema";
 import { UserRole } from "@app/common/enums/role.enum";
 import { Images } from "./subtype/images.subtype";
+import { Schools } from "./schools.schema";
 
 @Schema({ timestamps: true })
 export class Users extends AbstractDocument {
@@ -25,7 +26,17 @@ export class Users extends AbstractDocument {
     @Prop({ type: String, default: null, select: false })
     password: string;
 
+    @Prop({ type: Date, default: null })
+    deletedAt?: Date;
+
     //================================== Relations ======================================
+    @Prop({ type: Types.ObjectId, ref: 'Schools', default: null })
+    school: Schools;
 }
 
 export const UsersSchema = SchemaFactory.createForClass(Users);
+
+UsersSchema.pre('find', function () { this.where({ deletedAt: null }); });
+UsersSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
+UsersSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
+UsersSchema.pre('count', function () { this.where({ deletedAt: null }); });

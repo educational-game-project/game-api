@@ -15,6 +15,8 @@ import { ScoreController } from './controllers/scoring.controller';
 import { ScoreService } from './services/scoring.service';
 import { UserController } from './controllers/user.controller';
 import { UserService } from './services/user.service';
+import { LevelsController } from './controllers/levels.controller';
+import { LevelsService } from './services/levels.service';
 
 @Module({
   imports: [
@@ -36,6 +38,7 @@ import { UserService } from './services/user.service';
   controllers: [
     AuthController,
     AnalysisController,
+    LevelsController,
     ReportController,
     ScoreController,
     UserController,
@@ -43,6 +46,7 @@ import { UserService } from './services/user.service';
   providers: [
     AuthService,
     AnalysisService,
+    LevelsService,
     ReportService,
     ScoreService,
     UserService,
