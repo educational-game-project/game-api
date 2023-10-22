@@ -13,7 +13,8 @@ export class AuthController {
 
   @Get()
   findAll() {
-    return this.authService.findAll();
+    // return this.authService.findAll();
+    return "Hello World"
   }
 
   @Get(':id')
