@@ -7,11 +7,17 @@ import { GameType } from '../../enums/gameType.enum';
 @Schema({ timestamps: true })
 export class Levels extends AbstractDocument {
   //================================== Attributes =======================================
-  @Prop({ type: Number, default: 0 })
+  @Prop({ type: Number, default: 1 })
   current: number;
+
+  @Prop({ type: Number, default: 1 })
+  max: number;
 
   @Prop({ type: String, enum: GameType, default: null })
   game: string;
+
+  @Prop({ type: Boolean, default: true })
+  isValid: boolean;
 
   @Prop({ type: Date, default: null })
   deletedAt?: Date;

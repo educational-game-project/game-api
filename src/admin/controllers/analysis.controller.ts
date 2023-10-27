@@ -7,15 +7,15 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { AnalysisService } from '../services/analysis.service';
+import { AnalysisAdminService } from '../services/analysis.service';
 import {
   CreateAnalysisDto,
   UpdateAnalysisDto,
 } from '@app/common/dto/analysis.dto';
 
-@Controller('analysis')
-export class AnalysisController {
-  constructor(private readonly analysisService: AnalysisService) {}
+@Controller('admin/analysis')
+export class AnalysisAdminController {
+  constructor(private readonly analysisService: AnalysisAdminService) { }
 
   @Post()
   create(@Body() createAnalysisDto: CreateAnalysisDto) {

@@ -1,6 +1,7 @@
 import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
+import { ResponseService } from '@app/common/response/response.service';
 import mongoose, {
   Model,
   PipelineStage,
@@ -19,7 +20,8 @@ export class AnalysisService {
   constructor(
     @InjectModel(Analysis.name) private AnalysisModel: Model<Analysis>,
     @InjectModel(Users.name) private usersModel: Model<Users>,
-  ) {}
+    @Inject(ResponseService) private readonly responseService: ResponseService,
+  ) { }
 
   private readonly logger = new Logger(AnalysisService.name);
 

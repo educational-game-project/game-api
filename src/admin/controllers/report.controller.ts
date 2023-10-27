@@ -7,12 +7,12 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { ReportService } from '../services/report.service';
+import { ReportAdminService } from '../services/report.service';
 import { CreateReportDto, UpdateReportDto } from '@app/common/dto/report.dto';
 
-@Controller('report')
-export class ReportController {
-  constructor(private readonly reportService: ReportService) {}
+@Controller('admin/report')
+export class ReportAdminController {
+  constructor(private readonly reportService: ReportAdminService) { }
 
   @Post()
   create(@Body() createReportDto: CreateReportDto) {

@@ -9,12 +9,16 @@ import mongoose, {
 } from 'mongoose';
 import { CreateReportDto, UpdateReportDto } from '@app/common/dto/report.dto';
 import { Users } from '@app/common/model/schema/users.schema';
+import { ResponseService } from '@app/common/response/response.service';
 
 @Injectable()
-export class ReportService {
-  constructor(@InjectModel(Users.name) private usersModel: Model<Users>) {}
+export class ReportAdminService {
+  constructor(
+    @InjectModel(Users.name) private usersModel: Model<Users>,
+    @Inject(ResponseService) private readonly responseService: ResponseService,
+  ) { }
 
-  private readonly logger = new Logger(ReportService.name);
+  private readonly logger = new Logger(ReportAdminService.name);
 
   create(createReportDto: CreateReportDto) {
     return 'This action adds a new report';

@@ -7,9 +7,9 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { RecordService } from 'src/services/record.service';
+import { RecordService } from 'src/user/services/record.service';
 
 @Controller('record')
 export class RecordController {
-  constructor(private readonly recordService: RecordService) {}
+  constructor(private readonly recordService: RecordService) { }
 }

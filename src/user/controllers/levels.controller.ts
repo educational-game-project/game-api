@@ -7,9 +7,9 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { AnalysisService } from 'src/services/analysis.service';
+import { AnalysisService } from 'src/user/services/analysis.service';
 
 @Controller('levels')
 export class LevelsController {
-  constructor(private readonly levelsService: AnalysisService) {}
+  constructor(private readonly levelsService: AnalysisService) { }
 }

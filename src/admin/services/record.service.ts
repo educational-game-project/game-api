@@ -7,15 +7,17 @@ import mongoose, {
   Types,
   isValidObjectId,
 } from 'mongoose';
-import { Scores } from '@app/common/model/schema/scores.schema';
 import { Users } from '@app/common/model/schema/users.schema';
+import { Records } from '@app/common/model/schema/records.schema';
+import { ResponseService } from '@app/common/response/response.service';
 
 @Injectable()
-export class ScoreService {
+export class RecordAdminService {
   constructor(
-    @InjectModel(Scores.name) private scoresModel: Model<Scores>,
+    @InjectModel(Records.name) private recordsModel: Model<Records>,
     @InjectModel(Users.name) private usersModel: Model<Users>,
-  ) {}
+    @Inject(ResponseService) private readonly responseService: ResponseService,
+  ) { }
 
-  private readonly logger = new Logger(ScoreService.name);
+  private readonly logger = new Logger(RecordAdminService.name);
 }

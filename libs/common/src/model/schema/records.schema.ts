@@ -3,10 +3,25 @@ import { Types } from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
 import { Images } from './subtype/images.subtype';
 import { Users } from './users.schema';
+import { GameType } from '@app/common/enums/gameType.enum';
 
 @Schema({ timestamps: true })
 export class Records extends AbstractDocument {
   //================================== Attributes =======================================
+  @Prop({ type: String, enum: GameType, default: null })
+  game: string;
+
+  @Prop({ type: Number, default: 0 })
+  level: number;
+
+  @Prop({ type: Number, required: true })
+  time: number;
+
+  @Prop({ type: Number, required: true })
+  liveLeft: number;
+
+  @Prop({ type: Number, required: true })
+  count: number;
 
   @Prop({ type: Date, default: null })
   deletedAt?: Date;

@@ -9,10 +9,14 @@ import mongoose, {
 } from 'mongoose';
 import { CreateUserDto, UpdateUserDto } from '@app/common/dto/user.dto';
 import { Users } from '@app/common/model/schema/users.schema';
+import { ResponseService } from '@app/common/response/response.service';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(Users.name) private usersModel: Model<Users>) {}
+  constructor(
+    @InjectModel(Users.name) private usersModel: Model<Users>,
+    @Inject(ResponseService) private readonly responseService: ResponseService,
+  ) { }
 
   private readonly logger = new Logger(UserService.name);
 
