@@ -1,4 +1,5 @@
 import {
+  Request,
   Controller,
   Get,
   Post,
@@ -8,7 +9,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthAdminService } from '../services/auth.service';
-import { LoginUserDto } from '@app/common/dto/auth.dto';
+import { LoginAdminDto } from '@app/common/dto/auth.dto';
+import { ResponseStatusCode } from '@app/common/response/response.decorator';
 
 @Controller('admin/auth')
 export class AuthAdminController {
@@ -16,4 +18,9 @@ export class AuthAdminController {
     private readonly authService: AuthAdminService
   ) { }
 
+  @Post('login')
+  @ResponseStatusCode()
+  async login(@Body() body: LoginAdminDto, @Request() req) {
+    return this.authService.login(body)
+  }
 }
