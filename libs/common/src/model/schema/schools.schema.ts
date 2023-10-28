@@ -14,7 +14,7 @@ export class Schools extends AbstractDocument {
   address: string;
 
   @Prop({ type: [Object], default: null })
-  image: Images;
+  images: Images[];
 
   @Prop({ type: Number, default: 0 })
   adminsCount: number;
