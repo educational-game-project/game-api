@@ -23,33 +23,16 @@ export const StringHelper = {
         return `${value}_not_avaliable`;
     },
 
+    existResponse(value: string) {
+        return `${value}_already_exist`;
+    },
+
     expiredResponse(value: string) {
         return `${value}_expired`;
     },
 
     successResponse(section: string, method: string) {
         return `${section}_${method}_success`
-    },
-
-    shortenNumber(num: number): string {
-        if (num >= 1000000000) {
-            let result = Number((num / 1000000000).toFixed(1));
-            (result % 1 == 0) ? result.toFixed(0) : result.toFixed(1);
-
-            return result + "B+";
-        } else if (num >= 1000000) {
-            let result = Number((num / 1000000).toFixed(1));
-            (result % 1 == 0) ? result.toFixed(0) : result.toFixed(1);
-
-            return result + "B+";
-        } else if (num >= 1000) {
-            let result = Number((num / 1000).toFixed(1));
-            (result % 1 == 0) ? result.toFixed(0) : result.toFixed(1);
-
-            return result + "B+";
-        } else {
-            return "Below 1K";
-        }
     },
 
     // date time format: 2020-12-31T23:59:59.999Z utc to locale in 26 Jun '23 12 PM
