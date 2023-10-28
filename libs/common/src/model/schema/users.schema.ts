@@ -36,6 +36,10 @@ export class Users extends AbstractDocument {
 
 export const UsersSchema = SchemaFactory.createForClass(Users);
 
+UsersSchema.index({ geolocation: '2dsphere' });
+UsersSchema.index({ email: 1 });
+UsersSchema.index({ phoneNumber: 1 });
+
 UsersSchema.pre('find', function () {
   this.where({ deletedAt: null });
 });
