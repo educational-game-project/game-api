@@ -36,6 +36,9 @@ import { ScoreAdminController } from './admin/controllers/scoring.controller';
 import { ScoreAdminService } from './admin/services/scoring.service';
 import { UserAdminController } from './admin/controllers/user.controller';
 import { UserAdminService } from './admin/services/user.service';
+import { ImagesService } from '@app/common/helpers/file.helpers';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -53,6 +56,9 @@ import { UserAdminService } from './admin/services/user.service';
     }),
     DatabaseModule,
     MongooseModule.forFeature(MongooseModulesImport),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..')
+    }),
   ],
   controllers: [
     AppController,
@@ -72,6 +78,7 @@ import { UserAdminService } from './admin/services/user.service';
     UserAdminController,
   ],
   providers: [
+    ImagesService,
     ResponseService,
     AppService,
     AuthService,
