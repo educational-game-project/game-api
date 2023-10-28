@@ -47,7 +47,7 @@ export class AuthAdminService {
     } catch (error) {
       this.logger.error(this.login.name);
       console.log(error)
-      this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' })
+      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' })
     }
   }
 

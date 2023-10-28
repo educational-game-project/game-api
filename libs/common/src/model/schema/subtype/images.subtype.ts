@@ -6,8 +6,11 @@ export class Images extends AbstractDocument {
   @Prop({ type: String, default: null })
   originalname: string;
 
+  @Prop({ type: String, default: null })
+  filename: string;
+
   @Prop({ type: String, required: true })
-  imageLink: string;
+  fileLink: string;
 
   @Prop({ type: String, default: null })
   mimeType: string;
