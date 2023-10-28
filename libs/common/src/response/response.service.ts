@@ -54,20 +54,20 @@ export class ResponseService {
 
     paging(
         message: string,
-        totalData: number,
-        totalPage: number,
-        currentPage: number,
-        perPage: number,
         data: Record<string, any>[],
+        page: {
+            totalData: number,
+            totalPage: number,
+            currentPage: number,
+            perPage: number,
+        },
     ): IResponsePaging {
         return {
             message,
-            totalData,
-            totalPage,
-            currentPage,
             status: 'success',
-            perPage,
+            server_time: new Date().toISOString(),
             data,
+            page,
         };
     }
 
