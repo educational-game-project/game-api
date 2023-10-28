@@ -25,6 +25,6 @@ export class AppService {
       return `${createUser.name} Successfully Created.`
     }
 
-    return 'Hello World!';
+    return 'Welcome to Game API. Created by Iwan Suryaningrat.';
   }
 }
