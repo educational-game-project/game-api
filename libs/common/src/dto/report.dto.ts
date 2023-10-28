@@ -1,5 +1,5 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/swagger';
 
-export class CreateReportDto {}
+export class CreateReportDto { }
 
-export class UpdateReportDto extends PartialType(CreateReportDto) {}
+export class UpdateReportDto extends PartialType(CreateReportDto) { }
