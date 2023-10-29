@@ -35,5 +35,15 @@ export class UserAdminController {
     }
   }
 
+  @Post('admin/find')
+  async find(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
+    return this.userService.findAdmin(body, req);
+  }
+
+  @Delete('admin')
+  async delete(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+    return this.userService.deleteAdmin(body, req);
+  }
+
 
 }
