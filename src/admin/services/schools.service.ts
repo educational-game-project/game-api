@@ -126,6 +126,26 @@ export class SchoolAdminService {
         }
     }
 
+    public async detail(body: ByIdDto, req: Request): Promise<any> {
+        try {
+            const school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body.id) })
+                .populate({
+                    path: "admins",
+                    select: "name role images email phoneNumber",
+                    options: {
+                        match: { deletedAt: null }
+                    }
+                });
+            if (!school) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('school'));
+
+            return this.responseService.success(true, StringHelper.successResponse('school', 'get_detail'), school);
+        } catch (error) {
+            this.logger.error(this.detail.name);
+            console.log(error);
+            return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+        }
+    }
+
     public async delete(body: ByIdDto, req: Request): Promise<any> {
         try {
             let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body.id) });

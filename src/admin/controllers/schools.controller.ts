@@ -54,6 +54,11 @@ export class SchoolAdminController {
         return this.schoolService.find(body, req);
     }
 
+    @Post('detail')
+    async detail(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+        return this.schoolService.detail(body, req);
+    }
+
     @Delete()
     async delete(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
         return this.schoolService.delete(body, req);
