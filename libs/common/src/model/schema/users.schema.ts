@@ -15,7 +15,7 @@ export class Users extends AbstractDocument {
   role: string;
 
   @Prop({ type: [Object], default: null })
-  image: Images;
+  images: Images[];
 
   @Prop({ type: String, default: null })
   email: string;
