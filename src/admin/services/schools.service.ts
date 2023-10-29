@@ -154,7 +154,14 @@ export class SchoolAdminService {
             // Validate Super Admin
 
             school.deletedAt = new Date()
-            school.save()
+            school.save();
+
+            let users = await this.usersModel.find({ school: school._id });
+            console.log(users)
+            if (users.length > 0) users.forEach(async (item) => {
+                item.school = null;
+                await item.save();
+            })
 
             return this.responseService.success(true, StringHelper.successResponse('school', 'delete'));
         } catch (error) {
