@@ -7,7 +7,7 @@ import mongoose, {
   Types,
   isValidObjectId,
 } from 'mongoose';
-import { CreateUserDto, UpdateUserDto } from '@app/common/dto/user.dto';
+import { CreateUserDto } from '@app/common/dto/user.dto';
 import { Users } from '@app/common/model/schema/users.schema';
 import { ResponseService } from '@app/common/response/response.service';
 
@@ -32,7 +32,7 @@ export class UserService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: number, updateUserDto: any) {
     return `This action updates a #${id} user`;
   }
 

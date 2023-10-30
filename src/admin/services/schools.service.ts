@@ -28,7 +28,7 @@ export class SchoolAdminService {
             const exist = await this.schoolsModel.count({ name });
             if (exist > 0) return this.responseService.error(HttpStatus.CONFLICT, StringHelper.existResponse('school'));
 
-            media.isDefault = true;
+            if (media) media.isDefault = true;
             const school = await this.schoolsModel.create({
                 name,
                 address,
@@ -56,7 +56,7 @@ export class SchoolAdminService {
             if (body.mediaIds) school.images = school?.images.filter(ev => body.mediaIds?.includes(ev._id?.toString()));
 
             if (media?.length > 0) school.images.push(...media);
-            school.images.map((item, index) => index === 0 ? item.isDefault = true : item.isDefault = false);
+            school?.images?.map((item, index) => index === 0 ? item.isDefault = true : item.isDefault = false);
 
             school = await school.save();
 
@@ -157,7 +157,7 @@ export class SchoolAdminService {
             school.save();
 
             let users = await this.usersModel.find({ school: school._id });
-            console.log(users)
+
             if (users.length > 0) users.forEach(async (item) => {
                 item.school = null;
                 await item.save();
