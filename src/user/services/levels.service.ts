@@ -18,7 +18,7 @@ export class LevelsService {
 
   private readonly logger = new Logger(LevelsService.name);
 
-  public async initLevel(body: initLevelDTO, req: any): Promise<any> {
+  public async initLevel(body: initLevelDTO, req: Request): Promise<any> {
     try {
       let today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -44,7 +44,7 @@ export class LevelsService {
     }
   }
 
-  public async getLevel(body: getLevelDTO, req: any): Promise<any> {
+  public async getLevel(body: getLevelDTO, req: Request): Promise<any> {
     try {
       let today = new Date();
       today.setHours(0, 0, 0, 0);
