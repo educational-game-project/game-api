@@ -22,9 +22,6 @@ export class AuthService {
       let user = await this.usersModel.findOne({ name: body.name, role: UserRole.USER });
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
-
-
-
     } catch (error) {
       this.logger.error(this.login.name);
       console.log(error)
