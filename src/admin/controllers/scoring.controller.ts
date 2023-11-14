@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Request, Controller, Get, Post, Body, Patch, Param, Delete, } from '@nestjs/common';
 import { ScoreAdminService } from '../services/scoring.service';
 
 @Controller('admin/score')

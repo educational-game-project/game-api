@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Request, Controller, Get, Post, Body, Patch, Param, Delete, } from '@nestjs/common';
 import { RecordAdminService } from '../services/record.service';
 
 @Controller('admin/record')

@@ -1,17 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, } from '@nestjs/common';
 import { AnalysisService } from '../services/analysis.service';
-import {
-  CreateAnalysisDto,
-  UpdateAnalysisDto,
-} from '@app/common/dto/analysis.dto';
+import { CreateAnalysisDto, UpdateAnalysisDto, } from '@app/common/dto/analysis.dto';
 
 @Controller('analysis')
 export class AnalysisController {
