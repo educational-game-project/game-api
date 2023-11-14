@@ -49,6 +49,8 @@ jobs:
             HOSTNAME : ${{ secrets.VM_HOST }}
             USER_NAME : ${{ secrets.VM_USERNAME }}
             port: ${{ secrets.VM_PORT }}
+            DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
             # passphrase: ${{ secrets.SSH_PASSPHRASE }}
             
         run: |
@@ -56,7 +58,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} -p $port '
             cd /home/${{ secrets.VM_USERNAME }}/game &&
             ls -al &&
-            echo ${{ secrets.DOCKER_TOKEN }} | docker login --username AWS --password-stdin &&
+            echo $DOCKER_TOKEN | docker login --username $DOCKER_USERNAME --password-stdin &&
             docker pull thelogoreng/api:game &&
             docker compose up -d &&
             docker image prune --force
