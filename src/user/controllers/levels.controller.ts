@@ -1,4 +1,5 @@
-import { BadRequestException, Body, Controller, Delete, HttpCode, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, HttpCode, HttpStatus, Inject, Logger, Post, Put, Request as Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Request } from "express";
 import { LevelsService } from '../services/levels.service';
 import { getLevelDTO, initLevelDTO } from '@app/common/dto/levels.dto';
 
