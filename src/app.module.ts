@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -39,13 +38,14 @@ import { UserAdminService } from './admin/services/user.service';
 import { ImagesService } from '@app/common/helpers/file.helpers';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AuthHelper } from '@app/common/helpers/auth.helper';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt', property: 'user' }),
     JwtModule.registerAsync({
       useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_KEY'),
+        global: true,
+        secret: config.get<string>('JWT_SECRET'),
         signOptions: { expiresIn: config.get('JWT_EXPIRES') },
       }),
       inject: [ConfigService],
@@ -78,6 +78,7 @@ import { join } from 'path';
     UserAdminController,
   ],
   providers: [
+    AuthHelper,
     ImagesService,
     ResponseService,
     AppService,
