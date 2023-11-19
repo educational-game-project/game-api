@@ -1,5 +1,4 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { Observable } from "rxjs";
 import { Request } from "express";
 import { AuthHelper } from "../helpers/auth.helper";
 
@@ -9,12 +8,12 @@ export class AuthenticationGuard implements CanActivate {
         private authHelper: AuthHelper
     ) { }
 
-    canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    async canActivate(context: ExecutionContext): Promise<boolean> {
         try {
             const request = context.switchToHttp().getRequest();
             const token = this.extractTokenFromHeader(request);
             const decoded = this.authHelper.validateToken(token)
-            const user = this.authHelper.validateUser(decoded);
+            const user = await this.authHelper.validateUser(decoded);
             if (!token) throw new UnauthorizedException();
 
             request.user = user;
