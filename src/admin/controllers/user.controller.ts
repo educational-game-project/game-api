@@ -13,6 +13,7 @@ import { Roles } from '@app/common/decorators/roles.decorator';
 import { UserRole } from '@app/common/enums/role.enum';
 import { AuthenticationGuard } from '@app/common/auth/authentication.guard';
 import { AuthorizationGuard } from '@app/common/auth/authorization.guard';
+import { ResponseStatusCode } from '@app/common/response/response.decorator';
 
 @Controller('admin/user')
 export class UserAdminController {
@@ -27,6 +28,7 @@ export class UserAdminController {
   @Post('admin')
   @Roles([UserRole.SUPER_ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
   @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
   async create(@Body() body: CreateUserDto, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
     try {
@@ -43,6 +45,7 @@ export class UserAdminController {
   @Post('admin/find')
   @Roles([UserRole.SUPER_ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
   async find(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
     return this.userService.findAdmin(body, req);
   }
@@ -50,6 +53,7 @@ export class UserAdminController {
   @Delete('admin')
   @Roles([UserRole.SUPER_ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
   async delete(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.userService.deleteAdmin(body, req);
   }
@@ -57,6 +61,7 @@ export class UserAdminController {
   @Post('student')
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
   @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
   async addStudent(@Body() body: CreateUserDto, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
     try {

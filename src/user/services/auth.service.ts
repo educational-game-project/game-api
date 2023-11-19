@@ -21,7 +21,7 @@ export class AuthService {
 
   public async login(body: LoginUserDto): Promise<any> {
     try {
-      let user = await this.usersModel.findOne({ name: body.name, role: UserRole.USER });
+      let user = await this.usersModel.findOne({ name: body.name, role: UserRole.USER }).populate('images');
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
       const tokens = await this.authHelper.generateTokens(user._id, { role: user.role })

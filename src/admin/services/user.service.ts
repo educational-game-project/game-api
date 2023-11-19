@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException } from '@nestjs/common';
 import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types, } from 'mongoose';
@@ -151,7 +151,9 @@ export class UserAdminService {
       let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
       if (!school) throw new NotFoundException("School Not Found");
 
-      if (media?.length) media[0].isDefault = true;
+      const check = await this.usersModel.findOne({ role: UserRole.USER, name: body.name, school: school._id })
+      if (check) throw new BadRequestException("Student Already Exist")
+
       let student = await this.usersModel.create({
         name: body.name,
         email: body?.email ?? null,
