@@ -16,10 +16,6 @@ export class initLevelDTO {
     @IsString()
     @IsEnum(GameType)
     game: string;
-
-    @IsNotEmpty()
-    @IsMongoId()
-    userId: string;
 }
 
 export class getLevelDTO {
@@ -27,8 +23,4 @@ export class getLevelDTO {
     @IsString()
     @IsEnum(GameType)
     game: string;
-
-    @IsNotEmpty()
-    @IsMongoId()
-    userId: string;
 }

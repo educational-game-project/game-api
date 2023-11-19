@@ -1,7 +1,7 @@
 import { HttpStatus, Inject, Injectable, Logger, Body } from '@nestjs/common';
 import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from 'mongoose';
+import { Model, Types, } from 'mongoose';
 import { Levels } from '@app/common/model/schema/levels.schema';
 import { Users } from '@app/common/model/schema/users.schema';
 import { ResponseService } from '@app/common/response/response.service';
@@ -18,13 +18,13 @@ export class LevelsService {
 
   private readonly logger = new Logger(LevelsService.name);
 
-  public async initLevel(body: initLevelDTO, req: Request): Promise<any> {
+  public async initLevel(body: initLevelDTO, req: any): Promise<any> {
+    const users: Users = <Users>req.user
     try {
       let today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      let user = await this.usersModel.findOne({ _id: new Types.ObjectId(body.userId) });
-      delete body.userId
+      let user = await this.usersModel.findOne({ _id: users._id });
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
       let current = await this.levelsModel.findOne({ user: user._id, game: body.game, createdAt: { $gte: today } });
@@ -44,12 +44,13 @@ export class LevelsService {
     }
   }
 
-  public async getLevel(body: getLevelDTO, req: Request): Promise<any> {
+  public async getLevel(body: getLevelDTO, req: any): Promise<any> {
+    const users: Users = <Users>req.user
     try {
       let today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      let user = await this.usersModel.findOne({ _id: new Types.ObjectId(body.userId) });
+      let user = await this.usersModel.findOne({ _id: users._id });
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
       let current = await this.levelsModel.findOne({ user: user._id, game: body.game, createdAt: { $gte: today } });
