@@ -32,15 +32,7 @@ export class Schools extends AbstractDocument {
 
 export const SchoolsSchema = SchemaFactory.createForClass(Schools);
 
-SchoolsSchema.pre('find', function () {
-  this.where({ deletedAt: null });
-});
-SchoolsSchema.pre('findOne', function () {
-  this.where({ deletedAt: null });
-});
-SchoolsSchema.pre('findOneAndUpdate', function () {
-  this.where({ deletedAt: null });
-});
-SchoolsSchema.pre('count', function () {
-  this.where({ deletedAt: null });
-});
+SchoolsSchema.pre('find', function () { this.where({ deletedAt: null }); });
+SchoolsSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
+SchoolsSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
+SchoolsSchema.pre('count', function () { this.where({ deletedAt: null }); });

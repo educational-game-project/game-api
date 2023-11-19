@@ -1,5 +1,4 @@
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import { Request } from 'express';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Images } from '../model/schema/subtype/images.subtype';
 import { Model } from 'mongoose';
@@ -22,6 +21,7 @@ export class ImagesService {
                 filename: file.filename,
                 fileLink: link,
                 mimeType: file.mimetype,
+                size: file?.size,
             })
 
             return uploaded;

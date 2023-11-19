@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus, UnauthorizedException, Inject } from '@nestjs/common';
+import { Injectable, HttpStatus, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { ResponseService } from '@app/common/response/response.service';

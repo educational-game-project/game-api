@@ -15,6 +15,9 @@ export class Images extends AbstractDocument {
   @Prop({ type: String, default: null })
   mimeType: string;
 
+  @Prop({ type: Number, default: null })
+  size: number;
+
   @Prop({ type: Boolean, default: false })
   isDefault?: boolean;
 
@@ -23,3 +26,8 @@ export class Images extends AbstractDocument {
 }
 
 export const ImagesSchema = SchemaFactory.createForClass(Images);
+
+ImagesSchema.pre('find', function () { this.where({ deletedAt: null }); });
+ImagesSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
+ImagesSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
+ImagesSchema.pre('count', function () { this.where({ deletedAt: null }); });

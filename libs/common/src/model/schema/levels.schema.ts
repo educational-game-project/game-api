@@ -29,15 +29,7 @@ export class Levels extends AbstractDocument {
 
 export const LevelsSchema = SchemaFactory.createForClass(Levels);
 
-LevelsSchema.pre('find', function () {
-  this.where({ deletedAt: null });
-});
-LevelsSchema.pre('findOne', function () {
-  this.where({ deletedAt: null });
-});
-LevelsSchema.pre('findOneAndUpdate', function () {
-  this.where({ deletedAt: null });
-});
-LevelsSchema.pre('count', function () {
-  this.where({ deletedAt: null });
-});
+LevelsSchema.pre('find', function () { this.where({ deletedAt: null }); });
+LevelsSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
+LevelsSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
+LevelsSchema.pre('count', function () { this.where({ deletedAt: null }); });

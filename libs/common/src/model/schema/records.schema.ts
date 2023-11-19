@@ -33,15 +33,7 @@ export class Records extends AbstractDocument {
 
 export const RecordsSchema = SchemaFactory.createForClass(Records);
 
-RecordsSchema.pre('find', function () {
-  this.where({ deletedAt: null });
-});
-RecordsSchema.pre('findOne', function () {
-  this.where({ deletedAt: null });
-});
-RecordsSchema.pre('findOneAndUpdate', function () {
-  this.where({ deletedAt: null });
-});
-RecordsSchema.pre('count', function () {
-  this.where({ deletedAt: null });
-});
+RecordsSchema.pre('find', function () { this.where({ deletedAt: null }); });
+RecordsSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
+RecordsSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
+RecordsSchema.pre('count', function () { this.where({ deletedAt: null }); });

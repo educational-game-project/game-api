@@ -1,6 +1,6 @@
 import { FileInterceptor, AnyFilesInterceptor } from '@nestjs/platform-express';
 import { SchoolAdminService } from '../services/schools.service';
-import { BadRequestException, Body, Controller, Delete, HttpCode, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, HttpCode, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, InternalServerErrorException } from '@nestjs/common';
 import { Request } from 'express';
 import { fileStorage, imageFilter, limitImageUpload } from '@app/common/utils/validators/file.validator';
 import { diskStorage } from 'multer';
@@ -46,7 +46,7 @@ export class SchoolAdminController {
             return this.schoolService.edit(body, files, req);
         } catch (error) {
             this.logger.error(this.edit.name);
-            console.log(error);
+            console.log(error); throw new InternalServerErrorException()
             return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
         }
     }

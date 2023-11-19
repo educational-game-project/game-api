@@ -1,10 +1,4 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 
 // Restructure Response Object For Guard Exception
@@ -19,11 +13,11 @@ export class ResponseFilter implements ExceptionFilter {
       const status: number = exception.getStatus();
       const exceptionHttp: Record<string, any> = exception;
       const exceptionData: Record<string, any> = exceptionHttp.response;
-      const mess = (status == 429)?"too_many_request":exceptionData.message;
+      const mess = (status == 429) ? "too_many_request" : exceptionData.message;
 
       response.status(status).json({
         statusCode: status,
-        status:'error',
+        status: 'error',
         server_time: new Date().toISOString(),
         message: mess,
         errors: exceptionData.errors,
@@ -36,7 +30,7 @@ export class ResponseFilter implements ExceptionFilter {
       response.status(status).json({
         statusCode: status,
         server_time: new Date().toISOString(),
-        status:message,
+        status: message,
         message: exception || message,
       });
     }
