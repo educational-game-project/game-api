@@ -5,11 +5,14 @@ import { fileStorage, imageFilter, limitImageUpload } from '@app/common/utils/va
 import { diskStorage } from 'multer';
 import { ImagesService } from '@app/common/helpers/file.helpers';
 import { ResponseService } from '@app/common/response/response.service';
-import { StringHelper } from '@app/common/helpers/string.helpers';
 import { SearchDTO } from '@app/common/dto/search.dto';
 import { ByIdDto } from '@app/common/dto/byId.dto';
 import { UserAdminService } from '../services/user.service';
 import { CreateUserDto, } from '@app/common/dto/user.dto';
+import { Roles } from '@app/common/decorators/roles.decorator';
+import { UserRole } from '@app/common/enums/role.enum';
+import { AuthenticationGuard } from '@app/common/auth/authentication.guard';
+import { AuthorizationGuard } from '@app/common/auth/authorization.guard';
 
 @Controller('admin/user')
 export class UserAdminController {
@@ -22,6 +25,8 @@ export class UserAdminController {
   private readonly logger = new Logger(UserAdminController.name);
 
   @Post('admin')
+  @Roles([UserRole.SUPER_ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
   async create(@Body() body: CreateUserDto, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
     try {
@@ -36,16 +41,22 @@ export class UserAdminController {
   }
 
   @Post('admin/find')
+  @Roles([UserRole.SUPER_ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   async find(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
     return this.userService.findAdmin(body, req);
   }
 
   @Delete('admin')
+  @Roles([UserRole.SUPER_ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   async delete(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.userService.deleteAdmin(body, req);
   }
 
   @Post('student')
+  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
   async addStudent(@Body() body: CreateUserDto, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
     try {

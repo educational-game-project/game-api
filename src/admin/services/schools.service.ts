@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger, InternalServerErrorException, NotFoundException, HttpException, BadRequestException } from '@nestjs/common';
 import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from 'mongoose';
@@ -10,36 +10,38 @@ import { CreateSchoolDTO, EditSchoolDTO } from '@app/common/dto/school.dto';
 import { SearchDTO } from '@app/common/dto/search.dto';
 import { dateToString } from '@app/common/pipeline/dateToString.pipeline';
 import { ByIdDto } from '@app/common/dto/byId.dto';
+import { Images } from '@app/common/model/schema/subtype/images.subtype';
+import { ImagesService } from '@app/common/helpers/file.helpers';
 
 @Injectable()
 export class SchoolAdminService {
     constructor(
         @InjectModel(Schools.name) private schoolsModel: Model<Schools>,
         @InjectModel(Users.name) private usersModel: Model<Users>,
+        @Inject(ImagesService) private imageService: ImagesService,
         @Inject(ResponseService) private readonly responseService: ResponseService,
     ) { }
 
     private readonly logger = new Logger(SchoolAdminService.name);
 
-    public async create(body: CreateSchoolDTO, media: any, req: Request): Promise<any> {
+    public async create(body: CreateSchoolDTO, media: Array<Images>, req: Request): Promise<any> {
         try {
             const { name, address } = body;
 
             const exist = await this.schoolsModel.count({ name });
-            if (exist > 0) return this.responseService.error(HttpStatus.CONFLICT, StringHelper.existResponse('school'));
+            if (exist > 0) throw new BadRequestException("School Already Exist")
 
-            if (media) media.isDefault = true;
             const school = await this.schoolsModel.create({
                 name,
                 address,
-                images: media
+                images: media ?? []
             });
 
             return this.responseService.success(true, StringHelper.successResponse('schoool', 'create'), school);
         } catch (error) {
             this.logger.error(this.create.name);
             console.log(error);
-            throw new InternalServerErrorException(error);
+            throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -48,7 +50,6 @@ export class SchoolAdminService {
             const { id, name, address } = body;
 
             let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(id) });
-            if (!school) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('school'));
 
             if (name) school.name = name;
             if (address) school.address = address;
@@ -64,7 +65,7 @@ export class SchoolAdminService {
         } catch (error) {
             this.logger.error(this.edit.name);
             console.log(error);
-            throw new InternalServerErrorException(error);
+            throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -99,6 +100,14 @@ export class SchoolAdminService {
                         ]
                     }
                 },
+                {
+                    $lookup: {
+                        from: "images",
+                        localField: "images",
+                        foreignField: "_id",
+                        as: "images"
+                    }
+                },
                 ...dateToString,
                 {
                     $match: searchOption
@@ -109,7 +118,6 @@ export class SchoolAdminService {
             ];
 
             const schools = await this.schoolsModel.aggregate(pipeline).skip(SKIP).limit(LIMIT_PAGE);
-            if (schools.length == 0) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('school'));
 
             const total = await this.schoolsModel.aggregate(pipeline).count('total');
 
@@ -122,7 +130,7 @@ export class SchoolAdminService {
         } catch (error) {
             this.logger.error(this.find.name);
             console.log(error);
-            throw new InternalServerErrorException(error);
+            throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -135,23 +143,24 @@ export class SchoolAdminService {
                     options: {
                         match: { deletedAt: null }
                     }
-                });
-            if (!school) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('school'));
+                })
+                .populate('images');
+            if (!school) throw new NotFoundException("School Not Found");
 
             return this.responseService.success(true, StringHelper.successResponse('school', 'get_detail'), school);
         } catch (error) {
             this.logger.error(this.detail.name);
             console.log(error);
-            throw new InternalServerErrorException(error);
+            throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     public async delete(body: ByIdDto, req: Request): Promise<any> {
         try {
             let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body.id) });
-            if (!school) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('school'));
+            if (!school) throw new NotFoundException("School Not Found");
 
-            // Validate Super Admin
+            await this.imageService.delete(school.images);
 
             school.deletedAt = new Date()
             school.save();
@@ -167,7 +176,7 @@ export class SchoolAdminService {
         } catch (error) {
             this.logger.error(this.delete.name);
             console.log(error);
-            throw new InternalServerErrorException(error);
+            throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -13,7 +13,7 @@ export class Schools extends AbstractDocument {
   @Prop({ type: String, default: null })
   address: string;
 
-  @Prop({ type: [Object], default: null })
+  @Prop({ type: [{ type: Types.ObjectId, ref: Images.name, default: null }] })
   images: Images[];
 
   @Prop({ type: Number, default: 0 })

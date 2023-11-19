@@ -14,7 +14,7 @@ export class Users extends AbstractDocument {
   @Prop({ type: String, enum: UserRole, default: UserRole.USER })
   role: string;
 
-  @Prop({ type: [Object], default: null })
+  @Prop({ type: [{ type: Types.ObjectId, ref: Images.name, default: null }] })
   images: Images[];
 
   @Prop({ type: String, default: null })

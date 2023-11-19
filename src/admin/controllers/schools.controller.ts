@@ -1,6 +1,6 @@
 import { FileInterceptor, AnyFilesInterceptor } from '@nestjs/platform-express';
 import { SchoolAdminService } from '../services/schools.service';
-import { BadRequestException, Body, Controller, Delete, HttpCode, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, HttpCode, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, InternalServerErrorException, HttpException } from '@nestjs/common';
 import { Request } from 'express';
 import { fileStorage, imageFilter, limitImageUpload } from '@app/common/utils/validators/file.validator';
 import { diskStorage } from 'multer';
@@ -15,6 +15,8 @@ import { Roles } from '@app/common/decorators/roles.decorator';
 import { AuthorizationGuard } from '@app/common/auth/authorization.guard';
 import { UserRole } from '@app/common/enums/role.enum';
 
+@Roles([UserRole.SUPER_ADMIN])
+@UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller('admin/schools')
 export class SchoolAdminController {
     constructor(
@@ -26,8 +28,6 @@ export class SchoolAdminController {
     private readonly logger = new Logger(SchoolAdminService.name);
 
     @Post()
-    @Roles([UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.USER])
-    @UseGuards(AuthenticationGuard, AuthorizationGuard)
     @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
     async create(@Body() body: CreateSchoolDTO, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
         try {
@@ -37,7 +37,7 @@ export class SchoolAdminController {
         } catch (error) {
             this.logger.error(this.create.name);
             console.log(error);
-            throw new InternalServerErrorException(error);
+            throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -51,7 +51,7 @@ export class SchoolAdminController {
         } catch (error) {
             this.logger.error(this.edit.name);
             console.log(error);
-            throw new InternalServerErrorException(error);
+            throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
