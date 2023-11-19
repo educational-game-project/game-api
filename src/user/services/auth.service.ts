@@ -7,12 +7,14 @@ import { Users } from '@app/common/model/schema/users.schema';
 import { ResponseService } from '@app/common/response/response.service';
 import { StringHelper } from '@app/common/helpers/string.helpers';
 import { UserRole } from '@app/common/enums/role.enum';
+import { AuthHelper } from '@app/common/helpers/auth.helper';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(Users.name) private usersModel: Model<Users>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
+    @Inject(AuthHelper) private readonly authHelper: AuthHelper,
   ) { }
 
   private readonly logger = new Logger(AuthService.name);
@@ -22,6 +24,9 @@ export class AuthService {
       let user = await this.usersModel.findOne({ name: body.name, role: UserRole.USER });
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
+      const tokens = await this.authHelper.generateTokens(user._id, { role: user.role })
+
+      return this.responseService.success(true, StringHelper.successResponse('user', 'login'), { user, token: tokens });
     } catch (error) {
       this.logger.error(this.login.name);
       console.log(error)

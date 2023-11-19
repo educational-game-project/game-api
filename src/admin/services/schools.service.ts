@@ -50,6 +50,7 @@ export class SchoolAdminService {
             const { id, name, address } = body;
 
             let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(id) });
+            if (!school) throw new NotFoundException("School Not Found");
 
             if (name) school.name = name;
             if (address) school.address = address;

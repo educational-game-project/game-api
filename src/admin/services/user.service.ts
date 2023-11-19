@@ -1,7 +1,7 @@
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException } from '@nestjs/common';
 import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from 'mongoose';
+import { Model, PipelineStage, Types, } from 'mongoose';
 import { CreateUserDto, } from '@app/common/dto/user.dto';
 import { Users } from '@app/common/model/schema/users.schema';
 import { ResponseService } from '@app/common/response/response.service';
@@ -13,6 +13,7 @@ import { UserRole } from '@app/common/enums/role.enum';
 import { SearchDTO } from '@app/common/dto/search.dto';
 import { dateToString } from '@app/common/pipeline/dateToString.pipeline';
 import { ByIdDto } from '@app/common/dto/byId.dto';
+import { AuthHelper } from '@app/common/helpers/auth.helper';
 
 @Injectable()
 export class UserAdminService {
@@ -21,6 +22,7 @@ export class UserAdminService {
     @InjectModel(Schools.name) private schoolsModel: Model<Schools>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(ConfigService) private readonly configService: ConfigService,
+    @Inject(AuthHelper) private readonly authHelper: AuthHelper,
   ) { }
 
   private HASH_BCRYPT = this.configService.get<number>('HASH_BCRYPT');
@@ -29,10 +31,10 @@ export class UserAdminService {
 
   public async addAdmin(body: CreateUserDto, media: any, req: Request): Promise<any> {
     try {
-      const password = body?.password ? await bcrypt.hash(body?.password, Number(this.HASH_BCRYPT)) : await bcrypt.hash('Admin123', Number(this.HASH_BCRYPT));
+      const password = body?.password ? this.authHelper.encodePassword(body.password) : this.authHelper.encodePassword('Admin1234');
 
       let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
-      if (!school) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('school'));
+      if (!school) throw new NotFoundException("School Not Found");
 
       if (media?.length) media[0].isDefault = true;
       let admin = await this.usersModel.create({
@@ -53,7 +55,7 @@ export class UserAdminService {
     } catch (error) {
       this.logger.error(this.addAdmin.name);
       console.log(error);
-      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -106,7 +108,6 @@ export class UserAdminService {
       const admin = await this.usersModel.aggregate(pipeline)
         .skip(SKIP)
         .limit(LIMIT_PAGE);
-      if (admin.length == 0) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('admin'));
 
       const total = await this.usersModel.aggregate(pipeline).count("total");
 
@@ -119,19 +120,19 @@ export class UserAdminService {
     } catch (error) {
       this.logger.error(this.findAdmin.name);
       console.log(error);
-      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   public async deleteAdmin(body: ByIdDto, req: Request): Promise<any> {
     try {
       let admin = await this.usersModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.ADMIN });
-      if (!admin) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('admin'));
+      if (!admin) throw new NotFoundException("Admin Not Found");
 
       admin.deletedAt = new Date();
 
       let school = await this.schoolsModel.findOne({ _id: admin.school });
-      if (!school) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('school'));
+      if (!school) throw new NotFoundException("School Not Found");
 
       school.admins = school.admins.filter(i => i.toString() !== admin._id.toString());
       school.adminsCount--;
@@ -141,14 +142,14 @@ export class UserAdminService {
     } catch (error) {
       this.logger.error(this.deleteAdmin.name);
       console.log(error);
-      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   public async addStudent(body: CreateUserDto, media: any, req: Request): Promise<any> {
     try {
       let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
-      if (!school) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('school'));
+      if (!school) throw new NotFoundException("School Not Found");
 
       if (media?.length) media[0].isDefault = true;
       let student = await this.usersModel.create({
@@ -168,7 +169,7 @@ export class UserAdminService {
     } catch (error) {
       this.logger.error(this.addStudent.name);
       console.log(error);
-      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
