@@ -19,7 +19,7 @@ import { UserRole } from '@app/common/enums/role.enum';
 export class SchoolAdminController {
     constructor(
         private schoolService: SchoolAdminService,
-        @Inject(ImagesService) private imageHelper: ImagesService,
+        @Inject(ImagesService) private imageService: ImagesService,
         @Inject(ResponseService) private readonly responseService: ResponseService,
     ) { }
 
@@ -31,13 +31,13 @@ export class SchoolAdminController {
     @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
     async create(@Body() body: CreateSchoolDTO, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
         try {
-            const files = media ? await this.imageHelper.define([media]) : [];
+            const files = media ? await this.imageService.define([media]) : [];
 
             return this.schoolService.create(body, files, req);
         } catch (error) {
             this.logger.error(this.create.name);
             console.log(error);
-            return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+            throw new InternalServerErrorException(error);
         }
     }
 
@@ -45,13 +45,13 @@ export class SchoolAdminController {
     @UseInterceptors(AnyFilesInterceptor({ fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
     async edit(@Body() body: EditSchoolDTO, @UploadedFiles() media: Array<Express.Multer.File>, @Req() req: Request): Promise<any> {
         try {
-            const files = media.length ? await this.imageHelper.define(media) : [];
+            const files = media?.length ? await this.imageService.define(media) : [];
 
             return this.schoolService.edit(body, files, req);
         } catch (error) {
             this.logger.error(this.edit.name);
-            console.log(error); throw new InternalServerErrorException()
-            return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+            console.log(error);
+            throw new InternalServerErrorException(error);
         }
     }
 

@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { LoginAdminDto } from '@app/common/dto/auth.dto';
@@ -39,7 +39,7 @@ export class AuthAdminService {
     } catch (error) {
       this.logger.error(this.login.name);
       console.log(error)
-      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' })
+      throw new InternalServerErrorException(error);
     }
   }
 }

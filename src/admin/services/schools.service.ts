@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
 import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from 'mongoose';
@@ -39,7 +39,7 @@ export class SchoolAdminService {
         } catch (error) {
             this.logger.error(this.create.name);
             console.log(error);
-            return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+            throw new InternalServerErrorException(error);
         }
     }
 
@@ -64,7 +64,7 @@ export class SchoolAdminService {
         } catch (error) {
             this.logger.error(this.edit.name);
             console.log(error);
-            return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+            throw new InternalServerErrorException(error);
         }
     }
 
@@ -122,7 +122,7 @@ export class SchoolAdminService {
         } catch (error) {
             this.logger.error(this.find.name);
             console.log(error);
-            return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+            throw new InternalServerErrorException(error);
         }
     }
 
@@ -142,7 +142,7 @@ export class SchoolAdminService {
         } catch (error) {
             this.logger.error(this.detail.name);
             console.log(error);
-            return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+            throw new InternalServerErrorException(error);
         }
     }
 
@@ -167,7 +167,7 @@ export class SchoolAdminService {
         } catch (error) {
             this.logger.error(this.delete.name);
             console.log(error);
-            return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+            throw new InternalServerErrorException(error);
         }
     }
 }
