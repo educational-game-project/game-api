@@ -1,5 +1,5 @@
-import { BadRequestException, Body, Controller, Delete, HttpCode, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, InternalServerErrorException } from '@nestjs/common';
-import { FileInterceptor, AnyFilesInterceptor } from '@nestjs/platform-express';
+import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Req, UploadedFile, UseGuards, UseInterceptors, HttpException } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 import { fileStorage, imageFilter, limitImageUpload } from '@app/common/utils/validators/file.validator';
 import { diskStorage } from 'multer';
@@ -38,7 +38,7 @@ export class UserAdminController {
     } catch (error) {
       this.logger.error(this.create.name);
       console.log(error);
-      throw new InternalServerErrorException(error);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -71,7 +71,7 @@ export class UserAdminController {
     } catch (error) {
       this.logger.error(this.addStudent.name);
       console.log(error);
-      throw new InternalServerErrorException(error);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
