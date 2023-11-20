@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException, Body } from '@nestjs/common';
 import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types, } from 'mongoose';
@@ -6,8 +6,6 @@ import { CreateUserDto, } from '@app/common/dto/user.dto';
 import { Users } from '@app/common/model/schema/users.schema';
 import { ResponseService } from '@app/common/response/response.service';
 import { StringHelper } from '@app/common/helpers/string.helpers';
-import { ConfigService } from '@nestjs/config';
-import * as bcrypt from 'bcrypt';
 import { Schools } from '@app/common/model/schema/schools.schema';
 import { UserRole } from '@app/common/enums/role.enum';
 import { SearchDTO } from '@app/common/dto/search.dto';
@@ -21,11 +19,8 @@ export class UserAdminService {
     @InjectModel(Users.name) private usersModel: Model<Users>,
     @InjectModel(Schools.name) private schoolsModel: Model<Schools>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-    @Inject(ConfigService) private readonly configService: ConfigService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
   ) { }
-
-  private HASH_BCRYPT = this.configService.get<number>('HASH_BCRYPT');
 
   private readonly logger = new Logger(UserAdminService.name);
 
@@ -168,6 +163,79 @@ export class UserAdminService {
       school.save();
 
       return this.responseService.success(true, StringHelper.successResponse('user', 'add_admin'), student);
+    } catch (error) {
+      this.logger.error(this.addStudent.name);
+      console.log(error);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async listStudents(body: SearchDTO, req: Request): Promise<any> {
+    try {
+      const searchRegex = new RegExp(body.search?.toString(), 'i');
+      const LIMIT_PAGE: number = body?.limit ?? 10;
+      const SKIP: number = (Number(body?.page ?? 1) - 1) * LIMIT_PAGE;
+
+      let searchOption: any = {
+        $or: [
+          { name: searchRegex },
+          { email: searchRegex },
+          { phoneNumber: searchRegex },
+          { 'school.name': searchRegex },
+        ],
+        role: UserRole.USER,
+        deletedAt: null
+      };
+
+      const pipeline: PipelineStage[] = [
+        {
+          $lookup: {
+            from: 'schools',
+            foreignField: '_id',
+            localField: 'school',
+            as: "school",
+            pipeline: [
+              ...dateToString,
+              {
+                $project: { admins: 0 }
+              }
+            ]
+          }
+        },
+        {
+          $lookup: {
+            from: "images",
+            localField: "images",
+            foreignField: "_id",
+            as: "images",
+          }
+        },
+        ...dateToString,
+        {
+          $set: {
+            school: { $ifNull: [{ $arrayElemAt: ['$school', 0] }, null] }
+          }
+        },
+        {
+          $match: searchOption
+        },
+        {
+          $sort: { createdAt: -1 }
+        }
+      ];
+
+      const students = await this.usersModel.aggregate(pipeline)
+        .skip(SKIP)
+        .limit(LIMIT_PAGE);
+
+      const total = await this.usersModel.aggregate(pipeline).count("total")
+
+      return this.responseService.paging(StringHelper.successResponse('student', 'list'), students, {
+        totalData: Number(total[0]?.total) ?? 0,
+        perPage: LIMIT_PAGE,
+        currentPage: body?.page ?? 1,
+        totalPage: Math.ceil(total[0]?.total ?? 0 / LIMIT_PAGE),
+      });
     } catch (error) {
       this.logger.error(this.addStudent.name);
       console.log(error);

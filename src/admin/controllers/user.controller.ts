@@ -74,4 +74,12 @@ export class UserAdminController {
       throw new InternalServerErrorException(error);
     }
   }
+
+  @Post('student/find')
+  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
+  async listStudents(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
+    return this.userService.listStudents(body, req);
+  }
 }

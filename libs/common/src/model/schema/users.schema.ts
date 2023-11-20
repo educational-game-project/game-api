@@ -14,9 +14,6 @@ export class Users extends AbstractDocument {
   @Prop({ type: String, enum: UserRole, default: UserRole.USER })
   role: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: Images.name, default: null }] })
-  images: Images[];
-
   @Prop({ type: String, default: null })
   email: string;
 
@@ -30,6 +27,9 @@ export class Users extends AbstractDocument {
   deletedAt?: Date;
 
   //================================== Relations ======================================
+  @Prop({ type: [{ type: Types.ObjectId, ref: Images.name, default: null }] })
+  images: Images[];
+
   @Prop({ type: Types.ObjectId, ref: 'Schools', default: null })
   school: Schools;
 }

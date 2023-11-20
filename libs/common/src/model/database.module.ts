@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
 
 @Module({
   imports: [
@@ -13,4 +12,5 @@ import { Connection } from 'mongoose';
     }),
   ],
 })
-export class DatabaseModule {}
+
+export class DatabaseModule { }

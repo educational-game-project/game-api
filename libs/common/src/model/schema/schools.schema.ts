@@ -13,9 +13,6 @@ export class Schools extends AbstractDocument {
   @Prop({ type: String, default: null })
   address: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: Images.name, default: null }] })
-  images: Images[];
-
   @Prop({ type: Number, default: 0 })
   adminsCount: number;
 
@@ -28,6 +25,9 @@ export class Schools extends AbstractDocument {
   //================================== Relations ======================================
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Users', default: null }] })
   admins: Users[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: Images.name, default: null }] })
+  images: Images[];
 }
 
 export const SchoolsSchema = SchemaFactory.createForClass(Schools);
