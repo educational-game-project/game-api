@@ -1,9 +1,8 @@
-import { IsArray, IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf } from 'class-validator';
+import { IsNotEmpty, IsNumber, } from 'class-validator';
 import { PartialType } from '@nestjs/swagger';
-import { ByIdDto } from './byId.dto';
-import { GameType } from '../enums/gameType.enum';
+import { GameNameDTO } from './global.dto';
 
-export class initLevelDTO {
+export class initLevelDTO extends PartialType(GameNameDTO) {
     @IsNotEmpty()
     @IsNumber()
     current: number;
@@ -11,16 +10,4 @@ export class initLevelDTO {
     @IsNotEmpty()
     @IsNumber()
     max: number;
-
-    @IsNotEmpty()
-    @IsString()
-    @IsEnum(GameType)
-    game: string;
-}
-
-export class getLevelDTO {
-    @IsNotEmpty()
-    @IsString()
-    @IsEnum(GameType)
-    game: string;
 }
