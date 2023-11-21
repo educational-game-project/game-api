@@ -4,6 +4,12 @@ import { AbstractDocument } from './abstract.schema';
 import { Users } from './users.schema';
 import { GameType } from '@app/common/enums/gameType.enum';
 
+export enum StatusRecord {
+  PASSED = "Passed",
+  ONGOING = "On Going",
+  FAILED = "Failed"
+}
+
 @Schema({ timestamps: true })
 export class Records extends AbstractDocument {
   //================================== Attributes =======================================
@@ -13,14 +19,20 @@ export class Records extends AbstractDocument {
   @Prop({ type: Number, default: 0 })
   level: number;
 
-  @Prop({ type: Number, required: true })
-  time: number;
+  @Prop({ type: [Number], default: null })
+  time: number[];
 
-  @Prop({ type: Number, required: true })
+  @Prop({ type: Number, default: 5 })
   liveLeft: number;
 
-  @Prop({ type: Number, required: true })
+  @Prop({ type: Number, default: 0 })
   count: number;
+
+  @Prop({ type: String, enum: StatusRecord, default: StatusRecord.ONGOING })
+  status: string;
+
+  @Prop({ type: Boolean, default: true })
+  isValid: boolean;
 
   @Prop({ type: Date, default: null })
   deletedAt?: Date;

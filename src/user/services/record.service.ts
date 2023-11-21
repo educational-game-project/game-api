@@ -1,10 +1,11 @@
 import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from 'mongoose';
+import { Model, PipelineStage, Types, isValidObjectId, } from 'mongoose';
 import { Users } from '@app/common/model/schema/users.schema';
-import { Records } from '@app/common/model/schema/records.schema';
+import { Records, StatusRecord } from '@app/common/model/schema/records.schema';
 import { ResponseService } from '@app/common/response/response.service';
+import { StringHelper } from '@app/common/helpers/string.helpers';
+import { CreateReportDto, ReportType } from '@app/common/dto/report.dto';
 
 @Injectable()
 export class RecordService {
@@ -15,4 +16,59 @@ export class RecordService {
   ) { }
 
   private readonly logger = new Logger(RecordService.name);
+
+  public async record(body: CreateReportDto, req: any): Promise<any> {
+    const users: Users = <Users>req.user
+    try {
+      let user = await this.usersModel.findOne({ _id: users._id });
+      if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
+
+      let current = await this.recordsModel.findOne({ user: user._id, game: body.game, level: body.level, isValid: true })
+      if (!current) current = await this.initRecord(body, req);
+
+      switch (body.type) {
+        case ReportType.SUCCESS:
+          current.status = StatusRecord.PASSED;
+          current.isValid = false;
+          break;
+
+        case ReportType.FAILED:
+          if (current.liveLeft === 0) {
+            current.isValid = false;
+            current.status = StatusRecord.FAILED;
+          } else {
+            current.liveLeft--;
+          }
+          break;
+      }
+
+      current.count++;
+      current.time.push(body.time);
+      current = await current.save();
+
+      return this.responseService.success(true, StringHelper.successResponse("record", "add"), current)
+    } catch (error) {
+      this.logger.error(this.record.name);
+      console.log(error);
+      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+    }
+  }
+
+  public async initRecord(body: CreateReportDto, req: any): Promise<any> {
+    const users: Users = <Users>req.user
+    try {
+      const record = await this.recordsModel.create({
+        game: body.game,
+        level: body.level,
+        time: [],
+        user: users._id
+      })
+
+      return record;
+    } catch (error) {
+      this.logger.error(this.initRecord.name);
+      console.log(error);
+      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: '', property: '' });
+    }
+  }
 }
