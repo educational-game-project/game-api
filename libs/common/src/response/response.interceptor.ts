@@ -14,11 +14,11 @@ export class ResponseInterceptor
   ): Promise<Observable<Promise<any> | string>> {
     const ctx: HttpArgumentsHost = context.switchToHttp();
     const requesteExpress: any = ctx.getRequest();
-    const versionReq = requesteExpress.headers["x-youapp-version"]
-    
+    const responseExpress: any = ctx.getResponse();
+
     return next.handle().pipe(
       map(async (response: Promise<Record<string, any> | string>) => {
-        // const status: number = responseExpress.statusCode;
+        const status: number = responseExpress.statusCode;
         const data: Record<string, any> | string = await response;
 
         // response error must in object
@@ -30,8 +30,7 @@ export class ResponseInterceptor
 
         const { statusCode, ...others } = data;
         return {
-          statusCode: statusCode,
-          req_ver: versionReq,
+          status_code: statusCode || status,
           ...others,
         };
       }),

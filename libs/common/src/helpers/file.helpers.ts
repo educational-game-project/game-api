@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Images } from '../model/schema/subtype/images.subtype';
+import { Image } from '../model/schema/subtype/images.subtype';
 import { Model } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
@@ -9,7 +9,7 @@ import { join } from 'path';
 @Injectable()
 export class ImagesService {
     constructor(
-        @InjectModel(Images.name) private readonly imageModel: Model<Images>,
+        @InjectModel(Image.name) private readonly imageModel: Model<Image>,
         @Inject(ConfigService) private readonly configService: ConfigService,
     ) { }
 

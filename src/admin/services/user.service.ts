@@ -1,5 +1,4 @@
 import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException, Body } from '@nestjs/common';
-import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types, } from 'mongoose';
 import { CreateUserDto, } from '@app/common/dto/user.dto';
@@ -24,11 +23,11 @@ export class UserAdminService {
 
   private readonly logger = new Logger(UserAdminService.name);
 
-  public async addAdmin(body: CreateUserDto, media: any, req: Request): Promise<any> {
+  public async addAdmin(body: CreateUserDto, media: any, req: any): Promise<any> {
     try {
       const password = body?.password ? this.authHelper.encodePassword(body.password) : this.authHelper.encodePassword('Admin1234');
 
-      let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
+      let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body?.schoolId) }).populate('images');
       if (!school) throw new NotFoundException("School Not Found");
 
       if (media?.length) media[0].isDefault = true;
@@ -39,12 +38,16 @@ export class UserAdminService {
         role: UserRole.ADMIN,
         images: media?.length ? media : null,
         password,
-        school: school._id
+        school: school
       });
 
       school.admins.push(admin);
       school.adminsCount = school.admins.length;
       school.save();
+
+      admin = admin.toObject()
+      delete admin.password
+      delete admin.school.admins
 
       return this.responseService.success(true, StringHelper.successResponse('user', 'add_admin'), admin);
     } catch (error) {
@@ -54,7 +57,7 @@ export class UserAdminService {
     }
   }
 
-  public async findAdmin(body: SearchDTO, req: Request): Promise<any> {
+  public async findAdmin(body: SearchDTO, req: any): Promise<any> {
     try {
       const searchRegex = new RegExp(body.search?.toString(), 'i');
       const LIMIT_PAGE: number = body?.limit ?? 10;
@@ -119,7 +122,7 @@ export class UserAdminService {
     }
   }
 
-  public async deleteAdmin(body: ByIdDto, req: Request): Promise<any> {
+  public async deleteAdmin(body: ByIdDto, req: any): Promise<any> {
     try {
       let admin = await this.usersModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.ADMIN });
       if (!admin) throw new NotFoundException("Admin Not Found");
@@ -141,7 +144,7 @@ export class UserAdminService {
     }
   }
 
-  public async addStudent(body: CreateUserDto, media: any, req: Request): Promise<any> {
+  public async addStudent(body: CreateUserDto, media: any, req: any): Promise<any> {
     try {
       let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
       if (!school) throw new NotFoundException("School Not Found");
@@ -170,7 +173,7 @@ export class UserAdminService {
     }
   }
 
-  public async listStudents(body: SearchDTO, req: Request): Promise<any> {
+  public async listStudents(body: SearchDTO, req: any): Promise<any> {
     try {
       const searchRegex = new RegExp(body.search?.toString(), 'i');
       const LIMIT_PAGE: number = body?.limit ?? 10;
@@ -238,6 +241,17 @@ export class UserAdminService {
       });
     } catch (error) {
       this.logger.error(this.addStudent.name);
+      console.log(error);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async deleteStudent(body: ByIdDto, req: any): Promise<any> {
+    const users: Users = <Users>req.user
+    try {
+
+    } catch (error) {
+      this.logger.error(this.deleteStudent.name);
       console.log(error);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }

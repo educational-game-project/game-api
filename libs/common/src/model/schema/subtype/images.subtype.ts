@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { AbstractDocument } from '../abstract.schema';
 
 @Schema({ timestamps: true })
-export class Images extends AbstractDocument {
+export class Image extends AbstractDocument {
   @Prop({ type: String, default: null })
   originalname: string;
 
@@ -25,9 +25,9 @@ export class Images extends AbstractDocument {
   deletedAt?: Date;
 }
 
-export const ImagesSchema = SchemaFactory.createForClass(Images);
+export const ImageSchema = SchemaFactory.createForClass(Image);
 
-ImagesSchema.pre('find', function () { this.where({ deletedAt: null }); });
-ImagesSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
-ImagesSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
-ImagesSchema.pre('count', function () { this.where({ deletedAt: null }); });
+ImageSchema.pre('find', function () { this.where({ deletedAt: null }); });
+ImageSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
+ImageSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
+ImageSchema.pre('count', function () { this.where({ deletedAt: null }); });

@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
 import { UserRole } from '@app/common/enums/role.enum';
-import { Images } from './subtype/images.subtype';
+import { Image } from './subtype/images.subtype';
 import { Schools } from './schools.schema';
 
 @Schema({ timestamps: true })
@@ -27,8 +27,8 @@ export class Users extends AbstractDocument {
   deletedAt?: Date;
 
   //================================== Relations ======================================
-  @Prop({ type: [{ type: Types.ObjectId, ref: Images.name, default: null }] })
-  images: Images[];
+  @Prop({ type: [{ type: Types.ObjectId, ref: Image.name, default: null }] })
+  images: Image[];
 
   @Prop({ type: Types.ObjectId, ref: 'Schools', default: null })
   school: Schools;

@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
-import { Images } from './subtype/images.subtype';
 import { Users } from './users.schema';
 import { GameType } from '@app/common/enums/gameType.enum';
 import { Records } from './records.schema';

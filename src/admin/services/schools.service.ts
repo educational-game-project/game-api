@@ -10,7 +10,7 @@ import { CreateSchoolDTO, EditSchoolDTO } from '@app/common/dto/school.dto';
 import { SearchDTO } from '@app/common/dto/search.dto';
 import { dateToString } from '@app/common/pipeline/dateToString.pipeline';
 import { ByIdDto } from '@app/common/dto/byId.dto';
-import { Images } from '@app/common/model/schema/subtype/images.subtype';
+import { Image } from '@app/common/model/schema/subtype/images.subtype';
 import { ImagesService } from '@app/common/helpers/file.helpers';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class SchoolAdminService {
 
     private readonly logger = new Logger(SchoolAdminService.name);
 
-    public async create(body: CreateSchoolDTO, media: Array<Images>, req: Request): Promise<any> {
+    public async create(body: CreateSchoolDTO, media: Array<Image>, req: Request): Promise<any> {
         try {
             const { name, address } = body;
 

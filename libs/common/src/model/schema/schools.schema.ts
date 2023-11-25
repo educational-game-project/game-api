@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
-import { Images } from './subtype/images.subtype';
+import { Image } from './subtype/images.subtype';
 import { Users } from './users.schema';
 
 @Schema({ timestamps: true })
@@ -26,8 +26,8 @@ export class Schools extends AbstractDocument {
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Users', default: null }] })
   admins: Users[];
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: Images.name, default: null }] })
-  images: Images[];
+  @Prop({ type: [{ type: Types.ObjectId, ref: Image.name, default: null }] })
+  images: Image[];
 }
 
 export const SchoolsSchema = SchemaFactory.createForClass(Schools);

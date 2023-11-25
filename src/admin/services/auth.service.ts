@@ -25,12 +25,14 @@ export class AuthAdminService {
       }
       if (body.email) q.email = body.email
       if (body.phoneNumber) q.phoneNumber = body.phoneNumber
-      let user = await this.usersModel.findOne(q).select("+password");
+      let user = await this.usersModel.findOne(q).select("+password").populate('images');
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
       // Check password
       const isMatchPassword = this.authHelper.isPasswordValid(body.password, user.password);
       if (!isMatchPassword) return this.responseService.error(HttpStatus.CONFLICT, `password ${body.email} is incorrect`);
+
+      user = user.toObject()
       delete user.password
 
       const tokens = await this.authHelper.generateTokens(user?._id, { role: user.role, email: user?.email, phoneNumber: user?.phoneNumber });
