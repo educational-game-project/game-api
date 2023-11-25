@@ -18,10 +18,10 @@ export class AppService {
     if (!superAdmin) {
       const hashedPassword = this.authHelper.encodePassword('SuperAdmin123');
       const createUser = await this.userModel.create({ ...userSeeder[0], password: hashedPassword });
-      if (!createUser) return `Failed Create Users`;
-      return `${createUser.name} Successfully Created.`
+      if (!createUser) return { message: `Failed Create Users` };
+      return { message: `${createUser.name} Successfully Created.` }
     }
 
-    return 'Welcome to Game API. Created by Iwan Suryaningrat.';
+    return { message: 'Welcome to Game API. Created by Iwan Suryaningrat.' };
   }
 }
