@@ -14,7 +14,7 @@ export class AuthenticationGuard implements CanActivate {
             const token = this.extractTokenFromHeader(request);
             const decoded = this.authHelper.validateToken(token)
             const user = await this.authHelper.validateUser(decoded);
-            if (!token) throw new UnauthorizedException();
+            if (!token || !user) throw new UnauthorizedException();
 
             request.user = user;
         } catch (error) {

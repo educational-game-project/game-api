@@ -4,10 +4,10 @@ import { AbstractDocument } from '../abstract.schema';
 @Schema({ timestamps: true })
 export class Image extends AbstractDocument {
   @Prop({ type: String, default: null })
-  originalname: string;
+  originalName: string;
 
   @Prop({ type: String, default: null })
-  filename: string;
+  fileName: string;
 
   @Prop({ type: String, required: true })
   fileLink: string;

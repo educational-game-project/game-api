@@ -4,26 +4,32 @@ import { Image } from '../model/schema/subtype/images.subtype';
 import { Model } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
-import { join } from 'path';
+import { extname, join } from 'path';
+import { FileUploader } from '../utils/fileUploader.util';
 
 @Injectable()
 export class ImagesService {
     constructor(
         @InjectModel(Image.name) private readonly imageModel: Model<Image>,
         @Inject(ConfigService) private readonly configService: ConfigService,
+        @Inject(FileUploader) private uploader: FileUploader,
     ) { }
 
     private readonly logger = new Logger(ImagesService.name);
 
     private HOST = this.configService.get<number>('HOST');
 
-    async define(files: Array<any>): Promise<any> {
+    async define(files: Array<Express.Multer.File>): Promise<any> {
         try {
             const media = await Promise.all(files?.map(async (file) => {
-                const link = `${this.HOST}public/${file.filename}`;
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+                const ext = extname(file?.originalname);
+                file.filename = `game_${uniqueSuffix}${ext}`;
+
+                const link = await this.uploader.uploadFile(file)
                 const uploaded = await this.imageModel.create({
-                    originalname: file.originalname,
-                    filename: file.filename,
+                    originalName: file.originalname,
+                    fileName: file.filename,
                     fileLink: link,
                     mimeType: file.mimetype,
                     size: file?.size,
@@ -45,7 +51,7 @@ export class ImagesService {
             const media = await Promise.all(files.map(async (item) => {
                 let image = await this.imageModel.findOne({ _id: item._id });
                 if (image) {
-                    await this.unlink(image.filename)
+                    await this.unlink(image.fileName)
                     image.deletedAt = new Date();
                     await image.save();
                     return image

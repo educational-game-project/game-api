@@ -15,6 +15,7 @@ import { AuthAdminService } from './admin/services/auth.service';
 import { UserAdminService } from './admin/services/user.service';
 import { ImagesService } from '@app/common/helpers/file.helpers';
 import { AppController } from './user/controllers/app.controller';
+import { FileUploader } from '@app/common/utils/fileUploader.util';
 import { DatabaseModule } from '@app/common/model/database.module';
 import { UserController } from './user/controllers/user.controller';
 import { AuthController } from './user/controllers/auth.controller';
@@ -92,6 +93,7 @@ import { AnalysisAdminController } from './admin/controllers/analysis.controller
     ScoreAdminService,
     UserAdminService,
     RecordService,
+    FileUploader,
   ],
 })
 export class AppModule { }

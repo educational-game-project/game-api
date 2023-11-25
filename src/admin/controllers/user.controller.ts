@@ -4,7 +4,6 @@ import { Request } from 'express';
 import { fileStorage, imageFilter, limitImageUpload } from '@app/common/utils/validators/file.validator';
 import { diskStorage } from 'multer';
 import { ImagesService } from '@app/common/helpers/file.helpers';
-import { ResponseService } from '@app/common/response/response.service';
 import { SearchDTO } from '@app/common/dto/search.dto';
 import { ByIdDto } from '@app/common/dto/byId.dto';
 import { UserAdminService } from '../services/user.service';
@@ -20,7 +19,6 @@ export class UserAdminController {
   constructor(
     private readonly userService: UserAdminService,
     @Inject(ImagesService) private imageHelper: ImagesService,
-    @Inject(ResponseService) private readonly responseService: ResponseService,
   ) { }
 
   private readonly logger = new Logger(UserAdminController.name);
@@ -29,7 +27,7 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
-  @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
+  @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload() }))
   async create(@Body() body: CreateUserDto, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
     try {
       const files = media ? await this.imageHelper.define([media]) : [];
@@ -62,7 +60,7 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
-  @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
+  @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload() }))
   async addStudent(@Body() body: CreateUserDto, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
     try {
       const files = media ? await this.imageHelper.define([media]) : [];

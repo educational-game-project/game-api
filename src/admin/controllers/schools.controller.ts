@@ -30,7 +30,7 @@ export class SchoolAdminController {
 
     @Post()
     @ResponseStatusCode()
-    @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
+    @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload() }))
     async create(@Body() body: CreateSchoolDTO, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
         try {
             const files = media ? await this.imageService.define([media]) : [];
@@ -45,7 +45,7 @@ export class SchoolAdminController {
 
     @Put()
     @ResponseStatusCode()
-    @UseInterceptors(AnyFilesInterceptor({ fileFilter: imageFilter, limits: limitImageUpload(), storage: diskStorage(fileStorage()) }))
+    @UseInterceptors(AnyFilesInterceptor({ fileFilter: imageFilter, limits: limitImageUpload() }))
     async edit(@Body() body: EditSchoolDTO, @UploadedFiles() media: Array<Express.Multer.File>, @Req() req: Request): Promise<any> {
         try {
             const files = media?.length ? await this.imageService.define(media) : [];
