@@ -1,8 +1,7 @@
 import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Req, UploadedFile, UseGuards, UseInterceptors, HttpException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
-import { fileStorage, imageFilter, limitImageUpload } from '@app/common/utils/validators/file.validator';
-import { diskStorage } from 'multer';
+import { imageFilter, limitImageUpload } from '@app/common/utils/validators/file.validator';
 import { ImagesService } from '@app/common/helpers/file.helpers';
 import { SearchDTO } from '@app/common/dto/search.dto';
 import { ByIdDto } from '@app/common/dto/byId.dto';

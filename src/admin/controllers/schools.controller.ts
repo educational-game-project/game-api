@@ -1,13 +1,11 @@
 import { FileInterceptor, AnyFilesInterceptor } from '@nestjs/platform-express';
 import { SchoolAdminService } from '../services/schools.service';
-import { BadRequestException, Body, Controller, Delete, HttpCode, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, InternalServerErrorException, HttpException } from '@nestjs/common';
+import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, HttpException } from '@nestjs/common';
 import { Request } from 'express';
-import { fileStorage, imageFilter, limitImageUpload } from '@app/common/utils/validators/file.validator';
-import { diskStorage } from 'multer';
+import { imageFilter, limitImageUpload } from '@app/common/utils/validators/file.validator';
 import { ImagesService } from '@app/common/helpers/file.helpers';
 import { CreateSchoolDTO, EditSchoolDTO } from '@app/common/dto/school.dto';
 import { ResponseService } from '@app/common/response/response.service';
-import { StringHelper } from '@app/common/helpers/string.helpers';
 import { SearchDTO } from '@app/common/dto/search.dto';
 import { ByIdDto } from '@app/common/dto/byId.dto';
 import { AuthenticationGuard } from '@app/common/auth/authentication.guard';

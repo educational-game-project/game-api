@@ -55,20 +55,6 @@ export const videoFilter = (req, file, callback) => {
 
 export const limitImageUpload = (maxFile?: number) => {
     return {
-        fileSize: maxFile ?? 10 * 1024 * 1024 // default 7 mb
+        fileSize: maxFile ?? 10 * 1024 * 1024
     }
-}
-
-export const fileStorage = () => {
-    const destination = (req, file, cb) => {
-        cb(null, './public')
-    };
-    const filename = (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        const ext = extname(file?.originalname);
-        const filename = `game_${uniqueSuffix}${ext}`;
-        cb(null, filename)
-    }
-
-    return { destination, filename }
 }

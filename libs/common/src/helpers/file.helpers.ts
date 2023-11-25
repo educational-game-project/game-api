@@ -24,12 +24,12 @@ export class ImagesService {
             const media = await Promise.all(files?.map(async (file) => {
                 const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
                 const ext = extname(file?.originalname);
-                file.filename = `game_${uniqueSuffix}${ext}`;
+                file.filename = `game_${uniqueSuffix}`;
 
                 const link = await this.uploader.uploadFile(file)
                 const uploaded = await this.imageModel.create({
                     originalName: file.originalname,
-                    fileName: file.filename,
+                    fileName: file.filename + ext,
                     fileLink: link,
                     mimeType: file.mimetype,
                     size: file?.size,

@@ -26,7 +26,7 @@ export class FileUploader {
         try {
             const { filename } = file;
             const fileBuffer = Buffer.from(file.buffer);
-            let res: any = await this.uploadFileToCloudinary(fileBuffer, filename.split('.')[0])
+            let res: any = await this.uploadFileToCloudinary(fileBuffer, filename)
 
             return res?.secure_url
         } catch (error) {
