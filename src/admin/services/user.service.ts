@@ -2,10 +2,10 @@ import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpExceptio
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, Types, } from 'mongoose';
 import { CreateUserDto, } from '@app/common/dto/user.dto';
-import { Users } from '@app/common/model/schema/users.schema';
+import { User } from '@app/common/model/schema/users.schema';
 import { ResponseService } from '@app/common/response/response.service';
 import { StringHelper } from '@app/common/helpers/string.helpers';
-import { Schools } from '@app/common/model/schema/schools.schema';
+import { School } from '@app/common/model/schema/schools.schema';
 import { UserRole } from '@app/common/enums/role.enum';
 import { SearchDTO } from '@app/common/dto/search.dto';
 import { dateToString } from '@app/common/pipeline/dateToString.pipeline';
@@ -15,8 +15,8 @@ import { AuthHelper } from '@app/common/helpers/auth.helper';
 @Injectable()
 export class UserAdminService {
   constructor(
-    @InjectModel(Users.name) private usersModel: Model<Users>,
-    @InjectModel(Schools.name) private schoolsModel: Model<Schools>,
+    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(School.name) private schoolModel: Model<School>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
   ) { }
@@ -27,11 +27,11 @@ export class UserAdminService {
     try {
       const password = body?.password ? this.authHelper.encodePassword(body.password) : this.authHelper.encodePassword('Admin1234');
 
-      let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body?.schoolId) }).populate('images');
+      let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body?.schoolId) }).populate('images');
       if (!school) throw new NotFoundException("School Not Found");
 
       if (media?.length) media[0].isDefault = true;
-      let admin = await this.usersModel.create({
+      let admin = await this.userModel.create({
         name: body.name,
         email: body?.email ?? null,
         phoneNumber: body?.phoneNumber ?? null,
@@ -77,7 +77,7 @@ export class UserAdminService {
       const pipeline: PipelineStage[] = [
         {
           $lookup: {
-            from: 'schools',
+            from: 'school',
             foreignField: '_id',
             localField: 'school',
             as: "school",
@@ -103,11 +103,11 @@ export class UserAdminService {
         }
       ];
 
-      const admin = await this.usersModel.aggregate(pipeline)
+      const admin = await this.userModel.aggregate(pipeline)
         .skip(SKIP)
         .limit(LIMIT_PAGE);
 
-      const total = await this.usersModel.aggregate(pipeline).count("total");
+      const total = await this.userModel.aggregate(pipeline).count("total");
 
       return this.responseService.paging(StringHelper.successResponse('admin', 'list'), admin, {
         totalData: Number(total[0]?.total) ?? 0,
@@ -124,12 +124,12 @@ export class UserAdminService {
 
   public async deleteAdmin(body: ByIdDto, req: any): Promise<any> {
     try {
-      let admin = await this.usersModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.ADMIN });
+      let admin = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.ADMIN });
       if (!admin) throw new NotFoundException("Admin Not Found");
 
       admin.deletedAt = new Date();
 
-      let school = await this.schoolsModel.findOne({ _id: admin.school });
+      let school = await this.schoolModel.findOne({ _id: admin.school });
       if (!school) throw new NotFoundException("School Not Found");
 
       school.admins = school.admins.filter(i => i.toString() !== admin._id.toString());
@@ -146,13 +146,13 @@ export class UserAdminService {
 
   public async addStudent(body: CreateUserDto, media: any, req: any): Promise<any> {
     try {
-      let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
+      let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
       if (!school) throw new NotFoundException("School Not Found");
 
-      const check = await this.usersModel.findOne({ role: UserRole.USER, name: body.name, school: school._id })
+      const check = await this.userModel.findOne({ role: UserRole.USER, name: body.name, school: school._id })
       if (check) throw new BadRequestException("Student Already Exist")
 
-      let student = await this.usersModel.create({
+      let student = await this.userModel.create({
         name: body.name,
         email: body?.email ?? null,
         phoneNumber: body?.phoneNumber ?? null,
@@ -193,7 +193,7 @@ export class UserAdminService {
       const pipeline: PipelineStage[] = [
         {
           $lookup: {
-            from: 'schools',
+            from: 'school',
             foreignField: '_id',
             localField: 'school',
             as: "school",
@@ -227,11 +227,11 @@ export class UserAdminService {
         }
       ];
 
-      const students = await this.usersModel.aggregate(pipeline)
+      const students = await this.userModel.aggregate(pipeline)
         .skip(SKIP)
         .limit(LIMIT_PAGE);
 
-      const total = await this.usersModel.aggregate(pipeline).count("total")
+      const total = await this.userModel.aggregate(pipeline).count("total")
 
       return this.responseService.paging(StringHelper.successResponse('student', 'list'), students, {
         totalData: Number(total[0]?.total) ?? 0,
@@ -247,7 +247,7 @@ export class UserAdminService {
   }
 
   public async deleteStudent(body: ByIdDto, req: any): Promise<any> {
-    const users: Users = <Users>req.user
+    const users: User = <User>req.user
     try {
 
     } catch (error) {

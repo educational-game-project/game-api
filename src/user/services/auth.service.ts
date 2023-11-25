@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from 'mongoose';
 import { LoginUserDto } from '@app/common/dto/auth.dto';
-import { Users } from '@app/common/model/schema/users.schema';
+import { User } from '@app/common/model/schema/users.schema';
 import { ResponseService } from '@app/common/response/response.service';
 import { StringHelper } from '@app/common/helpers/string.helpers';
 import { UserRole } from '@app/common/enums/role.enum';
@@ -12,7 +12,7 @@ import { AuthHelper } from '@app/common/helpers/auth.helper';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(Users.name) private usersModel: Model<Users>,
+    @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
   ) { }
@@ -21,7 +21,7 @@ export class AuthService {
 
   public async login(body: LoginUserDto): Promise<any> {
     try {
-      let user = await this.usersModel.findOne({ name: body.name, role: UserRole.USER }).populate('images');
+      let user = await this.userModel.findOne({ name: body.name, role: UserRole.USER }).populate('images');
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
       const tokens = await this.authHelper.generateTokens(user._id, { role: user.role })

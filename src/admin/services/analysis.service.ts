@@ -4,14 +4,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ResponseService } from '@app/common/response/response.service';
 import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from 'mongoose';
 import { CreateAnalysisDto, UpdateAnalysisDto, } from '@app/common/dto/analysis.dto';
-import { Users } from '@app/common/model/schema/users.schema';
+import { User } from '@app/common/model/schema/users.schema';
 import { Analysis } from '@app/common/model/schema/analysis.schema';
 
 @Injectable()
 export class AnalysisAdminService {
   constructor(
     @InjectModel(Analysis.name) private AnalysisModel: Model<Analysis>,
-    @InjectModel(Users.name) private usersModel: Model<Users>,
+    @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
   ) { }
 

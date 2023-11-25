@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
-import { Users } from './users.schema';
+import { User } from './users.schema';
 import { GameType } from '../../enums/gameType.enum';
 
 @Schema({ timestamps: true })
-export class Levels extends AbstractDocument {
+export class Level extends AbstractDocument {
   //================================== Attributes =======================================
   @Prop({ type: Number, default: 1 })
   current: number;
@@ -23,13 +23,13 @@ export class Levels extends AbstractDocument {
   deletedAt?: Date;
 
   //================================== Relations ======================================
-  @Prop({ type: Types.ObjectId, ref: Users.name, default: null })
-  user: Users;
+  @Prop({ type: Types.ObjectId, ref: User.name, default: null })
+  user: User;
 }
 
-export const LevelsSchema = SchemaFactory.createForClass(Levels);
+export const LevelSchema = SchemaFactory.createForClass(Level);
 
-LevelsSchema.pre('find', function () { this.where({ deletedAt: null }); });
-LevelsSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
-LevelsSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
-LevelsSchema.pre('count', function () { this.where({ deletedAt: null }); });
+LevelSchema.pre('find', function () { this.where({ deletedAt: null }); });
+LevelSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
+LevelSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
+LevelSchema.pre('count', function () { this.where({ deletedAt: null }); });

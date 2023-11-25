@@ -2,9 +2,9 @@ import { HttpStatus, Inject, Injectable, Logger, InternalServerErrorException, N
 import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from 'mongoose';
-import { Users } from '@app/common/model/schema/users.schema';
+import { User } from '@app/common/model/schema/users.schema';
 import { ResponseService } from '@app/common/response/response.service';
-import { Schools } from '@app/common/model/schema/schools.schema';
+import { School } from '@app/common/model/schema/schools.schema';
 import { StringHelper } from '@app/common/helpers/string.helpers';
 import { CreateSchoolDTO, EditSchoolDTO } from '@app/common/dto/school.dto';
 import { SearchDTO } from '@app/common/dto/search.dto';
@@ -16,8 +16,8 @@ import { ImagesService } from '@app/common/helpers/file.helpers';
 @Injectable()
 export class SchoolAdminService {
     constructor(
-        @InjectModel(Schools.name) private schoolsModel: Model<Schools>,
-        @InjectModel(Users.name) private usersModel: Model<Users>,
+        @InjectModel(School.name) private schoolModel: Model<School>,
+        @InjectModel(User.name) private userModel: Model<User>,
         @Inject(ImagesService) private imageService: ImagesService,
         @Inject(ResponseService) private readonly responseService: ResponseService,
     ) { }
@@ -28,10 +28,10 @@ export class SchoolAdminService {
         try {
             const { name, address } = body;
 
-            const exist = await this.schoolsModel.count({ name });
+            const exist = await this.schoolModel.count({ name });
             if (exist > 0) throw new BadRequestException("School Already Exist")
 
-            const school = await this.schoolsModel.create({
+            const school = await this.schoolModel.create({
                 name,
                 address,
                 images: media ?? []
@@ -49,7 +49,7 @@ export class SchoolAdminService {
         try {
             const { id, name, address } = body;
 
-            let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(id) });
+            let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(id) });
             if (!school) throw new NotFoundException("School Not Found");
 
             if (name) school.name = name;
@@ -118,9 +118,9 @@ export class SchoolAdminService {
                 }
             ];
 
-            const schools = await this.schoolsModel.aggregate(pipeline).skip(SKIP).limit(LIMIT_PAGE);
+            const schools = await this.schoolModel.aggregate(pipeline).skip(SKIP).limit(LIMIT_PAGE);
 
-            const total = await this.schoolsModel.aggregate(pipeline).count('total');
+            const total = await this.schoolModel.aggregate(pipeline).count('total');
 
             return this.responseService.paging(StringHelper.successResponse('schoool', 'list'), schools, {
                 totalData: Number(total[0]?.total) ?? 0,
@@ -137,7 +137,7 @@ export class SchoolAdminService {
 
     public async detail(body: ByIdDto, req: Request): Promise<any> {
         try {
-            const school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body.id) })
+            const school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body.id) })
                 .populate({
                     path: "admins",
                     select: "name role images email phoneNumber",
@@ -158,7 +158,7 @@ export class SchoolAdminService {
 
     public async delete(body: ByIdDto, req: Request): Promise<any> {
         try {
-            let school = await this.schoolsModel.findOne({ _id: new Types.ObjectId(body.id) });
+            let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body.id) });
             if (!school) throw new NotFoundException("School Not Found");
 
             await this.imageService.delete(school.images);
@@ -166,7 +166,7 @@ export class SchoolAdminService {
             school.deletedAt = new Date()
             school.save();
 
-            let users = await this.usersModel.find({ school: school._id });
+            let users = await this.userModel.find({ school: school._id });
 
             if (users.length > 0) users.forEach(async (item) => {
                 item.school = null;

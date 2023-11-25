@@ -1,18 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
-import { Users } from './users.schema';
+import { User } from './users.schema';
 import { GameType } from '@app/common/enums/gameType.enum';
-import { Records } from './records.schema';
+import { Record } from './records.schema';
 
 @Schema({ timestamps: true })
-export class Scores extends AbstractDocument {
+export class Score extends AbstractDocument {
   //================================== Attributes =======================================
   @Prop({ type: String, enum: GameType, default: null })
   game: string;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: Records.name, default: null }] })
-  records: Records[];
+  @Prop({ type: [{ type: Types.ObjectId, ref: Record.name, default: null }] })
+  records: Record[];
 
   @Prop({ type: Number, required: true })
   value: number;
@@ -24,13 +24,13 @@ export class Scores extends AbstractDocument {
   deletedAt?: Date;
 
   //================================== Relations ======================================
-  @Prop({ type: Types.ObjectId, ref: Users.name, default: null })
-  user: Users;
+  @Prop({ type: Types.ObjectId, ref: User.name, default: null })
+  user: User;
 }
 
-export const ScoresSchema = SchemaFactory.createForClass(Scores);
+export const ScoreSchema = SchemaFactory.createForClass(Score);
 
-ScoresSchema.pre('find', function () { this.where({ deletedAt: null }); });
-ScoresSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
-ScoresSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
-ScoresSchema.pre('count', function () { this.where({ deletedAt: null }); });
+ScoreSchema.pre('find', function () { this.where({ deletedAt: null }); });
+ScoreSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
+ScoreSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
+ScoreSchema.pre('count', function () { this.where({ deletedAt: null }); });

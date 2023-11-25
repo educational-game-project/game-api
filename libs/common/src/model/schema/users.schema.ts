@@ -3,10 +3,10 @@ import { Types } from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
 import { UserRole } from '@app/common/enums/role.enum';
 import { Image } from './subtype/images.subtype';
-import { Schools } from './schools.schema';
+import { School } from './schools.schema';
 
 @Schema({ timestamps: true })
-export class Users extends AbstractDocument {
+export class User extends AbstractDocument {
   //================================== Attributes =======================================
   @Prop({ type: String, required: true })
   name: string;
@@ -31,16 +31,16 @@ export class Users extends AbstractDocument {
   images: Image[];
 
   @Prop({ type: Types.ObjectId, ref: 'Schools', default: null })
-  school: Schools;
+  school: School;
 }
 
-export const UsersSchema = SchemaFactory.createForClass(Users);
+export const UserSchema = SchemaFactory.createForClass(User);
 
-UsersSchema.index({ geolocation: '2dsphere' });
-UsersSchema.index({ email: 1 });
-UsersSchema.index({ phoneNumber: 1 });
+UserSchema.index({ geolocation: '2dsphere' });
+UserSchema.index({ email: 1 });
+UserSchema.index({ phoneNumber: 1 });
 
-UsersSchema.pre('find', function () { this.where({ deletedAt: null }); });
-UsersSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
-UsersSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
-UsersSchema.pre('count', function () { this.where({ deletedAt: null }); });
+UserSchema.pre('find', function () { this.where({ deletedAt: null }); });
+UserSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
+UserSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
+UserSchema.pre('count', function () { this.where({ deletedAt: null }); });

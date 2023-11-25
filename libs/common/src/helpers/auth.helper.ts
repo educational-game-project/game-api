@@ -6,14 +6,14 @@ import { IResponseError } from '@app/common/response/response.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
-import { Users } from '../model/schema/users.schema';
+import { User } from '../model/schema/users.schema';
 
 @Injectable()
 export class AuthHelper {
     constructor(
         private readonly jwt: JwtService,
 
-        @InjectModel(Users.name) private readonly userModel: Model<Users>,
+        @InjectModel(User.name) private readonly userModel: Model<User>,
 
         @Inject(ResponseService) private readonly responseService: ResponseService,
         @Inject(ConfigService) private readonly configService: ConfigService,
@@ -32,7 +32,7 @@ export class AuthHelper {
     }
 
     // Get User by User ID we get from decode()
-    public async validateUser(decoded: any): Promise<Users> {
+    public async validateUser(decoded: any): Promise<User> {
         const user = await this.userModel.findOne({ _id: new Types.ObjectId(decoded._id) });
 
         return user;
@@ -87,7 +87,7 @@ export class AuthHelper {
 
         if (!decoded) return this.responseService.error(HttpStatus.UNAUTHORIZED, 'User Unauthorized!', { value: '', constraint: '', property: '' });
 
-        const user: Users = await this.validateUser(decoded);
+        const user: User = await this.validateUser(decoded);
 
         if (!user) return this.responseService.error(HttpStatus.UNAUTHORIZED, 'User Unauthorized!', { value: '', constraint: '', property: '' });
 

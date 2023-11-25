@@ -2,8 +2,8 @@ import { HttpStatus, Inject, Injectable, Logger, Body } from '@nestjs/common';
 import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, } from 'mongoose';
-import { Levels } from '@app/common/model/schema/levels.schema';
-import { Users } from '@app/common/model/schema/users.schema';
+import { Level } from '@app/common/model/schema/levels.schema';
+import { User } from '@app/common/model/schema/users.schema';
 import { ResponseService } from '@app/common/response/response.service';
 import { initLevelDTO } from '@app/common/dto/levels.dto';
 import { StringHelper } from '@app/common/helpers/string.helpers';
@@ -13,23 +13,23 @@ import { GameNameDTO } from '@app/common/dto/global.dto';
 @Injectable()
 export class LevelsService {
   constructor(
-    @InjectModel(Levels.name) private levelsModel: Model<Levels>,
-    @InjectModel(Users.name) private usersModel: Model<Users>,
+    @InjectModel(Level.name) private levelModel: Model<Level>,
+    @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
   ) { }
 
   private readonly logger = new Logger(LevelsService.name);
 
   public async initLevel(body: initLevelDTO, req: any): Promise<any> {
-    const users: Users = <Users>req.user
+    const users: User = <User>req.user
     try {
-      let user = await this.usersModel.findOne({ _id: users._id });
+      let user = await this.userModel.findOne({ _id: users._id });
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
-      let currentLevel = await this.levelsModel.findOne({ user: user._id, game: body.game, isValid: true, createdAt: { $gte: TimeHelper.getToday() } });
+      let currentLevel = await this.levelModel.findOne({ user: user._id, game: body.game, isValid: true, createdAt: { $gte: TimeHelper.getToday() } });
       if (currentLevel) return this.responseService.success(true, StringHelper.successResponse('level', 'initiated'), currentLevel);
 
-      const level = await this.levelsModel.create({
+      const level = await this.levelModel.create({
         ...body,
         isValid: true,
         user: user._id
@@ -44,12 +44,12 @@ export class LevelsService {
   }
 
   public async getLevel(body: GameNameDTO, req: any): Promise<any> {
-    const users: Users = <Users>req.user
+    const users: User = <User>req.user
     try {
-      let user = await this.usersModel.findOne({ _id: users._id });
+      let user = await this.userModel.findOne({ _id: users._id });
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
-      let currentLevel = await this.levelsModel.findOne({ user: user._id, game: body.game, isValid: true, createdAt: { $gte: TimeHelper.getToday() } });
+      let currentLevel = await this.levelModel.findOne({ user: user._id, game: body.game, isValid: true, createdAt: { $gte: TimeHelper.getToday() } });
       if (!currentLevel) {
         const init = await this.initLevel({ current: 1, max: 3, ...body }, req);
         currentLevel = init.data;
@@ -64,12 +64,12 @@ export class LevelsService {
   }
 
   public async updateLevel(body: GameNameDTO, req: any) {
-    const users: Users = <Users>req.user
+    const users: User = <User>req.user
     try {
-      let user = await this.usersModel.findOne({ _id: users._id });
+      let user = await this.userModel.findOne({ _id: users._id });
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
-      let currentLevel = await this.levelsModel.findOne({ user: user._id, game: body.game, isValid: true, createdAt: { $gte: TimeHelper.getToday() } });
+      let currentLevel = await this.levelModel.findOne({ user: user._id, game: body.game, isValid: true, createdAt: { $gte: TimeHelper.getToday() } });
       if (!currentLevel) {
         const init = await this.initLevel({ current: 1, max: 3, ...body }, req);
         currentLevel = init.data;

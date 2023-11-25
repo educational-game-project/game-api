@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
-import { Users } from './users.schema';
+import { User } from './users.schema';
 import { GameType } from '@app/common/enums/gameType.enum';
 
 export enum StatusRecord {
@@ -11,7 +11,7 @@ export enum StatusRecord {
 }
 
 @Schema({ timestamps: true })
-export class Records extends AbstractDocument {
+export class Record extends AbstractDocument {
   //================================== Attributes =======================================
   @Prop({ type: String, enum: GameType, default: null })
   game: string;
@@ -38,13 +38,13 @@ export class Records extends AbstractDocument {
   deletedAt?: Date;
 
   //================================== Relations ======================================
-  @Prop({ type: Types.ObjectId, ref: Users.name, default: null })
-  user: Users;
+  @Prop({ type: Types.ObjectId, ref: User.name, default: null })
+  user: User;
 }
 
-export const RecordsSchema = SchemaFactory.createForClass(Records);
+export const RecordSchema = SchemaFactory.createForClass(Record);
 
-RecordsSchema.pre('find', function () { this.where({ deletedAt: null }); });
-RecordsSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
-RecordsSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
-RecordsSchema.pre('count', function () { this.where({ deletedAt: null }); });
+RecordSchema.pre('find', function () { this.where({ deletedAt: null }); });
+RecordSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
+RecordSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
+RecordSchema.pre('count', function () { this.where({ deletedAt: null }); });

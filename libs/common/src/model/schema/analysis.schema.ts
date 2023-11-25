@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
-import { Users } from './users.schema';
+import { User } from './users.schema';
 
 @Schema({ timestamps: true })
 export class Analysis extends AbstractDocument {
@@ -11,8 +11,8 @@ export class Analysis extends AbstractDocument {
   deletedAt?: Date;
 
   //================================== Relations ======================================
-  @Prop({ type: Types.ObjectId, ref: Users.name, default: null })
-  user: Users;
+  @Prop({ type: Types.ObjectId, ref: User.name, default: null })
+  user: User;
 }
 
 export const AnalysisSchema = SchemaFactory.createForClass(Analysis);

@@ -1,8 +1,8 @@
 import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Users } from '@app/common/model/schema/users.schema';
-import { Records, StatusRecord } from '@app/common/model/schema/records.schema';
+import { User } from '@app/common/model/schema/users.schema';
+import { Record, StatusRecord } from '@app/common/model/schema/records.schema';
 import { ResponseService } from '@app/common/response/response.service';
 import { StringHelper } from '@app/common/helpers/string.helpers';
 import { CreateReportDto, ReportType } from '@app/common/dto/report.dto';
@@ -10,20 +10,20 @@ import { CreateReportDto, ReportType } from '@app/common/dto/report.dto';
 @Injectable()
 export class RecordService {
   constructor(
-    @InjectModel(Records.name) private recordsModel: Model<Records>,
-    @InjectModel(Users.name) private usersModel: Model<Users>,
+    @InjectModel(Record.name) private recordModel: Model<Record>,
+    @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
   ) { }
 
   private readonly logger = new Logger(RecordService.name);
 
   public async record(body: CreateReportDto, req: any): Promise<any> {
-    const users: Users = <Users>req.user
+    const users: User = <User>req.user
     try {
-      let user = await this.usersModel.findOne({ _id: users._id });
+      let user = await this.userModel.findOne({ _id: users._id });
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('user'));
 
-      let current = await this.recordsModel.findOne({ user: user._id, game: body.game, level: body.level, isValid: true })
+      let current = await this.recordModel.findOne({ user: user._id, game: body.game, level: body.level, isValid: true })
       if (!current) current = await this.initRecord(body, req);
 
       switch (body.type) {
@@ -55,9 +55,9 @@ export class RecordService {
   }
 
   public async initRecord(body: CreateReportDto, req: any): Promise<any> {
-    const users: Users = <Users>req.user
+    const users: User = <User>req.user
     try {
-      const record = await this.recordsModel.create({
+      const record = await this.recordModel.create({
         game: body.game,
         level: body.level,
         time: [],
