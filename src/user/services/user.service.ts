@@ -1,7 +1,7 @@
 import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateUserDto } from '@app/common/dto/user.dto';
 import { User } from '@app/common/model/schema/users.schema';
 import { ResponseService } from '@app/common/response/response.service';
@@ -11,7 +11,7 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-  ) { }
+  ) {}
 
   private readonly logger = new Logger(UserService.name);
 

@@ -27,7 +27,15 @@ export class Image extends AbstractDocument {
 
 export const ImageSchema = SchemaFactory.createForClass(Image);
 
-ImageSchema.pre('find', function () { this.where({ deletedAt: null }); });
-ImageSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
-ImageSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
-ImageSchema.pre('count', function () { this.where({ deletedAt: null }); });
+ImageSchema.pre('find', function () {
+  this.where({ deletedAt: null });
+});
+ImageSchema.pre('findOne', function () {
+  this.where({ deletedAt: null });
+});
+ImageSchema.pre('findOneAndUpdate', function () {
+  this.where({ deletedAt: null });
+});
+ImageSchema.pre('count', function () {
+  this.where({ deletedAt: null });
+});

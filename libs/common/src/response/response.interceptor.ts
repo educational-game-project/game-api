@@ -1,4 +1,10 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -23,9 +29,7 @@ export class ResponseInterceptor
 
         // response error must in object
         if (typeof data !== 'object') {
-          throw new InternalServerErrorException(
-            'Data not object',
-          );
+          throw new InternalServerErrorException('Data not object');
         }
 
         const { statusCode, ...others } = data;

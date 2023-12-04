@@ -30,7 +30,15 @@ export class Score extends AbstractDocument {
 
 export const ScoreSchema = SchemaFactory.createForClass(Score);
 
-ScoreSchema.pre('find', function () { this.where({ deletedAt: null }); });
-ScoreSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
-ScoreSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
-ScoreSchema.pre('count', function () { this.where({ deletedAt: null }); });
+ScoreSchema.pre('find', function () {
+  this.where({ deletedAt: null });
+});
+ScoreSchema.pre('findOne', function () {
+  this.where({ deletedAt: null });
+});
+ScoreSchema.pre('findOneAndUpdate', function () {
+  this.where({ deletedAt: null });
+});
+ScoreSchema.pre('count', function () {
+  this.where({ deletedAt: null });
+});

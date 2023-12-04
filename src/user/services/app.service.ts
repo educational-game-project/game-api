@@ -11,15 +11,20 @@ export class AppService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
-  ) { }
+  ) {}
 
   async getHello(): Promise<any> {
-    const superAdmin = await this.userModel.findOne({ role: UserRole.SUPER_ADMIN });
+    const superAdmin = await this.userModel.findOne({
+      role: UserRole.SUPER_ADMIN,
+    });
     if (!superAdmin) {
       const hashedPassword = this.authHelper.encodePassword('SuperAdmin123');
-      const createUser = await this.userModel.create({ ...userSeeder[0], password: hashedPassword });
+      const createUser = await this.userModel.create({
+        ...userSeeder[0],
+        password: hashedPassword,
+      });
       if (!createUser) return { message: `Failed Create Users` };
-      return { message: `${createUser.name} Successfully Created.` }
+      return { message: `${createUser.name} Successfully Created.` };
     }
 
     return { message: 'Welcome to Game API. Created by Iwan Suryaningrat.' };

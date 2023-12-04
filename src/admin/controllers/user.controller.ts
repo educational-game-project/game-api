@@ -1,12 +1,28 @@
-import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Req, UploadedFile, UseGuards, UseInterceptors, HttpException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpStatus,
+  Inject,
+  Logger,
+  Post,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+  HttpException,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
-import { imageFilter, limitImageUpload } from '@app/common/utils/validators/file.validator';
+import {
+  imageFilter,
+  limitImageUpload,
+} from '@app/common/utils/validators/file.validator';
 import { ImagesService } from '@app/common/helpers/file.helpers';
 import { SearchDTO } from '@app/common/dto/search.dto';
 import { ByIdDto } from '@app/common/dto/byId.dto';
 import { UserAdminService } from '../services/user.service';
-import { CreateUserDto, } from '@app/common/dto/user.dto';
+import { CreateUserDto } from '@app/common/dto/user.dto';
 import { Roles } from '@app/common/decorators/roles.decorator';
 import { UserRole } from '@app/common/enums/role.enum';
 import { AuthenticationGuard } from '@app/common/auth/authentication.guard';
@@ -18,7 +34,7 @@ export class UserAdminController {
   constructor(
     private readonly userService: UserAdminService,
     @Inject(ImagesService) private imageHelper: ImagesService,
-  ) { }
+  ) {}
 
   private readonly logger = new Logger(UserAdminController.name);
 
@@ -26,8 +42,17 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
-  @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload() }))
-  async create(@Body() body: CreateUserDto, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
+  @UseInterceptors(
+    FileInterceptor('media', {
+      fileFilter: imageFilter,
+      limits: limitImageUpload(),
+    }),
+  )
+  async create(
+    @Body() body: CreateUserDto,
+    @UploadedFile() media: Express.Multer.File,
+    @Req() req: Request,
+  ): Promise<any> {
     try {
       const files = media ? await this.imageHelper.define([media]) : [];
 
@@ -35,7 +60,10 @@ export class UserAdminController {
     } catch (error) {
       this.logger.error(this.create.name);
       console.log(error);
-      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        error?.response ?? error?.message ?? error,
+        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -59,8 +87,17 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
-  @UseInterceptors(FileInterceptor('media', { fileFilter: imageFilter, limits: limitImageUpload() }))
-  async addStudent(@Body() body: CreateUserDto, @UploadedFile() media: Express.Multer.File, @Req() req: Request): Promise<any> {
+  @UseInterceptors(
+    FileInterceptor('media', {
+      fileFilter: imageFilter,
+      limits: limitImageUpload(),
+    }),
+  )
+  async addStudent(
+    @Body() body: CreateUserDto,
+    @UploadedFile() media: Express.Multer.File,
+    @Req() req: Request,
+  ): Promise<any> {
     try {
       const files = media ? await this.imageHelper.define([media]) : [];
 
@@ -68,7 +105,10 @@ export class UserAdminController {
     } catch (error) {
       this.logger.error(this.addStudent.name);
       console.log(error);
-      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        error?.response ?? error?.message ?? error,
+        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -76,7 +116,10 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
-  async listStudents(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
+  async listStudents(
+    @Body() body: SearchDTO,
+    @Req() req: Request,
+  ): Promise<any> {
     return this.userService.listStudents(body, req);
   }
 }

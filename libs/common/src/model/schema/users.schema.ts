@@ -40,7 +40,15 @@ UserSchema.index({ geolocation: '2dsphere' });
 UserSchema.index({ email: 1 });
 UserSchema.index({ phoneNumber: 1 });
 
-UserSchema.pre('find', function () { this.where({ deletedAt: null }); });
-UserSchema.pre('findOne', function () { this.where({ deletedAt: null }); });
-UserSchema.pre('findOneAndUpdate', function () { this.where({ deletedAt: null }); });
-UserSchema.pre('count', function () { this.where({ deletedAt: null }); });
+UserSchema.pre('find', function () {
+  this.where({ deletedAt: null });
+});
+UserSchema.pre('findOne', function () {
+  this.where({ deletedAt: null });
+});
+UserSchema.pre('findOneAndUpdate', function () {
+  this.where({ deletedAt: null });
+});
+UserSchema.pre('count', function () {
+  this.where({ deletedAt: null });
+});

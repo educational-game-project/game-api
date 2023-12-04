@@ -25,10 +25,10 @@ import { join } from 'path';
     DatabaseModule,
     MongooseModule.forFeature(MongooseModulesImport),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..')
+      rootPath: join(__dirname, '..'),
     }),
   ],
   providers: [CommonService],
   exports: [CommonService],
 })
-export class CommonModule { }
+export class CommonModule {}

@@ -1,10 +1,15 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, } from '@nestjs/common';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 
 // Restructure Response Object For Guard Exception
 @Catch()
 export class ResponseFilter implements ExceptionFilter {
-
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx: HttpArgumentsHost = host.switchToHttp();
     const response: any = ctx.getResponse();
@@ -13,7 +18,7 @@ export class ResponseFilter implements ExceptionFilter {
       const status: number = exception.getStatus();
       const exceptionHttp: Record<string, any> = exception;
       const exceptionData: Record<string, any> = exceptionHttp.response;
-      const mess = (status == 429) ? "too_many_request" : exceptionData.message;
+      const mess = status == 429 ? 'too_many_request' : exceptionData.message;
 
       response.status(status).json({
         statusCode: status,

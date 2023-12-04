@@ -3,22 +3,22 @@ import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 import { GameNameDTO } from './global.dto';
 
 export enum ReportType {
-    SUCCESS = "Success",
-    FAILED = "Failed"
+  SUCCESS = 'Success',
+  FAILED = 'Failed',
 }
 
 export class CreateReportDto extends PartialType(GameNameDTO) {
-    @IsNotEmpty()
-    @IsEnum(ReportType)
-    type: string;
+  @IsNotEmpty()
+  @IsEnum(ReportType)
+  type: string;
 
-    @IsNotEmpty()
-    @IsNumber()
-    level: number
+  @IsNotEmpty()
+  @IsNumber()
+  level: number;
 
-    @IsNotEmpty()
-    @IsNumber()
-    time: number
+  @IsNotEmpty()
+  @IsNumber()
+  time: number;
 }
 
-export class UpdateReportDto extends PartialType(CreateReportDto) { }
+export class UpdateReportDto extends PartialType(CreateReportDto) {}
