@@ -1,5 +1,5 @@
-import { PartialType } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { PartialType } from "@nestjs/swagger";
+import { IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateUserDto {
   @IsNotEmpty()

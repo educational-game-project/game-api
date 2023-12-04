@@ -3,9 +3,9 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { Request } from 'express';
-import { AuthHelper } from '../helpers/auth.helper';
+} from "@nestjs/common";
+import { Request } from "express";
+import { AuthHelper } from "../helpers/auth.helper";
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -27,7 +27,7 @@ export class AuthenticationGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+    const [type, token] = request.headers.authorization?.split(" ") ?? [];
+    return type === "Bearer" ? token : undefined;
   }
 }

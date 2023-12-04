@@ -31,7 +31,7 @@ export interface IResponseError {
 }
 
 export interface IResponsePaging
-  extends Omit<IResponse, 'success' | 'errors' | 'data'> {
+  extends Omit<IResponse, "success" | "errors" | "data"> {
   readonly data: Record<string, any> | Record<string, any>[];
   readonly server_time: string;
   readonly page: IPage;

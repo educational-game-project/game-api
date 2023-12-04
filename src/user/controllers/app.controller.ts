@@ -1,6 +1,6 @@
-import { ResponseStatusCode } from '@app/common/response/response.decorator';
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from 'src/user/services/app.service';
+import { ResponseStatusCode } from "@app/common/response/response.decorator";
+import { Controller, Get } from "@nestjs/common";
+import { AppService } from "src/user/services/app.service";
 
 @Controller()
 export class AppController {

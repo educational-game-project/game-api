@@ -1,14 +1,14 @@
-import { HttpStatus, Inject, Injectable, Logger, Body } from '@nestjs/common';
-import { Request } from 'express';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { Level } from '@app/common/model/schema/levels.schema';
-import { User } from '@app/common/model/schema/users.schema';
-import { ResponseService } from '@app/common/response/response.service';
-import { initLevelDTO } from '@app/common/dto/levels.dto';
-import { StringHelper } from '@app/common/helpers/string.helpers';
-import { TimeHelper } from '@app/common/helpers/time.helper';
-import { GameNameDTO } from '@app/common/dto/global.dto';
+import { HttpStatus, Inject, Injectable, Logger, Body } from "@nestjs/common";
+import { Request } from "express";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model, Types } from "mongoose";
+import { Level } from "@app/common/model/schema/levels.schema";
+import { User } from "@app/common/model/schema/users.schema";
+import { ResponseService } from "@app/common/response/response.service";
+import { initLevelDTO } from "@app/common/dto/levels.dto";
+import { StringHelper } from "@app/common/helpers/string.helpers";
+import { TimeHelper } from "@app/common/helpers/time.helper";
+import { GameNameDTO } from "@app/common/dto/global.dto";
 
 @Injectable()
 export class LevelsService {
@@ -27,7 +27,7 @@ export class LevelsService {
       if (!user)
         return this.responseService.error(
           HttpStatus.NOT_FOUND,
-          StringHelper.notFoundResponse('user'),
+          StringHelper.notFoundResponse("user"),
         );
 
       let currentLevel = await this.levelModel.findOne({
@@ -39,7 +39,7 @@ export class LevelsService {
       if (currentLevel)
         return this.responseService.success(
           true,
-          StringHelper.successResponse('level', 'initiated'),
+          StringHelper.successResponse("level", "initiated"),
           currentLevel,
         );
 
@@ -51,7 +51,7 @@ export class LevelsService {
 
       return this.responseService.success(
         true,
-        StringHelper.successResponse('level', 'initiated'),
+        StringHelper.successResponse("level", "initiated"),
         level,
       );
     } catch (error) {
@@ -60,7 +60,7 @@ export class LevelsService {
       return this.responseService.error(
         HttpStatus.INTERNAL_SERVER_ERROR,
         StringHelper.internalServerError,
-        { value: error, constraint: '', property: '' },
+        { value: error, constraint: "", property: "" },
       );
     }
   }
@@ -72,7 +72,7 @@ export class LevelsService {
       if (!user)
         return this.responseService.error(
           HttpStatus.NOT_FOUND,
-          StringHelper.notFoundResponse('user'),
+          StringHelper.notFoundResponse("user"),
         );
 
       let currentLevel = await this.levelModel.findOne({
@@ -88,7 +88,7 @@ export class LevelsService {
 
       return this.responseService.success(
         true,
-        StringHelper.successResponse('level', 'initiated'),
+        StringHelper.successResponse("level", "initiated"),
         currentLevel,
       );
     } catch (error) {
@@ -97,7 +97,7 @@ export class LevelsService {
       return this.responseService.error(
         HttpStatus.INTERNAL_SERVER_ERROR,
         StringHelper.internalServerError,
-        { value: error, constraint: '', property: '' },
+        { value: error, constraint: "", property: "" },
       );
     }
   }
@@ -109,7 +109,7 @@ export class LevelsService {
       if (!user)
         return this.responseService.error(
           HttpStatus.NOT_FOUND,
-          StringHelper.notFoundResponse('user'),
+          StringHelper.notFoundResponse("user"),
         );
 
       let currentLevel = await this.levelModel.findOne({
@@ -130,7 +130,7 @@ export class LevelsService {
 
       return this.responseService.success(
         true,
-        StringHelper.successResponse('level', 'update'),
+        StringHelper.successResponse("level", "update"),
         currentLevel,
       );
     } catch (error) {
@@ -139,7 +139,7 @@ export class LevelsService {
       return this.responseService.error(
         HttpStatus.INTERNAL_SERVER_ERROR,
         StringHelper.internalServerError,
-        { value: error, constraint: '', property: '' },
+        { value: error, constraint: "", property: "" },
       );
     }
   }

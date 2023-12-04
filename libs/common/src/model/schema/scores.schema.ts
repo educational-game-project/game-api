@@ -1,9 +1,9 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
-import { AbstractDocument } from './abstract.schema';
-import { User } from './users.schema';
-import { GameType } from '@app/common/enums/gameType.enum';
-import { Record } from './records.schema';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Types } from "mongoose";
+import { AbstractDocument } from "./abstract.schema";
+import { User } from "./users.schema";
+import { GameType } from "@app/common/enums/gameType.enum";
+import { Record } from "./records.schema";
 
 @Schema({ timestamps: true })
 export class Score extends AbstractDocument {
@@ -30,15 +30,15 @@ export class Score extends AbstractDocument {
 
 export const ScoreSchema = SchemaFactory.createForClass(Score);
 
-ScoreSchema.pre('find', function () {
+ScoreSchema.pre("find", function () {
   this.where({ deletedAt: null });
 });
-ScoreSchema.pre('findOne', function () {
+ScoreSchema.pre("findOne", function () {
   this.where({ deletedAt: null });
 });
-ScoreSchema.pre('findOneAndUpdate', function () {
+ScoreSchema.pre("findOneAndUpdate", function () {
   this.where({ deletedAt: null });
 });
-ScoreSchema.pre('count', function () {
+ScoreSchema.pre("count", function () {
   this.where({ deletedAt: null });
 });

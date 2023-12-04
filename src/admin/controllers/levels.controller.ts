@@ -7,10 +7,10 @@ import {
   Patch,
   Param,
   Delete,
-} from '@nestjs/common';
-import { LevelsAdminService } from '../services/levels.service';
+} from "@nestjs/common";
+import { LevelsAdminService } from "../services/levels.service";
 
-@Controller('admin/levels')
+@Controller("admin/levels")
 export class LevelsAdminController {
   constructor(private readonly levelsService: LevelsAdminService) {}
 }

@@ -3,10 +3,10 @@ import {
   Inject,
   UseFilters,
   UseInterceptors,
-} from '@nestjs/common';
-import { ResponseFilter } from './response.filter';
-import { ResponseInterceptor } from './response.interceptor';
-import { IApplyDecorator } from './response.interface';
+} from "@nestjs/common";
+import { ResponseFilter } from "./response.filter";
+import { ResponseInterceptor } from "./response.interceptor";
+import { IApplyDecorator } from "./response.interface";
 
 export function Response(): (
   target: Record<string, any>,

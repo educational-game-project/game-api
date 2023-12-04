@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
-import { PartialType } from '@nestjs/swagger';
-import { GameNameDTO } from './global.dto';
+import { IsNotEmpty, IsNumber } from "class-validator";
+import { PartialType } from "@nestjs/swagger";
+import { GameNameDTO } from "./global.dto";
 
 export class initLevelDTO extends PartialType(GameNameDTO) {
   @IsNotEmpty()

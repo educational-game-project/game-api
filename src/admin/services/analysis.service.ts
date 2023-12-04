@@ -1,19 +1,19 @@
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import { Request } from 'express';
-import { InjectModel } from '@nestjs/mongoose';
-import { ResponseService } from '@app/common/response/response.service';
+import { HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
+import { Request } from "express";
+import { InjectModel } from "@nestjs/mongoose";
+import { ResponseService } from "@app/common/response/response.service";
 import mongoose, {
   Model,
   PipelineStage,
   Types,
   isValidObjectId,
-} from 'mongoose';
+} from "mongoose";
 import {
   CreateAnalysisDto,
   UpdateAnalysisDto,
-} from '@app/common/dto/analysis.dto';
-import { User } from '@app/common/model/schema/users.schema';
-import { Analysis } from '@app/common/model/schema/analysis.schema';
+} from "@app/common/dto/analysis.dto";
+import { User } from "@app/common/model/schema/users.schema";
+import { Analysis } from "@app/common/model/schema/analysis.schema";
 
 @Injectable()
 export class AnalysisAdminService {
@@ -26,7 +26,7 @@ export class AnalysisAdminService {
   private readonly logger = new Logger(AnalysisAdminService.name);
 
   create(createAnalysisDto: CreateAnalysisDto) {
-    return 'This action adds a new analysis';
+    return "This action adds a new analysis";
   }
 
   findAll() {

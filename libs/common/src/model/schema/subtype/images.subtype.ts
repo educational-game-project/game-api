@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { AbstractDocument } from '../abstract.schema';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { AbstractDocument } from "../abstract.schema";
 
 @Schema({ timestamps: true })
 export class Image extends AbstractDocument {
@@ -27,15 +27,15 @@ export class Image extends AbstractDocument {
 
 export const ImageSchema = SchemaFactory.createForClass(Image);
 
-ImageSchema.pre('find', function () {
+ImageSchema.pre("find", function () {
   this.where({ deletedAt: null });
 });
-ImageSchema.pre('findOne', function () {
+ImageSchema.pre("findOne", function () {
   this.where({ deletedAt: null });
 });
-ImageSchema.pre('findOneAndUpdate', function () {
+ImageSchema.pre("findOneAndUpdate", function () {
   this.where({ deletedAt: null });
 });
-ImageSchema.pre('count', function () {
+ImageSchema.pre("count", function () {
   this.where({ deletedAt: null });
 });

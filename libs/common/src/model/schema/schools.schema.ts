@@ -1,8 +1,8 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
-import { AbstractDocument } from './abstract.schema';
-import { Image } from './subtype/images.subtype';
-import { User } from './users.schema';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Types } from "mongoose";
+import { AbstractDocument } from "./abstract.schema";
+import { Image } from "./subtype/images.subtype";
+import { User } from "./users.schema";
 
 @Schema({ timestamps: true })
 export class School extends AbstractDocument {
@@ -23,7 +23,7 @@ export class School extends AbstractDocument {
   deletedAt?: Date;
 
   //================================== Relations ======================================
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'User', default: null }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: "User", default: null }] })
   admins: User[];
 
   @Prop({ type: [{ type: Types.ObjectId, ref: Image.name, default: null }] })
@@ -32,15 +32,15 @@ export class School extends AbstractDocument {
 
 export const SchoolSchema = SchemaFactory.createForClass(School);
 
-SchoolSchema.pre('find', function () {
+SchoolSchema.pre("find", function () {
   this.where({ deletedAt: null });
 });
-SchoolSchema.pre('findOne', function () {
+SchoolSchema.pre("findOne", function () {
   this.where({ deletedAt: null });
 });
-SchoolSchema.pre('findOneAndUpdate', function () {
+SchoolSchema.pre("findOneAndUpdate", function () {
   this.where({ deletedAt: null });
 });
-SchoolSchema.pre('count', function () {
+SchoolSchema.pre("count", function () {
   this.where({ deletedAt: null });
 });

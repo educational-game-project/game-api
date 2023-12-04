@@ -4,10 +4,10 @@ import {
   ExecutionContext,
   CallHandler,
   InternalServerErrorException,
-} from '@nestjs/common';
-import { HttpArgumentsHost } from '@nestjs/common/interfaces';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+} from "@nestjs/common";
+import { HttpArgumentsHost } from "@nestjs/common/interfaces";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
 // This interceptor for restructure response success
 @Injectable()
@@ -28,8 +28,8 @@ export class ResponseInterceptor
         const data: Record<string, any> | string = await response;
 
         // response error must in object
-        if (typeof data !== 'object') {
-          throw new InternalServerErrorException('Data not object');
+        if (typeof data !== "object") {
+          throw new InternalServerErrorException("Data not object");
         }
 
         const { statusCode, ...others } = data;

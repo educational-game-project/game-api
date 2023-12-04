@@ -5,14 +5,14 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Image } from '../model/schema/subtype/images.subtype';
-import { Model } from 'mongoose';
-import { ConfigService } from '@nestjs/config';
-import * as fs from 'fs';
-import { extname, join } from 'path';
-import { FileUploader } from '../utils/fileUploader.util';
+} from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Image } from "../model/schema/subtype/images.subtype";
+import { Model } from "mongoose";
+import { ConfigService } from "@nestjs/config";
+import * as fs from "fs";
+import { extname, join } from "path";
+import { FileUploader } from "../utils/fileUploader.util";
 
 @Injectable()
 export class ImagesService {
@@ -24,14 +24,14 @@ export class ImagesService {
 
   private readonly logger = new Logger(ImagesService.name);
 
-  private HOST = this.configService.get<number>('HOST');
+  private HOST = this.configService.get<number>("HOST");
 
   async define(files: Array<Express.Multer.File>): Promise<any> {
     try {
       const media = await Promise.all(
         files?.map(async (file) => {
           const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
+            Date.now() + "-" + Math.round(Math.random() * 1e9);
           const ext = extname(file?.originalname);
           file.filename = `game_${uniqueSuffix}`;
 

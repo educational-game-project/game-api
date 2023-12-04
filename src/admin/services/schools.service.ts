@@ -7,25 +7,25 @@ import {
   NotFoundException,
   HttpException,
   BadRequestException,
-} from '@nestjs/common';
-import { Request } from 'express';
-import { InjectModel } from '@nestjs/mongoose';
+} from "@nestjs/common";
+import { Request } from "express";
+import { InjectModel } from "@nestjs/mongoose";
 import mongoose, {
   Model,
   PipelineStage,
   Types,
   isValidObjectId,
-} from 'mongoose';
-import { User } from '@app/common/model/schema/users.schema';
-import { ResponseService } from '@app/common/response/response.service';
-import { School } from '@app/common/model/schema/schools.schema';
-import { StringHelper } from '@app/common/helpers/string.helpers';
-import { CreateSchoolDTO, EditSchoolDTO } from '@app/common/dto/school.dto';
-import { SearchDTO } from '@app/common/dto/search.dto';
-import { dateToString } from '@app/common/pipeline/dateToString.pipeline';
-import { ByIdDto } from '@app/common/dto/byId.dto';
-import { Image } from '@app/common/model/schema/subtype/images.subtype';
-import { ImagesService } from '@app/common/helpers/file.helpers';
+} from "mongoose";
+import { User } from "@app/common/model/schema/users.schema";
+import { ResponseService } from "@app/common/response/response.service";
+import { School } from "@app/common/model/schema/schools.schema";
+import { StringHelper } from "@app/common/helpers/string.helpers";
+import { CreateSchoolDTO, EditSchoolDTO } from "@app/common/dto/school.dto";
+import { SearchDTO } from "@app/common/dto/search.dto";
+import { dateToString } from "@app/common/pipeline/dateToString.pipeline";
+import { ByIdDto } from "@app/common/dto/byId.dto";
+import { Image } from "@app/common/model/schema/subtype/images.subtype";
+import { ImagesService } from "@app/common/helpers/file.helpers";
 
 @Injectable()
 export class SchoolAdminService {
@@ -47,7 +47,7 @@ export class SchoolAdminService {
       const { name, address } = body;
 
       const exist = await this.schoolModel.count({ name });
-      if (exist > 0) throw new BadRequestException('School Already Exist');
+      if (exist > 0) throw new BadRequestException("School Already Exist");
 
       const school = await this.schoolModel.create({
         name,
@@ -57,7 +57,7 @@ export class SchoolAdminService {
 
       return this.responseService.success(
         true,
-        StringHelper.successResponse('schoool', 'create'),
+        StringHelper.successResponse("schoool", "create"),
         school,
       );
     } catch (error) {
@@ -81,7 +81,7 @@ export class SchoolAdminService {
       let school = await this.schoolModel.findOne({
         _id: new Types.ObjectId(id),
       });
-      if (!school) throw new NotFoundException('School Not Found');
+      if (!school) throw new NotFoundException("School Not Found");
 
       if (name) school.name = name;
       if (address) school.address = address;
@@ -100,7 +100,7 @@ export class SchoolAdminService {
 
       return this.responseService.success(
         true,
-        StringHelper.successResponse('schoool', 'edit'),
+        StringHelper.successResponse("schoool", "edit"),
         school,
       );
     } catch (error) {
@@ -115,7 +115,7 @@ export class SchoolAdminService {
 
   public async find(body: SearchDTO, req: Request): Promise<any> {
     try {
-      const searchRegex = new RegExp(body.search?.toString(), 'i');
+      const searchRegex = new RegExp(body.search?.toString(), "i");
       const LIMIT_PAGE: number = body?.limit ?? 10;
       const SKIP: number = (Number(body?.page ?? 1) - 1) * LIMIT_PAGE;
 
@@ -127,10 +127,10 @@ export class SchoolAdminService {
       const pipeline: PipelineStage[] = [
         {
           $lookup: {
-            from: 'users',
-            foreignField: '_id',
-            localField: 'admins',
-            as: 'admins',
+            from: "users",
+            foreignField: "_id",
+            localField: "admins",
+            as: "admins",
             pipeline: [
               {
                 $match: { deletedAt: null },
@@ -143,10 +143,10 @@ export class SchoolAdminService {
         },
         {
           $lookup: {
-            from: 'images',
-            localField: 'images',
-            foreignField: '_id',
-            as: 'images',
+            from: "images",
+            localField: "images",
+            foreignField: "_id",
+            as: "images",
           },
         },
         ...dateToString,
@@ -163,10 +163,10 @@ export class SchoolAdminService {
         .skip(SKIP)
         .limit(LIMIT_PAGE);
 
-      const total = await this.schoolModel.aggregate(pipeline).count('total');
+      const total = await this.schoolModel.aggregate(pipeline).count("total");
 
       return this.responseService.paging(
-        StringHelper.successResponse('schoool', 'list'),
+        StringHelper.successResponse("schoool", "list"),
         schools,
         {
           totalData: Number(total[0]?.total) ?? 0,
@@ -190,18 +190,18 @@ export class SchoolAdminService {
       const school = await this.schoolModel
         .findOne({ _id: new Types.ObjectId(body.id) })
         .populate({
-          path: 'admins',
-          select: 'name role images email phoneNumber',
+          path: "admins",
+          select: "name role images email phoneNumber",
           options: {
             match: { deletedAt: null },
           },
         })
-        .populate('images');
-      if (!school) throw new NotFoundException('School Not Found');
+        .populate("images");
+      if (!school) throw new NotFoundException("School Not Found");
 
       return this.responseService.success(
         true,
-        StringHelper.successResponse('school', 'get_detail'),
+        StringHelper.successResponse("school", "get_detail"),
         school,
       );
     } catch (error) {
@@ -219,7 +219,7 @@ export class SchoolAdminService {
       let school = await this.schoolModel.findOne({
         _id: new Types.ObjectId(body.id),
       });
-      if (!school) throw new NotFoundException('School Not Found');
+      if (!school) throw new NotFoundException("School Not Found");
 
       await this.imageService.delete(school.images);
 
@@ -236,7 +236,7 @@ export class SchoolAdminService {
 
       return this.responseService.success(
         true,
-        StringHelper.successResponse('school', 'delete'),
+        StringHelper.successResponse("school", "delete"),
       );
     } catch (error) {
       this.logger.error(this.delete.name);

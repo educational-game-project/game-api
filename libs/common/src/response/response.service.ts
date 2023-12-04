@@ -5,14 +5,14 @@ import {
   HttpException,
   Injectable,
   ValidationError,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   IResponseError,
   IResponsePaging,
   RMessage,
   RSuccessMessage,
-} from './response.interface';
-import { Request, Response } from 'express';
+} from "./response.interface";
+import { Request, Response } from "express";
 
 @Injectable()
 export class ResponseService {
@@ -26,7 +26,7 @@ export class ResponseService {
     if (errors) {
       return {
         statusCode: statusCode,
-        status: 'error',
+        status: "error",
         message: message.toString(),
         server_time: new Date().toISOString(),
         error: [errors],
@@ -35,7 +35,7 @@ export class ResponseService {
 
     return {
       statusCode: statusCode,
-      status: 'error',
+      status: "error",
       message: message.toString(),
       server_time: new Date().toISOString(),
     };
@@ -50,7 +50,7 @@ export class ResponseService {
     if (data) {
       return {
         success: success,
-        status: 'success',
+        status: "success",
         message: message,
         server_time: new Date().toISOString(),
         data: data,
@@ -60,7 +60,7 @@ export class ResponseService {
 
     return {
       success: success,
-      status: 'success',
+      status: "success",
       server_time: new Date().toISOString(),
       message: message,
       meta,
@@ -79,7 +79,7 @@ export class ResponseService {
   ): IResponsePaging {
     return {
       message,
-      status: 'success',
+      status: "success",
       server_time: new Date().toISOString(),
       data,
       page,
@@ -89,7 +89,7 @@ export class ResponseService {
   validationError(statusCode: number, errors: ValidationError[]): any {
     const response = {
       statusCode,
-      status: 'error',
+      status: "error",
       server_time: new Date().toISOString(),
       message: [],
     };
@@ -110,26 +110,26 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const exceptionResponse = exception.getResponse();
 
-    if (typeof exceptionResponse == 'string') {
+    if (typeof exceptionResponse == "string") {
       response.status(status).json({
         statusCode: status,
         status: false,
         message: exceptionResponse.toString(),
         server_time: new Date().toISOString(),
       });
-    } else if (typeof exceptionResponse['message'] == 'object') {
+    } else if (typeof exceptionResponse["message"] == "object") {
       response.status(status).json({
-        statusCode: exceptionResponse['statusCode'],
+        statusCode: exceptionResponse["statusCode"],
         status: false,
-        message: exceptionResponse['error'].toString(),
+        message: exceptionResponse["error"].toString(),
         server_time: new Date().toISOString(),
-        error: exceptionResponse['message'],
+        error: exceptionResponse["message"],
       });
     } else {
       response.status(status).json({
         statusCode: status,
         status: false,
-        message: 'Forbidden',
+        message: "Forbidden",
         server_time: new Date().toISOString(),
       });
     }

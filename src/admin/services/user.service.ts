@@ -7,19 +7,19 @@ import {
   HttpException,
   BadRequestException,
   Body,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, PipelineStage, Types } from 'mongoose';
-import { CreateUserDto } from '@app/common/dto/user.dto';
-import { User } from '@app/common/model/schema/users.schema';
-import { ResponseService } from '@app/common/response/response.service';
-import { StringHelper } from '@app/common/helpers/string.helpers';
-import { School } from '@app/common/model/schema/schools.schema';
-import { UserRole } from '@app/common/enums/role.enum';
-import { SearchDTO } from '@app/common/dto/search.dto';
-import { dateToString } from '@app/common/pipeline/dateToString.pipeline';
-import { ByIdDto } from '@app/common/dto/byId.dto';
-import { AuthHelper } from '@app/common/helpers/auth.helper';
+} from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model, PipelineStage, Types } from "mongoose";
+import { CreateUserDto } from "@app/common/dto/user.dto";
+import { User } from "@app/common/model/schema/users.schema";
+import { ResponseService } from "@app/common/response/response.service";
+import { StringHelper } from "@app/common/helpers/string.helpers";
+import { School } from "@app/common/model/schema/schools.schema";
+import { UserRole } from "@app/common/enums/role.enum";
+import { SearchDTO } from "@app/common/dto/search.dto";
+import { dateToString } from "@app/common/pipeline/dateToString.pipeline";
+import { ByIdDto } from "@app/common/dto/byId.dto";
+import { AuthHelper } from "@app/common/helpers/auth.helper";
 
 @Injectable()
 export class UserAdminService {
@@ -40,12 +40,12 @@ export class UserAdminService {
     try {
       const password = body?.password
         ? this.authHelper.encodePassword(body.password)
-        : this.authHelper.encodePassword('Admin1234');
+        : this.authHelper.encodePassword("Admin1234");
 
       let school = await this.schoolModel
         .findOne({ _id: new Types.ObjectId(body?.schoolId) })
-        .populate('images');
-      if (!school) throw new NotFoundException('School Not Found');
+        .populate("images");
+      if (!school) throw new NotFoundException("School Not Found");
 
       if (media?.length) media[0].isDefault = true;
       let admin = await this.userModel.create({
@@ -68,7 +68,7 @@ export class UserAdminService {
 
       return this.responseService.success(
         true,
-        StringHelper.successResponse('user', 'add_admin'),
+        StringHelper.successResponse("user", "add_admin"),
         admin,
       );
     } catch (error) {
@@ -83,7 +83,7 @@ export class UserAdminService {
 
   public async findAdmin(body: SearchDTO, req: any): Promise<any> {
     try {
-      const searchRegex = new RegExp(body.search?.toString(), 'i');
+      const searchRegex = new RegExp(body.search?.toString(), "i");
       const LIMIT_PAGE: number = body?.limit ?? 10;
       const SKIP: number = (Number(body?.page ?? 1) - 1) * LIMIT_PAGE;
 
@@ -92,7 +92,7 @@ export class UserAdminService {
           { name: searchRegex },
           { email: searchRegex },
           { phoneNumber: searchRegex },
-          { 'school.name': searchRegex },
+          { "school.name": searchRegex },
         ],
         role: UserRole.ADMIN,
         deletedAt: null,
@@ -101,10 +101,10 @@ export class UserAdminService {
       const pipeline: PipelineStage[] = [
         {
           $lookup: {
-            from: 'school',
-            foreignField: '_id',
-            localField: 'school',
-            as: 'school',
+            from: "school",
+            foreignField: "_id",
+            localField: "school",
+            as: "school",
             pipeline: [
               ...dateToString,
               {
@@ -116,7 +116,7 @@ export class UserAdminService {
         ...dateToString,
         {
           $set: {
-            school: { $ifNull: [{ $arrayElemAt: ['$school', 0] }, null] },
+            school: { $ifNull: [{ $arrayElemAt: ["$school", 0] }, null] },
           },
         },
         {
@@ -132,10 +132,10 @@ export class UserAdminService {
         .skip(SKIP)
         .limit(LIMIT_PAGE);
 
-      const total = await this.userModel.aggregate(pipeline).count('total');
+      const total = await this.userModel.aggregate(pipeline).count("total");
 
       return this.responseService.paging(
-        StringHelper.successResponse('admin', 'list'),
+        StringHelper.successResponse("admin", "list"),
         admin,
         {
           totalData: Number(total[0]?.total) ?? 0,
@@ -160,12 +160,12 @@ export class UserAdminService {
         _id: new Types.ObjectId(body.id),
         role: UserRole.ADMIN,
       });
-      if (!admin) throw new NotFoundException('Admin Not Found');
+      if (!admin) throw new NotFoundException("Admin Not Found");
 
       admin.deletedAt = new Date();
 
       let school = await this.schoolModel.findOne({ _id: admin.school });
-      if (!school) throw new NotFoundException('School Not Found');
+      if (!school) throw new NotFoundException("School Not Found");
 
       school.admins = school.admins.filter(
         (i) => i.toString() !== admin._id.toString(),
@@ -175,7 +175,7 @@ export class UserAdminService {
 
       return this.responseService.success(
         true,
-        StringHelper.successResponse('admin', 'delete'),
+        StringHelper.successResponse("admin", "delete"),
       );
     } catch (error) {
       this.logger.error(this.deleteAdmin.name);
@@ -196,14 +196,14 @@ export class UserAdminService {
       let school = await this.schoolModel.findOne({
         _id: new Types.ObjectId(body?.schoolId),
       });
-      if (!school) throw new NotFoundException('School Not Found');
+      if (!school) throw new NotFoundException("School Not Found");
 
       const check = await this.userModel.findOne({
         role: UserRole.USER,
         name: body.name,
         school: school._id,
       });
-      if (check) throw new BadRequestException('Student Already Exist');
+      if (check) throw new BadRequestException("Student Already Exist");
 
       let student = await this.userModel.create({
         name: body.name,
@@ -220,7 +220,7 @@ export class UserAdminService {
 
       return this.responseService.success(
         true,
-        StringHelper.successResponse('user', 'add_admin'),
+        StringHelper.successResponse("user", "add_admin"),
         student,
       );
     } catch (error) {
@@ -235,7 +235,7 @@ export class UserAdminService {
 
   public async listStudents(body: SearchDTO, req: any): Promise<any> {
     try {
-      const searchRegex = new RegExp(body.search?.toString(), 'i');
+      const searchRegex = new RegExp(body.search?.toString(), "i");
       const LIMIT_PAGE: number = body?.limit ?? 10;
       const SKIP: number = (Number(body?.page ?? 1) - 1) * LIMIT_PAGE;
 
@@ -244,7 +244,7 @@ export class UserAdminService {
           { name: searchRegex },
           { email: searchRegex },
           { phoneNumber: searchRegex },
-          { 'school.name': searchRegex },
+          { "school.name": searchRegex },
         ],
         role: UserRole.USER,
         deletedAt: null,
@@ -253,10 +253,10 @@ export class UserAdminService {
       const pipeline: PipelineStage[] = [
         {
           $lookup: {
-            from: 'school',
-            foreignField: '_id',
-            localField: 'school',
-            as: 'school',
+            from: "school",
+            foreignField: "_id",
+            localField: "school",
+            as: "school",
             pipeline: [
               ...dateToString,
               {
@@ -267,16 +267,16 @@ export class UserAdminService {
         },
         {
           $lookup: {
-            from: 'images',
-            localField: 'images',
-            foreignField: '_id',
-            as: 'images',
+            from: "images",
+            localField: "images",
+            foreignField: "_id",
+            as: "images",
           },
         },
         ...dateToString,
         {
           $set: {
-            school: { $ifNull: [{ $arrayElemAt: ['$school', 0] }, null] },
+            school: { $ifNull: [{ $arrayElemAt: ["$school", 0] }, null] },
           },
         },
         {
@@ -292,10 +292,10 @@ export class UserAdminService {
         .skip(SKIP)
         .limit(LIMIT_PAGE);
 
-      const total = await this.userModel.aggregate(pipeline).count('total');
+      const total = await this.userModel.aggregate(pipeline).count("total");
 
       return this.responseService.paging(
-        StringHelper.successResponse('student', 'list'),
+        StringHelper.successResponse("student", "list"),
         students,
         {
           totalData: Number(total[0]?.total) ?? 0,

@@ -1,12 +1,12 @@
-import { Injectable, HttpStatus, Inject } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcryptjs';
-import { ResponseService } from '@app/common/response/response.service';
-import { IResponseError } from '@app/common/response/response.interface';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { ConfigService } from '@nestjs/config';
-import { User } from '../model/schema/users.schema';
+import { Injectable, HttpStatus, Inject } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcryptjs";
+import { ResponseService } from "@app/common/response/response.service";
+import { IResponseError } from "@app/common/response/response.interface";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model, Types } from "mongoose";
+import { ConfigService } from "@nestjs/config";
+import { User } from "../model/schema/users.schema";
 
 @Injectable()
 export class AuthHelper {
@@ -23,7 +23,7 @@ export class AuthHelper {
   // Validate token
   public validateToken(token: string) {
     const decoded = this.jwt.verify(token, {
-      secret: this.configService.get('JWT_SECRET'),
+      secret: this.configService.get("JWT_SECRET"),
     });
     return decoded;
   }
@@ -54,8 +54,8 @@ export class AuthHelper {
           ...data,
         },
         {
-          secret: this.configService.get('JWT_SECRET'),
-          expiresIn: '1d',
+          secret: this.configService.get("JWT_SECRET"),
+          expiresIn: "1d",
         },
       ),
       this.jwtService.signAsync(
@@ -64,8 +64,8 @@ export class AuthHelper {
           ...data,
         },
         {
-          secret: this.configService.get('JWT_SECRET'),
-          expiresIn: '7d',
+          secret: this.configService.get("JWT_SECRET"),
+          expiresIn: "7d",
         },
       ),
     ]);
@@ -95,8 +95,8 @@ export class AuthHelper {
     if (!decoded)
       return this.responseService.error(
         HttpStatus.UNAUTHORIZED,
-        'User Unauthorized!',
-        { value: '', constraint: '', property: '' },
+        "User Unauthorized!",
+        { value: "", constraint: "", property: "" },
       );
 
     const user: User = await this.validateUser(decoded);
@@ -104,8 +104,8 @@ export class AuthHelper {
     if (!user)
       return this.responseService.error(
         HttpStatus.UNAUTHORIZED,
-        'User Unauthorized!',
-        { value: '', constraint: '', property: '' },
+        "User Unauthorized!",
+        { value: "", constraint: "", property: "" },
       );
 
     return true;

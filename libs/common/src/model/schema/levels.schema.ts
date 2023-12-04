@@ -1,8 +1,8 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
-import { AbstractDocument } from './abstract.schema';
-import { User } from './users.schema';
-import { GameType } from '../../enums/gameType.enum';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Types } from "mongoose";
+import { AbstractDocument } from "./abstract.schema";
+import { User } from "./users.schema";
+import { GameType } from "../../enums/gameType.enum";
 
 @Schema({ timestamps: true })
 export class Level extends AbstractDocument {
@@ -29,15 +29,15 @@ export class Level extends AbstractDocument {
 
 export const LevelSchema = SchemaFactory.createForClass(Level);
 
-LevelSchema.pre('find', function () {
+LevelSchema.pre("find", function () {
   this.where({ deletedAt: null });
 });
-LevelSchema.pre('findOne', function () {
+LevelSchema.pre("findOne", function () {
   this.where({ deletedAt: null });
 });
-LevelSchema.pre('findOneAndUpdate', function () {
+LevelSchema.pre("findOneAndUpdate", function () {
   this.where({ deletedAt: null });
 });
-LevelSchema.pre('count', function () {
+LevelSchema.pre("count", function () {
   this.where({ deletedAt: null });
 });

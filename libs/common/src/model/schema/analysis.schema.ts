@@ -1,7 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
-import { AbstractDocument } from './abstract.schema';
-import { User } from './users.schema';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Types } from "mongoose";
+import { AbstractDocument } from "./abstract.schema";
+import { User } from "./users.schema";
 
 @Schema({ timestamps: true })
 export class Analysis extends AbstractDocument {
@@ -17,15 +17,15 @@ export class Analysis extends AbstractDocument {
 
 export const AnalysisSchema = SchemaFactory.createForClass(Analysis);
 
-AnalysisSchema.pre('find', function () {
+AnalysisSchema.pre("find", function () {
   this.where({ deletedAt: null });
 });
-AnalysisSchema.pre('findOne', function () {
+AnalysisSchema.pre("findOne", function () {
   this.where({ deletedAt: null });
 });
-AnalysisSchema.pre('findOneAndUpdate', function () {
+AnalysisSchema.pre("findOneAndUpdate", function () {
   this.where({ deletedAt: null });
 });
-AnalysisSchema.pre('count', function () {
+AnalysisSchema.pre("count", function () {
   this.where({ deletedAt: null });
 });

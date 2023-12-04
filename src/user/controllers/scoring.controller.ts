@@ -6,10 +6,10 @@ import {
   Patch,
   Param,
   Delete,
-} from '@nestjs/common';
-import { ScoreService } from 'src/user/services/scoring.service';
+} from "@nestjs/common";
+import { ScoreService } from "src/user/services/scoring.service";
 
-@Controller('score')
+@Controller("score")
 export class ScoreController {
   constructor(private scoreService: ScoreService) {}
 }

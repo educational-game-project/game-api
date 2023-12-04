@@ -11,25 +11,25 @@ import {
   UseGuards,
   UseInterceptors,
   HttpException,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Request } from 'express';
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Request } from "express";
 import {
   imageFilter,
   limitImageUpload,
-} from '@app/common/utils/validators/file.validator';
-import { ImagesService } from '@app/common/helpers/file.helpers';
-import { SearchDTO } from '@app/common/dto/search.dto';
-import { ByIdDto } from '@app/common/dto/byId.dto';
-import { UserAdminService } from '../services/user.service';
-import { CreateUserDto } from '@app/common/dto/user.dto';
-import { Roles } from '@app/common/decorators/roles.decorator';
-import { UserRole } from '@app/common/enums/role.enum';
-import { AuthenticationGuard } from '@app/common/auth/authentication.guard';
-import { AuthorizationGuard } from '@app/common/auth/authorization.guard';
-import { ResponseStatusCode } from '@app/common/response/response.decorator';
+} from "@app/common/utils/validators/file.validator";
+import { ImagesService } from "@app/common/helpers/file.helpers";
+import { SearchDTO } from "@app/common/dto/search.dto";
+import { ByIdDto } from "@app/common/dto/byId.dto";
+import { UserAdminService } from "../services/user.service";
+import { CreateUserDto } from "@app/common/dto/user.dto";
+import { Roles } from "@app/common/decorators/roles.decorator";
+import { UserRole } from "@app/common/enums/role.enum";
+import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
+import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
+import { ResponseStatusCode } from "@app/common/response/response.decorator";
 
-@Controller('admin/user')
+@Controller("admin/user")
 export class UserAdminController {
   constructor(
     private readonly userService: UserAdminService,
@@ -38,12 +38,12 @@ export class UserAdminController {
 
   private readonly logger = new Logger(UserAdminController.name);
 
-  @Post('admin')
+  @Post("admin")
   @Roles([UserRole.SUPER_ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   @UseInterceptors(
-    FileInterceptor('media', {
+    FileInterceptor("media", {
       fileFilter: imageFilter,
       limits: limitImageUpload(),
     }),
@@ -67,7 +67,7 @@ export class UserAdminController {
     }
   }
 
-  @Post('admin/find')
+  @Post("admin/find")
   @Roles([UserRole.SUPER_ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
@@ -75,7 +75,7 @@ export class UserAdminController {
     return this.userService.findAdmin(body, req);
   }
 
-  @Delete('admin')
+  @Delete("admin")
   @Roles([UserRole.SUPER_ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
@@ -83,12 +83,12 @@ export class UserAdminController {
     return this.userService.deleteAdmin(body, req);
   }
 
-  @Post('student')
+  @Post("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   @UseInterceptors(
-    FileInterceptor('media', {
+    FileInterceptor("media", {
       fileFilter: imageFilter,
       limits: limitImageUpload(),
     }),
@@ -112,7 +112,7 @@ export class UserAdminController {
     }
   }
 
-  @Post('student/find')
+  @Post("student/find")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()

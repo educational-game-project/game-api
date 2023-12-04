@@ -1,15 +1,15 @@
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import { Request } from 'express';
-import { InjectModel } from '@nestjs/mongoose';
+import { HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
+import { Request } from "express";
+import { InjectModel } from "@nestjs/mongoose";
 import mongoose, {
   Model,
   PipelineStage,
   Types,
   isValidObjectId,
-} from 'mongoose';
-import { CreateReportDto, UpdateReportDto } from '@app/common/dto/report.dto';
-import { User } from '@app/common/model/schema/users.schema';
-import { ResponseService } from '@app/common/response/response.service';
+} from "mongoose";
+import { CreateReportDto, UpdateReportDto } from "@app/common/dto/report.dto";
+import { User } from "@app/common/model/schema/users.schema";
+import { ResponseService } from "@app/common/response/response.service";
 
 @Injectable()
 export class ReportAdminService {
@@ -21,7 +21,7 @@ export class ReportAdminService {
   private readonly logger = new Logger(ReportAdminService.name);
 
   create(createReportDto: CreateReportDto) {
-    return 'This action adds a new report';
+    return "This action adds a new report";
   }
 
   findAll() {
