@@ -5,7 +5,7 @@ import { ResponseStatusCode } from "@app/common/response/response.decorator";
 
 @Controller("admin/auth")
 export class AuthAdminController {
-  constructor(private readonly authService: AuthAdminService) {}
+  constructor(private readonly authService: AuthAdminService) { }
 
   @Post("login")
   @ResponseStatusCode()

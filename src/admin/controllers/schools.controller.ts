@@ -1,26 +1,8 @@
 import { FileInterceptor, AnyFilesInterceptor } from "@nestjs/platform-express";
 import { SchoolAdminService } from "../services/schools.service";
-import {
-  Body,
-  Controller,
-  Delete,
-  HttpStatus,
-  Inject,
-  Logger,
-  Post,
-  Put,
-  Req,
-  UploadedFile,
-  UploadedFiles,
-  UseGuards,
-  UseInterceptors,
-  HttpException,
-} from "@nestjs/common";
+import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, HttpException, } from "@nestjs/common";
 import { Request } from "express";
-import {
-  imageFilter,
-  limitImageUpload,
-} from "@app/common/utils/validators/file.validator";
+import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { CreateSchoolDTO, EditSchoolDTO } from "@app/common/dto/school.dto";
 import { ResponseService } from "@app/common/response/response.service";
@@ -63,11 +45,8 @@ export class SchoolAdminController {
       return this.schoolService.create(body, files, req);
     } catch (error) {
       this.logger.error(this.create.name);
-      console.log(error?.message);;
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -90,11 +69,8 @@ export class SchoolAdminController {
       return this.schoolService.edit(body, files, req);
     } catch (error) {
       this.logger.error(this.edit.name);
-      console.log(error?.message);;
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

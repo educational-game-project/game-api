@@ -1,13 +1,4 @@
-import {
-  HttpStatus,
-  Inject,
-  Injectable,
-  Logger,
-  NotFoundException,
-  HttpException,
-  BadRequestException,
-  Body,
-} from "@nestjs/common";
+import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, PipelineStage, Types } from "mongoose";
 import { CreateUserDto } from "@app/common/dto/user.dto";
@@ -32,19 +23,10 @@ export class UserAdminService {
 
   private readonly logger = new Logger(UserAdminService.name);
 
-  public async addAdmin(
-    body: CreateUserDto,
-    media: any,
-    req: any,
-  ): Promise<any> {
+  public async addAdmin(body: CreateUserDto, media: any, req: any,): Promise<any> {
     try {
-      const password = body?.password
-        ? this.authHelper.encodePassword(body.password)
-        : this.authHelper.encodePassword("Admin1234");
-
-      let school = await this.schoolModel
-        .findOne({ _id: new Types.ObjectId(body?.schoolId) })
-        .populate("images");
+      const password = body?.password ? this.authHelper.encodePassword(body.password) : this.authHelper.encodePassword("Admin1234");
+      let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body?.schoolId) }).populate("images");
       if (!school) throw new NotFoundException("School Not Found");
 
       if (media?.length) media[0].isDefault = true;
@@ -66,18 +48,11 @@ export class UserAdminService {
       delete admin.password;
       delete admin.school.admins;
 
-      return this.responseService.success(
-        true,
-        StringHelper.successResponse("user", "add_admin"),
-        admin,
-      );
+      return this.responseService.success(true, StringHelper.successResponse("user", "add_admin"), admin,);
     } catch (error) {
       this.logger.error(this.addAdmin.name);
-      console.log(error?.message);;
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -127,30 +102,20 @@ export class UserAdminService {
         },
       ];
 
-      const admin = await this.userModel
-        .aggregate(pipeline)
-        .skip(SKIP)
-        .limit(LIMIT_PAGE);
+      const admin = await this.userModel.aggregate(pipeline).skip(SKIP).limit(LIMIT_PAGE);
 
       const total = await this.userModel.aggregate(pipeline).count("total");
 
-      return this.responseService.paging(
-        StringHelper.successResponse("admin", "list"),
-        admin,
-        {
-          totalData: Number(total[0]?.total) ?? 0,
-          perPage: LIMIT_PAGE,
-          currentPage: body?.page ?? 1,
-          totalPage: Math.ceil(total[0]?.total ?? 0 / LIMIT_PAGE),
-        },
-      );
+      return this.responseService.paging(StringHelper.successResponse("admin", "list"), admin, {
+        totalData: Number(total[0]?.total) ?? 0,
+        totalPage: Math.ceil(total[0]?.total ?? 0 / LIMIT_PAGE),
+        currentPage: body?.page ?? 1,
+        perPage: LIMIT_PAGE,
+      },);
     } catch (error) {
       this.logger.error(this.findAdmin.name);
-      console.log(error?.message);;
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -173,25 +138,15 @@ export class UserAdminService {
       school.adminsCount--;
       school.save();
 
-      return this.responseService.success(
-        true,
-        StringHelper.successResponse("admin", "delete"),
-      );
+      return this.responseService.success(true, StringHelper.successResponse("admin", "delete"));
     } catch (error) {
       this.logger.error(this.deleteAdmin.name);
-      console.log(error?.message);;
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  public async addStudent(
-    body: CreateUserDto,
-    media: any,
-    req: any,
-  ): Promise<any> {
+  public async addStudent(body: CreateUserDto, media: any, req: any,): Promise<any> {
     try {
       let school = await this.schoolModel.findOne({
         _id: new Types.ObjectId(body?.schoolId),
@@ -218,18 +173,11 @@ export class UserAdminService {
       school.studentsCount++;
       school.save();
 
-      return this.responseService.success(
-        true,
-        StringHelper.successResponse("user", "add_admin"),
-        student,
-      );
+      return this.responseService.success(true, StringHelper.successResponse("user", "add_admin"), student);
     } catch (error) {
       this.logger.error(this.addStudent.name);
-      console.log(error?.message);;
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -287,10 +235,7 @@ export class UserAdminService {
         },
       ];
 
-      const students = await this.userModel
-        .aggregate(pipeline)
-        .skip(SKIP)
-        .limit(LIMIT_PAGE);
+      const students = await this.userModel.aggregate(pipeline).skip(SKIP).limit(LIMIT_PAGE);
 
       const total = await this.userModel.aggregate(pipeline).count("total");
 
@@ -306,11 +251,8 @@ export class UserAdminService {
       );
     } catch (error) {
       this.logger.error(this.addStudent.name);
-      console.log(error?.message);;
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -319,11 +261,8 @@ export class UserAdminService {
     try {
     } catch (error) {
       this.logger.error(this.deleteStudent.name);
-      console.log(error?.message);;
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

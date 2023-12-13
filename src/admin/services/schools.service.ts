@@ -1,21 +1,7 @@
-import {
-  HttpStatus,
-  Inject,
-  Injectable,
-  Logger,
-  InternalServerErrorException,
-  NotFoundException,
-  HttpException,
-  BadRequestException,
-} from "@nestjs/common";
+import { HttpStatus, Inject, Injectable, Logger, InternalServerErrorException, NotFoundException, HttpException, BadRequestException, } from "@nestjs/common";
 import { Request } from "express";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose, {
-  Model,
-  PipelineStage,
-  Types,
-  isValidObjectId,
-} from "mongoose";
+import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from "mongoose";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { School } from "@app/common/model/schema/schools.schema";
@@ -63,10 +49,7 @@ export class SchoolAdminService {
     } catch (error) {
       this.logger.error(this.create.name);
       console.log(error?.message);
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -106,10 +89,7 @@ export class SchoolAdminService {
     } catch (error) {
       this.logger.error(this.edit.name);
       console.log(error?.message);
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -178,10 +158,7 @@ export class SchoolAdminService {
     } catch (error) {
       this.logger.error(this.find.name);
       console.log(error?.message);
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -207,10 +184,7 @@ export class SchoolAdminService {
     } catch (error) {
       this.logger.error(this.detail.name);
       console.log(error?.message);
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -241,10 +215,7 @@ export class SchoolAdminService {
     } catch (error) {
       this.logger.error(this.delete.name);
       console.log(error?.message);
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

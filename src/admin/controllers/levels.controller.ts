@@ -1,16 +1,7 @@
-import {
-  Request,
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from "@nestjs/common";
+import { Request, Controller, Get, Post, Body, Patch, Param, Delete, } from "@nestjs/common";
 import { LevelsAdminService } from "../services/levels.service";
 
 @Controller("admin/levels")
 export class LevelsAdminController {
-  constructor(private readonly levelsService: LevelsAdminService) {}
+  constructor(private readonly levelsService: LevelsAdminService) { }
 }

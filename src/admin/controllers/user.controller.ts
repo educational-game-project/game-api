@@ -1,23 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  HttpStatus,
-  Inject,
-  Logger,
-  Post,
-  Req,
-  UploadedFile,
-  UseGuards,
-  UseInterceptors,
-  HttpException,
-} from "@nestjs/common";
+import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Req, UploadedFile, UseGuards, UseInterceptors, HttpException, } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
-import {
-  imageFilter,
-  limitImageUpload,
-} from "@app/common/utils/validators/file.validator";
+import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { ByIdDto } from "@app/common/dto/byId.dto";
@@ -59,11 +43,8 @@ export class UserAdminController {
       return this.userService.addAdmin(body, files, req);
     } catch (error) {
       this.logger.error(this.create.name);
-      console.log(error?.message);;
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -104,11 +85,8 @@ export class UserAdminController {
       return this.userService.addStudent(body, files, req);
     } catch (error) {
       this.logger.error(this.addStudent.name);
-      console.log(error?.message);;
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

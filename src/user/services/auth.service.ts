@@ -1,12 +1,7 @@
 import { HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { Request } from "express";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose, {
-  Model,
-  PipelineStage,
-  Types,
-  isValidObjectId,
-} from "mongoose";
+import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from "mongoose";
 import { LoginUserDto } from "@app/common/dto/auth.dto";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
@@ -36,6 +31,7 @@ export class AuthService {
         );
 
       const tokens = await this.authHelper.generateTokens(user._id, {
+        name: user.name,
         role: user.role,
       });
 
@@ -47,11 +43,7 @@ export class AuthService {
     } catch (error) {
       this.logger.error(this.login.name);
       console.log(error?.message);;
-      this.responseService.error(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        StringHelper.internalServerError,
-        { value: error, constraint: "", property: "" },
-      );
+      this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
     }
   }
 }
