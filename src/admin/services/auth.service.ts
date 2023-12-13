@@ -20,7 +20,7 @@ export class AuthAdminService {
     @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(AuthAdminService.name);
 
@@ -56,6 +56,7 @@ export class AuthAdminService {
       delete user.password;
 
       const tokens = await this.authHelper.generateTokens(user?._id, {
+        name: user.name,
         role: user.role,
         email: user?.email,
         phoneNumber: user?.phoneNumber,

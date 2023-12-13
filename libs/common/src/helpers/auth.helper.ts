@@ -18,7 +18,7 @@ export class AuthHelper {
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(ConfigService) private readonly configService: ConfigService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   // Validate token
   public validateToken(token: string) {
@@ -45,7 +45,7 @@ export class AuthHelper {
   // Generate JWT Token
   public async generateTokens(
     userId: Types.ObjectId,
-    data: { role: string; email?: string; phoneNumber?: string },
+    data: { name: string; role: string; email?: string; phoneNumber?: string },
   ) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
