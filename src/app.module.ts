@@ -1,11 +1,10 @@
 import { join } from "path";
 import { Module } from "@nestjs/common";
-import { MongooseModule } from "@nestjs/mongoose";
 import { JwtModule } from "@nestjs/jwt";
+import { MongooseModule } from "@nestjs/mongoose";
 import { AppService } from "./user/services/app.service";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { AuthService } from "./user/services/auth.service";
-import { UserService } from "./user/services/user.service";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { LevelsService } from "./user/services/levels.service";
@@ -17,7 +16,6 @@ import { ImagesService } from "@app/common/helpers/file.helpers";
 import { AppController } from "./user/controllers/app.controller";
 import { FileUploader } from "@app/common/utils/fileUploader.util";
 import { DatabaseModule } from "@app/common/model/database.module";
-import { UserController } from "./user/controllers/user.controller";
 import { AuthController } from "./user/controllers/auth.controller";
 import { RecordAdminService } from "./admin/services/record.service";
 import { LevelsAdminService } from "./admin/services/levels.service";
@@ -64,7 +62,6 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     AuthController,
     LevelsController,
     ScoreController,
-    UserController,
     AnalysisAdminController,
     AuthAdminController,
     LevelsAdminController,
@@ -83,7 +80,6 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     AuthService,
     LevelsService,
     ScoreService,
-    UserService,
     AnalysisAdminService,
     AuthAdminService,
     LevelsAdminService,
@@ -96,4 +92,4 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     FileUploader,
   ],
 })
-export class AppModule {}
+export class AppModule { }
