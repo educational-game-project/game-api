@@ -20,7 +20,7 @@ export class ImagesService {
     @InjectModel(Image.name) private readonly imageModel: Model<Image>,
     @Inject(ConfigService) private readonly configService: ConfigService,
     @Inject(FileUploader) private uploader: FileUploader,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(ImagesService.name);
 
@@ -51,7 +51,7 @@ export class ImagesService {
       return media;
     } catch (error) {
       this.logger.error(this.define.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -76,7 +76,7 @@ export class ImagesService {
       return media;
     } catch (error) {
       this.logger.error(this.delete.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -96,7 +96,7 @@ export class ImagesService {
       return !!deletedMedia;
     } catch (error) {
       this.logger.error(this.delete.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new InternalServerErrorException({ message: error.message });
     }
   }

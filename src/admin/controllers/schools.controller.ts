@@ -40,7 +40,7 @@ export class SchoolAdminController {
     private schoolService: SchoolAdminService,
     @Inject(ImagesService) private imageService: ImagesService,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(SchoolAdminService.name);
 
@@ -63,7 +63,7 @@ export class SchoolAdminController {
       return this.schoolService.create(body, files, req);
     } catch (error) {
       this.logger.error(this.create.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -90,7 +90,7 @@ export class SchoolAdminController {
       return this.schoolService.edit(body, files, req);
     } catch (error) {
       this.logger.error(this.edit.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,

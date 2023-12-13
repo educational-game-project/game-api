@@ -34,7 +34,7 @@ export class UserAdminController {
   constructor(
     private readonly userService: UserAdminService,
     @Inject(ImagesService) private imageHelper: ImagesService,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(UserAdminController.name);
 
@@ -59,7 +59,7 @@ export class UserAdminController {
       return this.userService.addAdmin(body, files, req);
     } catch (error) {
       this.logger.error(this.create.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -104,7 +104,7 @@ export class UserAdminController {
       return this.userService.addStudent(body, files, req);
     } catch (error) {
       this.logger.error(this.addStudent.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,

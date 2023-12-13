@@ -13,7 +13,7 @@ export class RecordService {
     @InjectModel(Record.name) private recordModel: Model<Record>,
     @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(RecordService.name);
 
@@ -62,7 +62,7 @@ export class RecordService {
       );
     } catch (error) {
       this.logger.error(this.record.name);
-      console.log(error);
+      console.log(error?.message);;
       return this.responseService.error(
         HttpStatus.INTERNAL_SERVER_ERROR,
         StringHelper.internalServerError,
@@ -84,7 +84,7 @@ export class RecordService {
       return record;
     } catch (error) {
       this.logger.error(this.initRecord.name);
-      console.log(error);
+      console.log(error?.message);;
       return this.responseService.error(
         HttpStatus.INTERNAL_SERVER_ERROR,
         StringHelper.internalServerError,

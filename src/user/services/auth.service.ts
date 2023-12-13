@@ -20,7 +20,7 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(AuthService.name);
 
@@ -46,7 +46,7 @@ export class AuthService {
       );
     } catch (error) {
       this.logger.error(this.login.name);
-      console.log(error);
+      console.log(error?.message);;
       this.responseService.error(
         HttpStatus.INTERNAL_SERVER_ERROR,
         StringHelper.internalServerError,

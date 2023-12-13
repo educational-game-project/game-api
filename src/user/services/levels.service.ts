@@ -16,7 +16,7 @@ export class LevelsService {
     @InjectModel(Level.name) private levelModel: Model<Level>,
     @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(LevelsService.name);
 
@@ -56,7 +56,7 @@ export class LevelsService {
       );
     } catch (error) {
       this.logger.error(this.initLevel.name);
-      console.log(error);
+      console.log(error?.message);;
       return this.responseService.error(
         HttpStatus.INTERNAL_SERVER_ERROR,
         StringHelper.internalServerError,
@@ -93,7 +93,7 @@ export class LevelsService {
       );
     } catch (error) {
       this.logger.error(this.getLevel.name);
-      console.log(error);
+      console.log(error?.message);;
       return this.responseService.error(
         HttpStatus.INTERNAL_SERVER_ERROR,
         StringHelper.internalServerError,
@@ -135,7 +135,7 @@ export class LevelsService {
       );
     } catch (error) {
       this.logger.error(this.updateLevel.name);
-      console.log(error);
+      console.log(error?.message);;
       return this.responseService.error(
         HttpStatus.INTERNAL_SERVER_ERROR,
         StringHelper.internalServerError,

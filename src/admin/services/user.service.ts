@@ -28,7 +28,7 @@ export class UserAdminService {
     @InjectModel(School.name) private schoolModel: Model<School>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
-  ) {}
+  ) { }
 
   private readonly logger = new Logger(UserAdminService.name);
 
@@ -73,7 +73,7 @@ export class UserAdminService {
       );
     } catch (error) {
       this.logger.error(this.addAdmin.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -146,7 +146,7 @@ export class UserAdminService {
       );
     } catch (error) {
       this.logger.error(this.findAdmin.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -179,7 +179,7 @@ export class UserAdminService {
       );
     } catch (error) {
       this.logger.error(this.deleteAdmin.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -225,7 +225,7 @@ export class UserAdminService {
       );
     } catch (error) {
       this.logger.error(this.addStudent.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -306,7 +306,7 @@ export class UserAdminService {
       );
     } catch (error) {
       this.logger.error(this.addStudent.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -319,7 +319,7 @@ export class UserAdminService {
     try {
     } catch (error) {
       this.logger.error(this.deleteStudent.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,

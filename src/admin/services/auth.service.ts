@@ -69,7 +69,7 @@ export class AuthAdminService {
       );
     } catch (error) {
       this.logger.error(this.login.name);
-      console.log(error);
+      console.log(error?.message);;
       throw new InternalServerErrorException(error);
     }
   }
