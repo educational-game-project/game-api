@@ -24,15 +24,11 @@ export class SchoolAdminService {
 
   private readonly logger = new Logger(SchoolAdminService.name);
 
-  public async create(
-    body: CreateSchoolDTO,
-    media: Array<Image>,
-    req: Request,
-  ): Promise<any> {
+  public async create(body: CreateSchoolDTO, media: Array<Image>, req: Request,): Promise<any> {
     try {
       const { name, address } = body;
 
-      const exist = await this.schoolModel.count({ name });
+      const exist = await this.schoolModel.count({ name, address });
       if (exist > 0) throw new BadRequestException("School Already Exist");
 
       const school = await this.schoolModel.create({
@@ -41,11 +37,7 @@ export class SchoolAdminService {
         images: media ?? [],
       });
 
-      return this.responseService.success(
-        true,
-        StringHelper.successResponse("schoool", "create"),
-        school,
-      );
+      return this.responseService.success(true, StringHelper.successResponse("schoool", "create"), school);
     } catch (error) {
       this.logger.error(this.create.name);
       console.log(error?.message);
@@ -53,39 +45,24 @@ export class SchoolAdminService {
     }
   }
 
-  public async edit(
-    body: EditSchoolDTO,
-    media: any,
-    req: Request,
-  ): Promise<any> {
+  public async edit(body: EditSchoolDTO, media: any, req: Request,): Promise<any> {
     try {
       const { id, name, address } = body;
 
-      let school = await this.schoolModel.findOne({
-        _id: new Types.ObjectId(id),
-      });
+      let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(id) });
       if (!school) throw new NotFoundException("School Not Found");
 
       if (name) school.name = name;
       if (address) school.address = address;
 
-      if (body.mediaIds)
-        school.images = school?.images.filter((ev) =>
-          body.mediaIds?.includes(ev._id?.toString()),
-        );
+      if (body.mediaIds) school.images = school?.images.filter((ev) => body.mediaIds?.includes(ev._id?.toString()));
 
       if (media?.length > 0) school.images.push(...media);
-      school?.images?.map((item, index) =>
-        index === 0 ? (item.isDefault = true) : (item.isDefault = false),
-      );
+      school?.images?.map((item, index) => index === 0 ? (item.isDefault = true) : (item.isDefault = false));
 
       school = await school.save();
 
-      return this.responseService.success(
-        true,
-        StringHelper.successResponse("schoool", "edit"),
-        school,
-      );
+      return this.responseService.success(true, StringHelper.successResponse("schoool", "edit"), school);
     } catch (error) {
       this.logger.error(this.edit.name);
       console.log(error?.message);
@@ -107,22 +84,6 @@ export class SchoolAdminService {
       const pipeline: PipelineStage[] = [
         {
           $lookup: {
-            from: "users",
-            foreignField: "_id",
-            localField: "admins",
-            as: "admins",
-            pipeline: [
-              {
-                $match: { deletedAt: null },
-              },
-              {
-                $project: { school: 0 },
-              },
-            ],
-          },
-        },
-        {
-          $lookup: {
             from: "images",
             localField: "images",
             foreignField: "_id",
@@ -134,19 +95,20 @@ export class SchoolAdminService {
           $match: searchOption,
         },
         {
+          $project: { admins: 0 }
+        },
+        {
           $sort: { createdAt: -1 },
         },
       ];
 
-      const schools = await this.schoolModel
-        .aggregate(pipeline)
+      const schools = await this.schoolModel.aggregate(pipeline)
         .skip(SKIP)
         .limit(LIMIT_PAGE);
 
       const total = await this.schoolModel.aggregate(pipeline).count("total");
 
-      return this.responseService.paging(
-        StringHelper.successResponse("schoool", "list"),
+      return this.responseService.paging(StringHelper.successResponse("schoool", "list"),
         schools,
         {
           totalData: Number(total[0]?.total) ?? 0,
@@ -164,23 +126,19 @@ export class SchoolAdminService {
 
   public async detail(body: ByIdDto, req: Request): Promise<any> {
     try {
-      const school = await this.schoolModel
-        .findOne({ _id: new Types.ObjectId(body.id) })
+      const school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body.id) })
         .populate({
           path: "admins",
           select: "name role images email phoneNumber",
           options: {
             match: { deletedAt: null },
           },
+          populate: "images",
         })
         .populate("images");
       if (!school) throw new NotFoundException("School Not Found");
 
-      return this.responseService.success(
-        true,
-        StringHelper.successResponse("school", "get_detail"),
-        school,
-      );
+      return this.responseService.success(true, StringHelper.successResponse("school", "get_detail"), school);
     } catch (error) {
       this.logger.error(this.detail.name);
       console.log(error?.message);
