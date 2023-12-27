@@ -37,7 +37,7 @@ jobs:
         with:
           # context: .
           push: true
-          tags: thelogoreng/api:game-api${{ steps.vars.outputs.sha_short }}
+          tags: thelogoreng/api:game-${{ steps.vars.outputs.sha_short }}
 
   Deploy-to-VM:
     runs-on: ubuntu-latest
@@ -59,8 +59,8 @@ jobs:
             cd /home/${{ secrets.VM_USERNAME }}/game &&
             ls -al &&
             echo ${{ secrets.DOCKER_TOKEN }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin &&
-            docker pull thelogoreng/api:game-api${{ steps.vars.outputs.sha_short }} &&
-            docker tag thelogoreng/api:game-api${{ steps.vars.outputs.sha_short }} thelogoreng/api:game-api
+            docker pull thelogoreng/api:game-${{ steps.vars.outputs.sha_short }} &&
+            docker tag thelogoreng/api:game-${{ steps.vars.outputs.sha_short }} thelogoreng/api:game
             docker compose up -d &&
             docker image prune --force
             '
