@@ -11,6 +11,7 @@ import { SearchDTO } from "@app/common/dto/search.dto";
 import { dateToString } from "@app/common/pipeline/dateToString.pipeline";
 import { ByIdDto } from "@app/common/dto/byId.dto";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
+import { ImagesService } from "@app/common/helpers/file.helpers";
 
 @Injectable()
 export class UserAdminService {
@@ -19,6 +20,7 @@ export class UserAdminService {
     @InjectModel(School.name) private schoolModel: Model<School>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
+    @Inject(ImagesService) private imageHelper: ImagesService,
   ) { }
 
   private readonly logger = new Logger(UserAdminService.name);
@@ -46,9 +48,10 @@ export class UserAdminService {
       school.adminsCount = school.admins.length;
       await school.save();
 
+      admin.school = school;
       admin = admin.toObject();
       delete admin.password;
-      delete admin.school.admins;
+      delete admin.school.admins
 
       return this.responseService.success(true, StringHelper.successResponse("user", "add_admin"), admin,);
     } catch (error) {
@@ -75,6 +78,8 @@ export class UserAdminService {
         deletedAt: null,
       };
 
+      if (body?.schoolId) searchOption.school = new Types.ObjectId(body?.schoolId);
+
       const pipeline: PipelineStage[] = [
         {
           $lookup: {
@@ -85,10 +90,26 @@ export class UserAdminService {
             pipeline: [
               ...dateToString,
               {
+                $lookup: {
+                  from: "images",
+                  localField: "images",
+                  foreignField: "_id",
+                  as: "images",
+                }
+              },
+              {
                 $project: { admins: 0 },
               },
             ],
           },
+        },
+        {
+          $lookup: {
+            from: "images",
+            localField: "images",
+            foreignField: "_id",
+            as: "images",
+          }
         },
         ...dateToString,
         {
@@ -129,15 +150,16 @@ export class UserAdminService {
       });
       if (!admin) throw new NotFoundException("Admin Not Found");
 
+      if (admin.images.length) await this.imageHelper.delete(admin.images);
+
+      admin.images = [];
       admin.deletedAt = new Date();
       await admin.save();
 
       let school = await this.schoolModel.findOne({ _id: admin.school });
       if (!school) throw new NotFoundException("School Not Found");
 
-      school.admins = school.admins.filter(
-        (i) => i.toString() !== admin._id.toString(),
-      );
+      school.admins = school.admins.filter((i) => i.toString() !== admin._id.toString());
       school.adminsCount--;
       await school.save();
 
@@ -289,6 +311,9 @@ export class UserAdminService {
       });
       if (!student) throw new NotFoundException("Student Not Found");
 
+      if (student.images.length) await this.imageHelper.delete(student.images);
+
+      student.images = [];
       student.deletedAt = new Date();
       await student.save();
 

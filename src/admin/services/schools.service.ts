@@ -47,7 +47,7 @@ export class SchoolAdminService {
 
   public async edit(body: EditSchoolDTO, media: any, req: Request,): Promise<any> {
     try {
-      const { id, name, address } = body;
+      const { id, name, address, mediaIds } = body;
 
       let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(id) });
       if (!school) throw new NotFoundException("School Not Found");
@@ -55,9 +55,14 @@ export class SchoolAdminService {
       if (name) school.name = name;
       if (address) school.address = address;
 
-      if (body.mediaIds) school.images = school?.images.filter((ev) => body.mediaIds?.includes(ev._id?.toString()));
+      if (mediaIds) {
+        let deletedImages = school?.images.filter((ev) => !mediaIds?.includes(ev._id?.toString()));
+        if (deletedImages.length) await this.imageService.delete(deletedImages)
 
-      if (media?.length > 0) school.images.push(...media);
+        school.images = school?.images.filter((ev) => mediaIds?.includes(ev._id?.toString()));
+      }
+
+      if (media?.length) school.images.push(...media);
       school?.images?.map((item, index) => index === 0 ? (item.isDefault = true) : (item.isDefault = false));
 
       school = await school.save();
@@ -153,23 +158,20 @@ export class SchoolAdminService {
       });
       if (!school) throw new NotFoundException("School Not Found");
 
-      await this.imageService.delete(school.images);
+      if (school.images.length) await this.imageService.delete(school.images);
 
+      school.images = [];
       school.deletedAt = new Date();
-      school.save();
+      await school.save();
 
       let users = await this.userModel.find({ school: school._id });
 
-      if (users.length > 0)
-        users.forEach(async (item) => {
-          item.school = null;
-          await item.save();
-        });
+      if (users.length > 0) users.forEach(async (item) => {
+        item.school = null;
+        await item.save();
+      });
 
-      return this.responseService.success(
-        true,
-        StringHelper.successResponse("school", "delete"),
-      );
+      return this.responseService.success(true, StringHelper.successResponse("school", "delete"));
     } catch (error) {
       this.logger.error(this.delete.name);
       console.log(error?.message);

@@ -1,15 +1,7 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Image } from "../model/schema/subtype/images.subtype";
 import { Model } from "mongoose";
-import { ConfigService } from "@nestjs/config";
 import * as fs from "fs";
 import { extname, join } from "path";
 import { FileUploader } from "../utils/fileUploader.util";
@@ -18,13 +10,10 @@ import { FileUploader } from "../utils/fileUploader.util";
 export class ImagesService {
   constructor(
     @InjectModel(Image.name) private readonly imageModel: Model<Image>,
-    @Inject(ConfigService) private readonly configService: ConfigService,
     @Inject(FileUploader) private uploader: FileUploader,
   ) { }
 
   private readonly logger = new Logger(ImagesService.name);
-
-  private HOST = this.configService.get<number>("HOST");
 
   async define(files: Array<Express.Multer.File>): Promise<any> {
     try {
@@ -65,7 +54,7 @@ export class ImagesService {
         files.map(async (item) => {
           let image = await this.imageModel.findOne({ _id: item._id });
           if (image) {
-            await this.unlink(image.fileName);
+            await this.uploader.deleteFromCloudinary(image);
             image.deletedAt = new Date();
             await image.save();
             return image;

@@ -27,41 +27,51 @@ export class FileUploader {
       return res?.secure_url;
     } catch (error) {
       this.logger.error(this.uploadFile.name);
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  async uploadFileToCloudinary(
-    fileBuffer: Buffer,
-    fileName: string,
-  ): Promise<any> {
+
+  async uploadFileToCloudinary(fileBuffer: Buffer, fileName: string,): Promise<any> {
     try {
       const uploadResult = await new Promise((resolve) => {
-        cloudinary.uploader
-          .upload_stream(
-            {
-              resource_type: "auto",
-              public_id: `game/${fileName}`,
-              filename_override: fileName,
-              unique_filename: true,
-              overwrite: true,
-            },
-            (error, uploadResult) => {
-              return resolve(uploadResult);
-            },
-          )
+        cloudinary.uploader.upload_stream(
+          {
+            resource_type: "auto",
+            public_id: `game/${fileName}`,
+            filename_override: fileName,
+            unique_filename: true,
+            overwrite: true,
+          },
+          (error, uploadResult) => {
+            return resolve(uploadResult);
+          },
+        )
           .end(fileBuffer);
       });
+
       return uploadResult;
     } catch (error) {
       this.logger.error(this.uploadFileToCloudinary.name);
       console.error("Error uploading to Cloudinary:", error);
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async deleteFromCloudinary(file: any): Promise<any> {
+    try {
+      const result = await new Promise((resolve) => {
+        cloudinary.uploader
+          .destroy(`game/${file.fileName.split('.')[0]}`)
+          .then((result) => {
+            return resolve(result);
+          });
+      });
+
+      return result;
+    } catch (error) {
+      this.logger.error(this.deleteFromCloudinary.name);
+      console.error("Error deleting from Cloudinary:", error);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
