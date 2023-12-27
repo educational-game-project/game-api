@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Req, UploadedFile, UseGuards, UseInterceptors, HttpException, } from "@nestjs/common";
+import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Req, UploadedFile, UseGuards, UseInterceptors, HttpException, Get, } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
@@ -21,6 +21,8 @@ export class UserAdminController {
   ) { }
 
   private readonly logger = new Logger(UserAdminController.name);
+
+  //////////////////////////////////////////// ADMIN /////////////////////////////////////////////
 
   @Post("admin")
   @Roles([UserRole.SUPER_ADMIN])
@@ -64,6 +66,16 @@ export class UserAdminController {
     return this.userService.deleteAdmin(body, req);
   }
 
+  @Post("admin/detail")
+  @Roles([UserRole.SUPER_ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
+  async detailAdmin(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+    return this.userService.detailAdmin(body, req);
+  }
+
+  //////////////////////////////////////////// STUDENT /////////////////////////////////////////////
+
   @Post("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
@@ -99,5 +111,24 @@ export class UserAdminController {
     @Req() req: Request,
   ): Promise<any> {
     return this.userService.listStudents(body, req);
+  }
+
+  @Delete("student")
+  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
+  async deleteStudent(
+    @Body() body: ByIdDto,
+    @Req() req: Request,
+  ): Promise<any> {
+    return this.userService.deleteStudent(body, req);
+  }
+
+  @Get("profile")
+  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
+  async getProfile(@Req() req: Request,): Promise<any> {
+    return this.userService.getProfile(req);
   }
 }

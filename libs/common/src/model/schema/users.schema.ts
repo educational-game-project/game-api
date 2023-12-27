@@ -30,7 +30,7 @@ export class User extends AbstractDocument {
   @Prop({ type: [{ type: Types.ObjectId, ref: Image.name, default: null }] })
   images: Image[];
 
-  @Prop({ type: Types.ObjectId, ref: "Schools", default: null })
+  @Prop({ type: Types.ObjectId, ref: School.name, default: null })
   school: School;
 }
 

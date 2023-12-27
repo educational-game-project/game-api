@@ -23,6 +23,8 @@ export class UserAdminService {
 
   private readonly logger = new Logger(UserAdminService.name);
 
+  //////////////////////////////////////////// ADMIN /////////////////////////////////////////////
+
   public async addAdmin(body: CreateUserDto, media: any, req: any,): Promise<any> {
     try {
       const password = body?.password ? this.authHelper.encodePassword(body.password) : this.authHelper.encodePassword("Admin1234");
@@ -37,12 +39,12 @@ export class UserAdminService {
         role: UserRole.ADMIN,
         images: media?.length ? media : null,
         password,
-        school: school,
+        school: school._id,
       });
 
       school.admins.push(admin);
       school.adminsCount = school.admins.length;
-      school.save();
+      await school.save();
 
       admin = admin.toObject();
       delete admin.password;
@@ -128,6 +130,7 @@ export class UserAdminService {
       if (!admin) throw new NotFoundException("Admin Not Found");
 
       admin.deletedAt = new Date();
+      await admin.save();
 
       let school = await this.schoolModel.findOne({ _id: admin.school });
       if (!school) throw new NotFoundException("School Not Found");
@@ -136,7 +139,7 @@ export class UserAdminService {
         (i) => i.toString() !== admin._id.toString(),
       );
       school.adminsCount--;
-      school.save();
+      await school.save();
 
       return this.responseService.success(true, StringHelper.successResponse("admin", "delete"));
     } catch (error) {
@@ -145,6 +148,27 @@ export class UserAdminService {
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  public async detailAdmin(body: ByIdDto, req: any): Promise<any> {
+    try {
+      let admin = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.ADMIN })
+        .populate('images')
+        .populate({
+          path: 'school',
+          select: "-admins",
+          populate: "images"
+        });
+      if (!admin) throw new NotFoundException("Admin Not Found");
+
+      return this.responseService.success(true, StringHelper.successResponse("admin", "detail"), admin);
+    } catch (error) {
+      this.logger.error(this.detailAdmin.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  //////////////////////////////////////////// STUDENT /////////////////////////////////////////////
 
   public async addStudent(body: CreateUserDto, media: any, req: any,): Promise<any> {
     try {
@@ -259,8 +283,41 @@ export class UserAdminService {
   public async deleteStudent(body: ByIdDto, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
+      let student = await this.userModel.findOne({
+        _id: new Types.ObjectId(body.id),
+        role: UserRole.USER,
+      });
+      if (!student) throw new NotFoundException("Student Not Found");
+
+      student.deletedAt = new Date();
+      await student.save();
+
+      let school = await this.schoolModel.findOne({ _id: student.school });
+      if (!school) throw new NotFoundException("School Not Found");
+
+      school.studentsCount--;
+      await school.save();
+
+      return this.responseService.success(true, StringHelper.successResponse("student", "delete"));
     } catch (error) {
       this.logger.error(this.deleteStudent.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async getProfile(req: any): Promise<any> {
+    try {
+      let user = await this.userModel.findOne({
+        _id: new Types.ObjectId(req.user._id),
+      })
+        .populate("images")
+
+      if (!user) throw new NotFoundException("User Not Found")
+
+      return this.responseService.success(true, StringHelper.successResponse("user", "get_profile"), user)
+    } catch (error) {
+      this.logger.error(this.getProfile.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }

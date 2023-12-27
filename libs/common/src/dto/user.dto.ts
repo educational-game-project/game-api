@@ -18,7 +18,13 @@ export class CreateUserDto {
   @IsString()
   password?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsMongoId()
   schoolId?: string;
+}
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {
+  @IsNotEmpty()
+  @IsMongoId()
+  id: string;
 }
