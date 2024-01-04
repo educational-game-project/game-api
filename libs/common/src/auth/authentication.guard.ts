@@ -1,15 +1,10 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
 import { AuthHelper } from "../helpers/auth.helper";
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
-  constructor(private authHelper: AuthHelper) {}
+  constructor(private authHelper: AuthHelper) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
