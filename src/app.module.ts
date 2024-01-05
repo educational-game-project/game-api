@@ -53,9 +53,6 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     }),
     DatabaseModule,
     MongooseModule.forFeature(MongooseModulesImport),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, ".."),
-    }),
   ],
   controllers: [
     AppController,
