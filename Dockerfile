@@ -8,7 +8,7 @@ RUN apk add g++ make py3-pip
 RUN npm install
 COPY --chown=node:node . .
 
-####################### 
+#########################
 # BUILD FOR PRODUCTION 
 
 FROM node:18.18.2-alpine3.18 AS build
