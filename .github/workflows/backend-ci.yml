@@ -13,11 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.head_commit.message, '#build') }}
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
       - name: Get Short SHA
         id: vars
         shell: bash
         run: |
-          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
       - id: qemu
         name: Set up QEMU
