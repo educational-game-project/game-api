@@ -27,7 +27,7 @@ ENV NODE_ENV=${NODE_ENV}
 
 RUN npm install --omit=dev && npm cache clean --force
 
-##############
+################
 # PRODUCTION 
 
 FROM node:18.18.2-alpine3.18 AS production
