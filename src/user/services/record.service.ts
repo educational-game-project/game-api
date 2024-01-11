@@ -21,11 +21,7 @@ export class RecordService {
     const users: User = <User>req.user;
     try {
       let user = await this.userModel.findOne({ _id: users._id });
-      if (!user)
-        return this.responseService.error(
-          HttpStatus.NOT_FOUND,
-          StringHelper.notFoundResponse("user"),
-        );
+      if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("user"));
 
       let current = await this.recordModel.findOne({
         user: user._id,
@@ -33,6 +29,7 @@ export class RecordService {
         level: body.level,
         isValid: true,
       });
+
       if (!current) current = await this.initRecord(body, req);
 
       switch (body.type) {
@@ -55,19 +52,11 @@ export class RecordService {
       current.time.push(body.time);
       current = await current.save();
 
-      return this.responseService.success(
-        true,
-        StringHelper.successResponse("record", "add"),
-        current,
-      );
+      return this.responseService.success(true, StringHelper.successResponse("record", "add"), current);
     } catch (error) {
       this.logger.error(this.record.name);
-      console.log(error?.message);;
-      return this.responseService.error(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        StringHelper.internalServerError,
-        { value: error, constraint: "", property: "" },
-      );
+      console.log(error?.message);
+      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
     }
   }
 
@@ -84,12 +73,8 @@ export class RecordService {
       return record;
     } catch (error) {
       this.logger.error(this.initRecord.name);
-      console.log(error?.message);;
-      return this.responseService.error(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        StringHelper.internalServerError,
-        { value: error, constraint: "", property: "" },
-      );
+      console.log(error?.message);
+      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
     }
   }
 }

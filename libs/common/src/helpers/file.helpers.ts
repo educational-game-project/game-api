@@ -40,7 +40,7 @@ export class ImagesService {
       return media;
     } catch (error) {
       this.logger.error(this.define.name);
-      console.log(error?.message);;
+      console.log(error?.message);
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -65,7 +65,7 @@ export class ImagesService {
       return media;
     } catch (error) {
       this.logger.error(this.delete.name);
-      console.log(error?.message);;
+      console.log(error?.message);
       throw new HttpException(
         error?.response ?? error?.message ?? error,
         error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
@@ -85,7 +85,7 @@ export class ImagesService {
       return !!deletedMedia;
     } catch (error) {
       this.logger.error(this.delete.name);
-      console.log(error?.message);;
+      console.log(error?.message);
       throw new InternalServerErrorException({ message: error.message });
     }
   }

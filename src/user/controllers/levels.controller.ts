@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Put,
-  Request as Req,
-  UseGuards,
-} from "@nestjs/common";
+import { Body, Controller, Post, Put, Request as Req, UseGuards, } from "@nestjs/common";
 import { Request } from "express";
 import { LevelsService } from "../services/levels.service";
 import { initLevelDTO } from "@app/common/dto/levels.dto";
@@ -20,14 +13,11 @@ import { GameNameDTO } from "@app/common/dto/global.dto";
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("levels")
 export class LevelsController {
-  constructor(private readonly levelsService: LevelsService) {}
+  constructor(private readonly levelsService: LevelsService) { }
 
   @Post("init")
   @ResponseStatusCode()
-  async initLevel(
-    @Body() body: initLevelDTO,
-    @Req() req: Request,
-  ): Promise<any> {
+  async initLevel(@Body() body: initLevelDTO, @Req() req: Request): Promise<any> {
     return this.levelsService.initLevel(body, req);
   }
 
@@ -39,10 +29,7 @@ export class LevelsController {
 
   @Put()
   @ResponseStatusCode()
-  async updateLevel(
-    @Body() body: GameNameDTO,
-    @Req() req: Request,
-  ): Promise<any> {
+  async updateLevel(@Body() body: GameNameDTO, @Req() req: Request): Promise<any> {
     return this.levelsService.updateLevel(body, req);
   }
 }

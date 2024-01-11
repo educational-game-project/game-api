@@ -21,28 +21,15 @@ export class AuthService {
 
   public async login(body: LoginUserDto): Promise<any> {
     try {
-      let user = await this.userModel
-        .findOne({ name: body.name, role: UserRole.USER })
-        .populate("images");
-      if (!user)
-        return this.responseService.error(
-          HttpStatus.NOT_FOUND,
-          StringHelper.notFoundResponse("user"),
-        );
+      let user = await this.userModel.findOne({ name: body.name, role: UserRole.USER }).populate("images");
+      if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("user"));
 
-      const tokens = await this.authHelper.generateTokens(user._id, {
-        name: user.name,
-        role: user.role,
-      });
+      const tokens = await this.authHelper.generateTokens(user._id, { name: user.name, role: user.role });
 
-      return this.responseService.success(
-        true,
-        StringHelper.successResponse("user", "login"),
-        { user, token: tokens },
-      );
+      return this.responseService.success(true, StringHelper.successResponse("user", "login"), { user, token: tokens });
     } catch (error) {
       this.logger.error(this.login.name);
-      console.log(error?.message);;
+      console.log(error?.message);
       this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
     }
   }

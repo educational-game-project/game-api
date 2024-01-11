@@ -7,4 +7,10 @@ export const userSeeder = [
     email: "superadmin@gmail.com",
     phoneNumber: "+6288888888888",
   },
+  {
+    name: "Admin",
+    role: UserRole.ADMIN,
+    email: "admin@gmail.com",
+    phoneNumber: "+6288888888888",
+  },
 ];
