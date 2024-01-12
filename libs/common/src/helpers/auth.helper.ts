@@ -11,7 +11,6 @@ import { User } from "../model/schema/users.schema";
 @Injectable()
 export class AuthHelper {
   constructor(
-    private readonly jwt: JwtService,
 
     @InjectModel(User.name) private readonly userModel: Model<User>,
 
@@ -22,23 +21,18 @@ export class AuthHelper {
 
   // Validate token
   public validateToken(token: string) {
-    const decoded = this.jwt.verify(token, {
-      secret: this.configService.get("JWT_SECRET"),
-    });
+    const decoded = this.jwtService.verify(token, { secret: this.configService.get("JWT_SECRET") });
     return decoded;
   }
 
   // Decoding the JWT Token
   public async decode(token: string): Promise<unknown> {
-    return this.jwt.decode(token, null);
+    return this.jwtService.decode(token, null);
   }
 
   // Get User by User ID we get from decode()
   public async validateUser(decoded: any): Promise<User> {
-    const user = await this.userModel.findOne({
-      _id: new Types.ObjectId(decoded._id),
-    });
-
+    const user = await this.userModel.findOne({ _id: new Types.ObjectId(decoded._id) });
     return user;
   }
 
@@ -90,23 +84,11 @@ export class AuthHelper {
 
   // Validate JWT Token, throw forbidden error if JWT Token is invalid
   private async validate(token: string): Promise<boolean | IResponseError> {
-    const decoded: unknown = this.jwt.verify(token);
-
-    if (!decoded)
-      return this.responseService.error(
-        HttpStatus.UNAUTHORIZED,
-        "User Unauthorized!",
-        { value: "", constraint: "", property: "" },
-      );
+    const decoded: unknown = this.jwtService.verify(token);
+    if (!decoded) return this.responseService.error(HttpStatus.UNAUTHORIZED, "User Unauthorized!", { value: "", constraint: "", property: "" });
 
     const user: User = await this.validateUser(decoded);
-
-    if (!user)
-      return this.responseService.error(
-        HttpStatus.UNAUTHORIZED,
-        "User Unauthorized!",
-        { value: "", constraint: "", property: "" },
-      );
+    if (!user) return this.responseService.error(HttpStatus.UNAUTHORIZED, "User Unauthorized!", { value: "", constraint: "", property: "" });
 
     return true;
   }

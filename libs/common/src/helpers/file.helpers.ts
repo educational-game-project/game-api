@@ -41,10 +41,7 @@ export class ImagesService {
     } catch (error) {
       this.logger.error(this.define.name);
       console.log(error?.message);
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -66,27 +63,7 @@ export class ImagesService {
     } catch (error) {
       this.logger.error(this.delete.name);
       console.log(error?.message);
-      throw new HttpException(
-        error?.response ?? error?.message ?? error,
-        error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  private async unlink(filename: string): Promise<any> {
-    try {
-      const deletedMedia: any = await fs.unlink(
-        join(__dirname, `../public/${filename}`),
-        (err) => {
-          if (err) throw new InternalServerErrorException(err);
-          return true;
-        },
-      );
-      return !!deletedMedia;
-    } catch (error) {
-      this.logger.error(this.delete.name);
-      console.log(error?.message);
-      throw new InternalServerErrorException({ message: error.message });
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

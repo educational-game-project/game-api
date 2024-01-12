@@ -3,11 +3,7 @@ export const StringHelper = {
 
   capitalize: (str: string, all: boolean = false): string => {
     str = str.toLocaleLowerCase();
-    if (all)
-      return str
-        .split(" ")
-        .map((s) => StringHelper.capitalize(s))
-        .join(" ");
+    if (all) return str.split(" ").map((s) => StringHelper.capitalize(s)).join(" ");
     return str.charAt(0).toUpperCase() + str.slice(1);
   },
 
@@ -15,12 +11,7 @@ export const StringHelper = {
     return new RegExp(`^${word}$`, "i");
   },
 
-  validationResponse(
-    section: string,
-    field: string,
-    rule: string,
-    value?: string,
-  ) {
+  validationResponse(section: string, field: string, rule: string, value?: string) {
     return `${section}_${field}_${rule}${value ? " " + value : ""}`;
   },
 
@@ -55,9 +46,8 @@ export const StringHelper = {
     const minute = d.getMinutes();
     const ampm = hour >= 12 ? "PM" : "AM";
 
-    return `${day} ${month} '${year.toString().substr(-2)} ${
-      hour % 12
-    }:${minute} ${ampm}`;
+    return `${day} ${month} '${year.toString().substr(-2)} ${hour % 12
+      }:${minute} ${ampm}`;
   },
 
   formatDate(date: string, timeZone: string = "Asia/Jakarta"): string {
