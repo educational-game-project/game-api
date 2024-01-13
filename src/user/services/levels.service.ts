@@ -7,7 +7,7 @@ import { ResponseService } from "@app/common/response/response.service";
 import { initLevelDTO } from "@app/common/dto/levels.dto";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { TimeHelper } from "@app/common/helpers/time.helper";
-import { GameNameDTO } from "@app/common/dto/global.dto";
+import { GameNameDTO } from "@app/common/dto/game.dto";
 
 @Injectable()
 export class LevelsService {

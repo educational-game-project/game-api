@@ -1,6 +1,6 @@
 import { PartialType } from "@nestjs/swagger";
 import { IsEnum, IsNotEmpty, IsNumber } from "class-validator";
-import { GameNameDTO } from "./global.dto";
+import { GameNameDTO } from "./game.dto";
 
 export enum ReportType {
   SUCCESS = "Success",
@@ -21,4 +21,4 @@ export class CreateReportDto extends PartialType(GameNameDTO) {
   time: number;
 }
 
-export class UpdateReportDto extends PartialType(CreateReportDto) {}
+export class UpdateReportDto extends PartialType(CreateReportDto) { }

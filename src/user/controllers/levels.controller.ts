@@ -7,7 +7,7 @@ import { UserRole } from "@app/common/enums/role.enum";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
-import { GameNameDTO } from "@app/common/dto/global.dto";
+import { GameNameDTO } from "@app/common/dto/game.dto";
 
 @Roles([UserRole.USER])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)

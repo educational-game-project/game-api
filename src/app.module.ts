@@ -13,6 +13,7 @@ import { RecordService } from "./user/services/record.service";
 import { AuthAdminService } from "./admin/services/auth.service";
 import { UserAdminService } from "./admin/services/user.service";
 import { ImagesService } from "@app/common/helpers/file.helpers";
+import { GameAdminService } from "./admin/services/game.service";
 import { AppController } from "./user/controllers/app.controller";
 import { FileUploader } from "@app/common/utils/fileUploader.util";
 import { DatabaseModule } from "@app/common/model/database.module";
@@ -29,6 +30,7 @@ import { ScoreController } from "./user/controllers/scoring.controller";
 import { AnalysisAdminService } from "./admin/services/analysis.service";
 import { AuthAdminController } from "./admin/controllers/auth.controller";
 import { UserAdminController } from "./admin/controllers/user.controller";
+import { GameAdminController } from "./admin/controllers/game.controller";
 import { MongooseModulesImport } from "@app/common/model/database.service";
 import { LevelsAdminController } from "./admin/controllers/levels.controller";
 import { ScoreAdminController } from "./admin/controllers/scoring.controller";
@@ -36,6 +38,8 @@ import { RecordAdminController } from "./admin/controllers/record.controller";
 import { ReportAdminController } from "./admin/controllers/report.controller";
 import { SchoolAdminController } from "./admin/controllers/schools.controller";
 import { AnalysisAdminController } from "./admin/controllers/analysis.controller";
+import { GameController } from "./user/controllers/game.controller";
+import { GameService } from "./user/services/game.service";
 
 @Module({
   imports: [
@@ -56,37 +60,41 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
   ],
   controllers: [
     AppController,
+    GameController,
     AuthController,
-    LevelsController,
     ScoreController,
-    AnalysisAdminController,
+    LevelsController,
+    RecordController,
+    GameAdminController,
     AuthAdminController,
+    UserAdminController,
+    ScoreAdminController,
     LevelsAdminController,
     RecordAdminController,
     ReportAdminController,
     SchoolAdminController,
-    ScoreAdminController,
-    UserAdminController,
-    RecordController,
+    AnalysisAdminController,
   ],
   providers: [
     AuthHelper,
-    ImagesService,
-    ResponseService,
     AppService,
+    GameService,
     AuthService,
-    LevelsService,
     ScoreService,
-    AnalysisAdminService,
+    FileUploader,
+    ImagesService,
+    LevelsService,
+    RecordService,
+    ResponseService,
+    GameAdminService,
     AuthAdminService,
+    UserAdminService,
+    ScoreAdminService,
     LevelsAdminService,
     RecordAdminService,
     ReportAdminService,
     SchoolAdminService,
-    ScoreAdminService,
-    UserAdminService,
-    RecordService,
-    FileUploader,
+    AnalysisAdminService,
   ],
 })
 export class AppModule { }
