@@ -7,11 +7,11 @@ export class SearchDTO {
 
   @IsOptional()
   @IsNumber()
-  public readonly page?: number;
+  public readonly page?: number = 1;
 
   @IsOptional()
   @IsNumber()
-  public readonly limit?: number;
+  public readonly limit?: number = 10;
 
   @IsOptional()
   @IsMongoId()

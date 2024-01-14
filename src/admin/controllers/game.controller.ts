@@ -9,7 +9,7 @@ import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { FileInterceptor, AnyFilesInterceptor } from "@nestjs/platform-express";
-import { DefineGameDTO } from "@app/common/dto/game.dto";
+import { DefineGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
 
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/games")
@@ -21,8 +21,8 @@ export class GameAdminController {
 
   private readonly logger = new Logger(GameAdminController.name);
 
-  @Roles([UserRole.SUPER_ADMIN])
   @Post()
+  @Roles([UserRole.SUPER_ADMIN])
   @ResponseStatusCode()
   @UseInterceptors(
     AnyFilesInterceptor({
@@ -44,5 +44,12 @@ export class GameAdminController {
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  @Post('find')
+  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @ResponseStatusCode()
+  async listGame(@Body() body: ListGameDTO, @Req() req: Request): Promise<any> {
+    return this.gameService.listGame(body);
   }
 }
