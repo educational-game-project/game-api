@@ -16,7 +16,7 @@ export class GameAdminService {
 
   private readonly logger = new Logger(GameAdminService.name);
 
-  public async defineGame(body: DefineGameDTO, media: any, req: any): Promise<any> {
+  public async defineGame(body: DefineGameDTO, media: any[], req: any): Promise<any> {
     const user: User = <User>req.user;
     try {
       let current = await this.gameModel.findOne({ name: body.name });

@@ -32,7 +32,7 @@ export class GameAdminController {
   )
   async defineGame(
     @Body() body: DefineGameDTO,
-    @UploadedFile() media: Array<Express.Multer.File>,
+    @UploadedFiles() media: Array<Express.Multer.File>,
     @Req() req: Request,
   ): Promise<any> {
     try {
