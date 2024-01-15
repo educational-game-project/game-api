@@ -11,7 +11,6 @@ import { User } from "../model/schema/users.schema";
 @Injectable()
 export class AuthHelper {
   constructor(
-
     @InjectModel(User.name) private readonly userModel: Model<User>,
 
     @Inject(ResponseService) private readonly responseService: ResponseService,

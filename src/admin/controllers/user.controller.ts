@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Req, UploadedFile, UseGuards, UseInterceptors, HttpException, Get, } from "@nestjs/common";
+import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Req, UploadedFile, UseGuards, UseInterceptors, HttpException, Get, Put, } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
@@ -6,17 +6,19 @@ import { ImagesService } from "@app/common/helpers/file.helpers";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { ByIdDto } from "@app/common/dto/byId.dto";
 import { UserAdminService } from "../services/user.service";
-import { CreateUserDto } from "@app/common/dto/user.dto";
+import { CreateUserDto, UpdateUserDto } from "@app/common/dto/user.dto";
 import { Roles } from "@app/common/decorators/roles.decorator";
 import { UserRole } from "@app/common/enums/role.enum";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
+import { StudentsService } from "../services/students.service";
 
 @Controller("admin/user")
 export class UserAdminController {
   constructor(
     private readonly userService: UserAdminService,
+    private readonly studentsService: StudentsService,
     @Inject(ImagesService) private imageHelper: ImagesService,
   ) { }
 
@@ -50,6 +52,32 @@ export class UserAdminController {
     }
   }
 
+  @Put("admin")
+  @Roles([UserRole.SUPER_ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
+  @UseInterceptors(
+    FileInterceptor("media", {
+      fileFilter: imageFilter,
+      limits: limitImageUpload(),
+    }),
+  )
+  async updateAdmin(
+    @Body() body: UpdateUserDto,
+    @UploadedFile() media: Express.Multer.File,
+    @Req() req: Request,
+  ): Promise<any> {
+    try {
+      const files = media ? await this.imageHelper.define([media]) : [];
+
+      return this.userService.updateAdmin(body, files, req);
+    } catch (error) {
+      this.logger.error(this.updateAdmin.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   @Post("admin/find")
   @Roles([UserRole.SUPER_ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
@@ -74,6 +102,14 @@ export class UserAdminController {
     return this.userService.detailAdmin(body, req);
   }
 
+  @Get("profile")
+  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
+  async getProfile(@Req() req: Request,): Promise<any> {
+    return this.userService.getUserDetail(req);
+  }
+
   //////////////////////////////////////////// STUDENT /////////////////////////////////////////////
 
   @Post("student")
@@ -94,9 +130,35 @@ export class UserAdminController {
     try {
       const files = media ? await this.imageHelper.define([media]) : [];
 
-      return this.userService.addStudent(body, files, req);
+      return this.studentsService.addStudent(body, files, req);
     } catch (error) {
       this.logger.error(this.addStudent.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Put("student")
+  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
+  @UseInterceptors(
+    FileInterceptor("media", {
+      fileFilter: imageFilter,
+      limits: limitImageUpload(),
+    }),
+  )
+  async editStudent(
+    @Body() body: UpdateUserDto,
+    @UploadedFile() media: Express.Multer.File,
+    @Req() req: Request,
+  ): Promise<any> {
+    try {
+      const files = media ? await this.imageHelper.define([media]) : [];
+
+      return this.studentsService.editStudent(body, files, req);
+    } catch (error) {
+      this.logger.error(this.editStudent.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -110,7 +172,7 @@ export class UserAdminController {
     @Body() body: SearchDTO,
     @Req() req: Request,
   ): Promise<any> {
-    return this.userService.listStudents(body, req);
+    return this.studentsService.listStudents(body, req);
   }
 
   @Delete("student")
@@ -121,14 +183,6 @@ export class UserAdminController {
     @Body() body: ByIdDto,
     @Req() req: Request,
   ): Promise<any> {
-    return this.userService.deleteStudent(body, req);
-  }
-
-  @Get("profile")
-  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
-  @ResponseStatusCode()
-  async getProfile(@Req() req: Request,): Promise<any> {
-    return this.userService.getProfile(req);
+    return this.studentsService.deleteStudent(body, req);
   }
 }

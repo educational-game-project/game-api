@@ -1,10 +1,9 @@
-import { join } from "path";
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AppService } from "./user/services/app.service";
-import { ServeStaticModule } from "@nestjs/serve-static";
 import { AuthService } from "./user/services/auth.service";
+import { GameService } from "./user/services/game.service";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { LevelsService } from "./user/services/levels.service";
@@ -17,7 +16,9 @@ import { GameAdminService } from "./admin/services/game.service";
 import { AppController } from "./user/controllers/app.controller";
 import { FileUploader } from "@app/common/utils/fileUploader.util";
 import { DatabaseModule } from "@app/common/model/database.module";
+import { StudentsService } from "./admin/services/students.service";
 import { AuthController } from "./user/controllers/auth.controller";
+import { GameController } from "./user/controllers/game.controller";
 import { RecordAdminService } from "./admin/services/record.service";
 import { LevelsAdminService } from "./admin/services/levels.service";
 import { ReportAdminService } from "./admin/services/report.service";
@@ -38,8 +39,6 @@ import { RecordAdminController } from "./admin/controllers/record.controller";
 import { ReportAdminController } from "./admin/controllers/report.controller";
 import { SchoolAdminController } from "./admin/controllers/schools.controller";
 import { AnalysisAdminController } from "./admin/controllers/analysis.controller";
-import { GameController } from "./user/controllers/game.controller";
-import { GameService } from "./user/services/game.service";
 
 @Module({
   imports: [
@@ -86,6 +85,7 @@ import { GameService } from "./user/services/game.service";
     LevelsService,
     RecordService,
     ResponseService,
+    StudentsService,
     GameAdminService,
     AuthAdminService,
     UserAdminService,

@@ -27,8 +27,17 @@ export class User extends AbstractDocument {
   deletedAt?: Date;
 
   //================================== Relations ======================================
-  @Prop({ type: [{ type: Types.ObjectId, ref: Image.name, default: null }] })
-  images: Image[];
+  @Prop({ type: Types.ObjectId, ref: User.name, default: null, select: false })
+  addedBy: User;
+
+  @Prop({ type: Types.ObjectId, ref: User.name, default: null, select: false })
+  deletedBy: User;
+
+  @Prop({ type: Types.ObjectId, ref: User.name, default: null, select: false })
+  lastUpdatedBy: User;
+
+  @Prop({ type: Types.ObjectId, ref: Image.name, default: null })
+  image: Image;
 
   @Prop({ type: Types.ObjectId, ref: School.name, default: null })
   school: School;

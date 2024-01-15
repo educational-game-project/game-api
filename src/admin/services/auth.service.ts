@@ -23,7 +23,7 @@ export class AuthAdminService {
       let q: any = { role: { $ne: UserRole.USER }, };
       if (body.email) q.email = body.email;
       if (body.phoneNumber) q.phoneNumber = body.phoneNumber;
-      let user = await this.userModel.findOne(q).select("+password").populate("images");
+      let user = await this.userModel.findOne(q).select("+password").populate("image");
       if (!user) throw new NotFoundException("User Not Found!")
 
       // Check password
