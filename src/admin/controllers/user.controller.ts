@@ -185,4 +185,15 @@ export class UserAdminController {
   ): Promise<any> {
     return this.studentsService.deleteStudent(body, req);
   }
+
+  @Post("student/detail")
+  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
+  async detailStudent(
+    @Body() body: ByIdDto,
+    @Req() req: Request,
+  ): Promise<any> {
+    return this.studentsService.detailStudent(body, req);
+  }
 }

@@ -12,6 +12,7 @@ import { dateToString } from "@app/common/pipeline/dateToString.pipeline";
 import { ByIdDto } from "@app/common/dto/byId.dto";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { ImagesService } from "@app/common/helpers/file.helpers";
+import { globalPopulate } from "@app/common/pipeline/global.populate";
 
 @Injectable()
 export class StudentsService {
@@ -216,6 +217,27 @@ export class StudentsService {
       await school.save();
 
       return this.responseService.success(true, StringHelper.successResponse("student", "delete"));
+    } catch (error) {
+      this.logger.error(this.deleteStudent.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async detailStudent(body: ByIdDto, req: any): Promise<any> {
+    try {
+      let student = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.USER })
+        .populate(globalPopulate({
+          school: true,
+          user: false,
+          addedBy: true,
+          image: true,
+          images: false,
+          admins: false,
+        }))
+      if (!student) throw new NotFoundException("Student Not Found")
+
+      return this.responseService.success(true, StringHelper.successResponse("student", "detail"), student)
     } catch (error) {
       this.logger.error(this.deleteStudent.name);
       console.log(error?.message);

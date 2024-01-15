@@ -12,6 +12,7 @@ import { dateToString } from "@app/common/pipeline/dateToString.pipeline";
 import { ByIdDto } from "@app/common/dto/byId.dto";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { ImagesService } from "@app/common/helpers/file.helpers";
+import { globalPopulate } from "@app/common/pipeline/global.populate";
 
 @Injectable()
 export class UserAdminService {
@@ -85,7 +86,7 @@ export class UserAdminService {
       }
 
       if (body?.schoolId && body?.schoolId !== admin.school.toString()) {
-        let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body?.schoolId) }).populate("images");
+        let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
         if (school) {
           admin.school = school
           school.admins.push(admin)
@@ -220,12 +221,16 @@ export class UserAdminService {
   public async detailAdmin(body: ByIdDto, req: any): Promise<any> {
     try {
       let admin = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.ADMIN })
-        .populate('image')
-        .populate({
-          path: 'school',
-          select: "-admins",
-          populate: "images"
-        });
+        .populate(globalPopulate(
+          {
+            school: true,
+            user: false,
+            addedBy: true,
+            image: true,
+            images: false,
+            admins: false,
+          }
+        ))
       if (!admin) throw new NotFoundException("Admin Not Found");
 
       return this.responseService.success(true, StringHelper.successResponse("admin", "detail"), admin);
@@ -239,12 +244,16 @@ export class UserAdminService {
   public async getUserDetail(req: any): Promise<any> {
     try {
       let user = await this.userModel.findOne({ _id: new Types.ObjectId(req.user._id) })
-        .populate("image")
-        .populate({
-          path: 'school',
-          select: "-admins",
-          populate: 'images'
-        })
+        .populate(globalPopulate(
+          {
+            school: true,
+            user: false,
+            addedBy: true,
+            image: true,
+            images: false,
+            admins: false,
+          }
+        ))
 
       if (!user) throw new NotFoundException("User Not Found")
 

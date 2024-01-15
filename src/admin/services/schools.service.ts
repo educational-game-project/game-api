@@ -12,6 +12,7 @@ import { dateToString } from "@app/common/pipeline/dateToString.pipeline";
 import { ByIdDto } from "@app/common/dto/byId.dto";
 import { Image } from "@app/common/model/schema/subtype/images.subtype";
 import { ImagesService } from "@app/common/helpers/file.helpers";
+import { globalPopulate } from "@app/common/pipeline/global.populate";
 
 @Injectable()
 export class SchoolAdminService {
@@ -164,15 +165,16 @@ export class SchoolAdminService {
   public async detail(body: ByIdDto, req: Request): Promise<any> {
     try {
       const school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body.id) })
-        .populate({
-          path: "admins",
-          select: "name role images email phoneNumber",
-          options: {
-            match: { deletedAt: null },
-          },
-          populate: "image",
-        })
-        .populate("images");
+        .populate(globalPopulate(
+          {
+            school: false,
+            user: false,
+            addedBy: false,
+            image: false,
+            images: true,
+            admins: true,
+          }
+        ))
       if (!school) throw new NotFoundException("School Not Found");
 
       return this.responseService.success(true, StringHelper.successResponse("school", "get_detail"), school);
