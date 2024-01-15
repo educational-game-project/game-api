@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { GameType } from "../enums/gameType.enum";
 import { PartialType } from "@nestjs/swagger";
 import { SearchDTO } from "./search.dto";
@@ -36,4 +36,10 @@ export class ListGameDTO extends PartialType(SearchDTO) {
   @IsOptional()
   @IsString()
   author?: string;
+}
+
+export class EditGameDTO extends PartialType(DefineGameDTO) {
+  @IsNotEmpty()
+  @IsMongoId()
+  id: string;
 }
