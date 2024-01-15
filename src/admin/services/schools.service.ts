@@ -24,7 +24,8 @@ export class SchoolAdminService {
 
   private readonly logger = new Logger(SchoolAdminService.name);
 
-  public async create(body: CreateSchoolDTO, media: Array<Image>, req: Request,): Promise<any> {
+  public async create(body: CreateSchoolDTO, media: Array<Image>, req: any,): Promise<any> {
+    const users: User = <User>req.user;
     try {
       const { name, address } = body;
 
@@ -35,6 +36,7 @@ export class SchoolAdminService {
         name,
         address,
         images: media ?? [],
+        addedBy: users._id,
       });
 
       return this.responseService.success(true, StringHelper.successResponse("schoool", "create"), school);
@@ -45,7 +47,8 @@ export class SchoolAdminService {
     }
   }
 
-  public async edit(body: EditSchoolDTO, media: any, req: Request,): Promise<any> {
+  public async edit(body: EditSchoolDTO, media: any, req: any): Promise<any> {
+    const users: User = <User>req.user;
     try {
       const { id, name, address, mediaIds } = body;
 
@@ -64,6 +67,7 @@ export class SchoolAdminService {
 
       if (media?.length) school.images.push(...media);
       school?.images?.map((item, index) => index === 0 ? (item.isDefault = true) : (item.isDefault = false));
+      school.lastUpdatedBy = users
 
       school = await school.save();
 
@@ -95,7 +99,35 @@ export class SchoolAdminService {
             as: "images",
           },
         },
+        {
+          $lookup: {
+            from: "users",
+            localField: "addedBy",
+            foreignField: "_id",
+            as: "addedBy",
+            pipeline: [
+              {
+                $lookup: {
+                  from: "images",
+                  localField: "image",
+                  foreignField: "_id",
+                  as: "image",
+                },
+              },
+              {
+                $set: {
+                  image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] },
+                }
+              }
+            ]
+          }
+        },
         ...dateToString,
+        {
+          $set: {
+            addedBy: { $ifNull: [{ $arrayElemAt: ["$addedBy", 0] }, null] },
+          }
+        },
         {
           $match: searchOption,
         },
@@ -138,7 +170,7 @@ export class SchoolAdminService {
           options: {
             match: { deletedAt: null },
           },
-          populate: "images",
+          populate: "image",
         })
         .populate("images");
       if (!school) throw new NotFoundException("School Not Found");
@@ -151,16 +183,18 @@ export class SchoolAdminService {
     }
   }
 
-  public async delete(body: ByIdDto, req: Request): Promise<any> {
+  public async delete(body: ByIdDto, req: any): Promise<any> {
+    const user: User = <User>req.user;
     try {
       let school = await this.schoolModel.findOne({
-        _id: new Types.ObjectId(body.id),
-      });
+        _id: new Types.ObjectId(body.id)
+      }).populate('images');
       if (!school) throw new NotFoundException("School Not Found");
 
       if (school.images.length) await this.imageService.delete(school.images);
 
       school.images = [];
+      school.deletedBy = user
       school.deletedAt = new Date();
       await school.save();
 

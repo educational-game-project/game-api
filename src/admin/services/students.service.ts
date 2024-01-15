@@ -127,6 +127,29 @@ export class StudentsService {
         },
         {
           $lookup: {
+            from: "users",
+            localField: "addedBy",
+            foreignField: "_id",
+            as: "addedBy",
+            pipeline: [
+              {
+                $lookup: {
+                  from: "images",
+                  localField: "image",
+                  foreignField: "_id",
+                  as: "image",
+                },
+              },
+              {
+                $set: {
+                  image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] },
+                }
+              }
+            ]
+          }
+        },
+        {
+          $lookup: {
             from: "images",
             localField: "image",
             foreignField: "_id",
@@ -137,6 +160,7 @@ export class StudentsService {
         {
           $set: {
             school: { $ifNull: [{ $arrayElemAt: ["$school", 0] }, null] },
+            addedBy: { $ifNull: [{ $arrayElemAt: ["$addedBy", 0] }, null] },
             image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] },
           },
         },

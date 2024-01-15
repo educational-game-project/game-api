@@ -28,6 +28,15 @@ export class School extends AbstractDocument {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: Image.name, default: null }] })
   images: Image[];
+
+  @Prop({ type: Types.ObjectId, ref: "User", default: null, select: false })
+  addedBy: User;
+
+  @Prop({ type: Types.ObjectId, ref: "User", default: null, select: false })
+  deletedBy: User;
+
+  @Prop({ type: Types.ObjectId, ref: "User", default: null, select: false })
+  lastUpdatedBy: User;
 }
 
 export const SchoolSchema = SchemaFactory.createForClass(School);
