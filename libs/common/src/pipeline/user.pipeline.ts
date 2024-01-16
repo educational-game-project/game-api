@@ -6,12 +6,20 @@ export function userPipeline(query: any): PipelineStage[] {
   return [
     {
       $lookup: {
-        from: "school",
+        from: "schools",
         foreignField: "_id",
         localField: "school",
         as: "school",
         pipeline: [
           ...dateToString,
+          {
+            $lookup: {
+              from: "images",
+              localField: "images",
+              foreignField: "_id",
+              as: "images",
+            },
+          },
           {
             $project: {
               admins: 0,
@@ -42,7 +50,7 @@ export function userPipeline(query: any): PipelineStage[] {
     },
     {
       $match: query,
-    }, ,
+    },
     {
       $project: {
         addedBy: 0,
