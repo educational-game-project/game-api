@@ -1,18 +1,18 @@
-import { HttpStatus, Inject, Injectable, Logger, InternalServerErrorException, NotFoundException, HttpException, BadRequestException, } from "@nestjs/common";
+import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException } from "@nestjs/common";
 import { Request } from "express";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from "mongoose";
+import { Model, Types, } from "mongoose";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { School } from "@app/common/model/schema/schools.schema";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { CreateSchoolDTO, EditSchoolDTO } from "@app/common/dto/school.dto";
 import { SearchDTO } from "@app/common/dto/search.dto";
-import { dateToString } from "@app/common/pipeline/dateToString.pipeline";
 import { ByIdDto } from "@app/common/dto/byId.dto";
 import { Image } from "@app/common/model/schema/subtype/images.subtype";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
+import { schoolPipeline } from "@app/common/pipeline/school.pipeline";
 
 @Injectable()
 export class SchoolAdminService {
@@ -91,60 +91,10 @@ export class SchoolAdminService {
         deletedAt: null,
       };
 
-      const pipeline: PipelineStage[] = [
-        {
-          $lookup: {
-            from: "images",
-            localField: "images",
-            foreignField: "_id",
-            as: "images",
-          },
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "addedBy",
-            foreignField: "_id",
-            as: "addedBy",
-            pipeline: [
-              {
-                $lookup: {
-                  from: "images",
-                  localField: "image",
-                  foreignField: "_id",
-                  as: "image",
-                },
-              },
-              {
-                $set: {
-                  image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] },
-                }
-              }
-            ]
-          }
-        },
-        ...dateToString,
-        {
-          $set: {
-            addedBy: { $ifNull: [{ $arrayElemAt: ["$addedBy", 0] }, null] },
-          }
-        },
-        {
-          $match: searchOption,
-        },
-        {
-          $project: { admins: 0 }
-        },
-        {
-          $sort: { createdAt: -1 },
-        },
-      ];
-
-      const schools = await this.schoolModel.aggregate(pipeline)
+      const schools = await this.schoolModel.aggregate(schoolPipeline(searchOption))
         .skip(SKIP)
         .limit(LIMIT_PAGE);
-
-      const total = await this.schoolModel.aggregate(pipeline).count("total");
+      const total = await this.schoolModel.aggregate(schoolPipeline(searchOption)).count("total");
 
       return this.responseService.paging(StringHelper.successResponse("schoool", "list"),
         schools,

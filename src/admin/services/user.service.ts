@@ -1,6 +1,6 @@
 import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, PipelineStage, Types } from "mongoose";
+import { Model, Types } from "mongoose";
 import { CreateUserDto, UpdateUserDto } from "@app/common/dto/user.dto";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
@@ -8,11 +8,11 @@ import { StringHelper } from "@app/common/helpers/string.helpers";
 import { School } from "@app/common/model/schema/schools.schema";
 import { UserRole } from "@app/common/enums/role.enum";
 import { SearchDTO } from "@app/common/dto/search.dto";
-import { dateToString } from "@app/common/pipeline/dateToString.pipeline";
 import { ByIdDto } from "@app/common/dto/byId.dto";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
+import { userPipeline } from "@app/common/pipeline/user.pipeline";
 
 @Injectable()
 export class UserAdminService {
@@ -124,55 +124,9 @@ export class UserAdminService {
 
       if (body?.schoolId) searchOption.school = new Types.ObjectId(body?.schoolId);
 
-      const pipeline: PipelineStage[] = [
-        {
-          $lookup: {
-            from: "school",
-            foreignField: "_id",
-            localField: "school",
-            as: "school",
-            pipeline: [
-              ...dateToString,
-              {
-                $lookup: {
-                  from: "images",
-                  localField: "images",
-                  foreignField: "_id",
-                  as: "images",
-                }
-              },
-              {
-                $project: { admins: 0 },
-              },
-            ],
-          },
-        },
-        {
-          $lookup: {
-            from: "images",
-            localField: "image",
-            foreignField: "_id",
-            as: "image",
-          }
-        },
-        ...dateToString,
-        {
-          $set: {
-            school: { $ifNull: [{ $arrayElemAt: ["$school", 0] }, null] },
-            image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] },
-          },
-        },
-        {
-          $match: searchOption,
-        },
-        {
-          $sort: { createdAt: -1 },
-        },
-      ];
+      const admin = await this.userModel.aggregate(userPipeline(searchOption)).skip(SKIP).limit(LIMIT_PAGE);
 
-      const admin = await this.userModel.aggregate(pipeline).skip(SKIP).limit(LIMIT_PAGE);
-
-      const total = await this.userModel.aggregate(pipeline).count("total");
+      const total = await this.userModel.aggregate(userPipeline(searchOption)).count("total");
 
       return this.responseService.paging(StringHelper.successResponse("admin", "list"), admin, {
         totalData: Number(total[0]?.total) ?? 0,

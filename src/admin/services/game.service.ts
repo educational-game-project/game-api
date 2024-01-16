@@ -2,11 +2,11 @@ import { DefineGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { Game } from "@app/common/model/schema/game.schema";
 import { User } from "@app/common/model/schema/users.schema";
-import { dateToString } from "@app/common/pipeline/dateToString.pipeline";
+import { gamePipeline } from "@app/common/pipeline/game.pipeline";
 import { ResponseService } from "@app/common/response/response.service";
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, PipelineStage } from "mongoose";
+import { Model } from "mongoose";
 
 @Injectable()
 export class GameAdminService {
@@ -27,7 +27,7 @@ export class GameAdminService {
         ...body,
         images: media?.length ? media : [],
         addedBy: user,
-      })
+      });
 
       return this.responseService.success(true, StringHelper.successResponse('game', 'define'), game);
     } catch (error) {
@@ -55,53 +55,9 @@ export class GameAdminService {
         deletedAt: null,
       };
 
-      const pipeline: PipelineStage[] = [
-        {
-          $lookup: {
-            from: "users",
-            localField: "addedBy",
-            foreignField: "_id",
-            as: "addedBy",
-            pipeline: [
-              {
-                $match: { deletedAt: null }
-              },
-              {
-                $lookup: {
-                  from: "images",
-                  localField: "images",
-                  foreignField: "_id",
-                  as: "images",
-                },
-              },
-            ]
-          }
-        },
-        {
-          $lookup: {
-            from: "images",
-            localField: "images",
-            foreignField: "_id",
-            as: "images",
-          },
-        },
-        ...dateToString,
-        {
-          $set: {
-            addedBy: { $ifNull: [{ $arrayElemAt: ["$addedBy", 0] }, null] },
-          },
-        },
-        {
-          $match: searchOption,
-        },
-        {
-          $sort: { createdAt: -1 },
-        },
-      ]
+      let games = await this.gameModel.aggregate(gamePipeline(searchOption)).skip(SKIP).limit(LIMIT_PAGE);
 
-      let games = await this.gameModel.aggregate(pipeline).skip(SKIP).limit(LIMIT_PAGE);
-
-      const total = await this.gameModel.aggregate(pipeline).count("total");
+      const total = await this.gameModel.aggregate(gamePipeline(searchOption)).count("total");
 
       return this.responseService.paging(
         StringHelper.successResponse("game", "list"),
