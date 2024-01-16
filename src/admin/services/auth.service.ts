@@ -68,6 +68,8 @@ export class AuthAdminService {
           email: user?.email,
           phoneNumber: user?.phoneNumber,
         });
+        await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken } });
+
         return this.responseService.success(true, StringHelper.successResponse("auth", "verifyRefreshToken"), { user, tokens });
       }
     } catch (error) {
