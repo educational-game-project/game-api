@@ -72,4 +72,26 @@ export class AuthAdminService {
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,);
     }
   }
+
+  public async changePassword(body: any, req: any): Promise<any> {
+    const users: User = <User>req.user;
+    try {
+      let { oldPassword, newPassword } = body;
+      let user = await this.userModel.findById(users._id).select("+password");
+      if (!user) throw new NotFoundException("User Not Found!")
+
+      // Check password
+      const isMatchPassword = this.authHelper.isPasswordValid(oldPassword, user.password,);
+      if (!isMatchPassword) throw new BadRequestException("Password is incorrect!")
+
+      user.password = this.authHelper.encodePassword(newPassword);
+      await user.save();
+
+      return this.responseService.success(true, StringHelper.successResponse("auth", "changePassword"));
+    } catch (error) {
+      this.logger.error(this.changePassword.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,);
+    }
+  }
 }
