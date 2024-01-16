@@ -30,4 +30,12 @@ export class AuthAdminController {
   async changePassword(@Body() body: any, @Request() req) {
     return this.authService.changePassword(body, req);
   }
+
+  @Post('logout')
+  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @ResponseStatusCode()
+  async logout(@Request() req) {
+    return this.authService.logout(req);
+  }
 }

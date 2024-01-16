@@ -23,6 +23,9 @@ export class User extends AbstractDocument {
   @Prop({ type: String, default: null, select: false })
   password: string;
 
+  @Prop({ type: String, default: null, select: false })
+  refreshToken: string;
+
   @Prop({ type: Date, default: null })
   deletedAt?: Date;
 

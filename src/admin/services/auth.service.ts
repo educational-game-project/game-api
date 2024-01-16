@@ -40,6 +40,8 @@ export class AuthAdminService {
         phoneNumber: user?.phoneNumber,
       });
 
+      await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken } });
+
       return this.responseService.success(true, StringHelper.successResponse("auth", "login"), { user, tokens },);
     } catch (error) {
       this.logger.error(this.login.name);
@@ -53,6 +55,8 @@ export class AuthAdminService {
       let { refreshToken } = body;
 
       let { isValid, user } = await this.authHelper.validate(refreshToken);
+
+      if (!user) user = await this.userModel.findOne({ refreshToken })
 
       if (user) {
         user = user.toObject();
@@ -90,6 +94,19 @@ export class AuthAdminService {
       return this.responseService.success(true, StringHelper.successResponse("auth", "changePassword"));
     } catch (error) {
       this.logger.error(this.changePassword.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,);
+    }
+  }
+
+  public async logout(req: any): Promise<any> {
+    try {
+      let user = <User>req.user;
+      console.log(user)
+      await this.authHelper.logout(user);
+      return this.responseService.success(true, StringHelper.successResponse("auth", "logout"));
+    } catch (error) {
+      this.logger.error(this.logout.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,);
     }

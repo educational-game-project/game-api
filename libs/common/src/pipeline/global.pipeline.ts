@@ -29,6 +29,7 @@ export const addedByPipeline: PipelineStage[] = [{
           deletedBy: 0,
           lastUpdatedBy: 0,
           deletedAt: 0,
+          refreshToken: 0,
         },
       },
     ]

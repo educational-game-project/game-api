@@ -28,20 +28,20 @@ export function globalPopulate(
     },
     select.admins && {
       path: 'admins',
-      select: "-password -school -deletedBy -lastUpdatedBy",
+      select: "-password -school -deletedBy -lastUpdatedBy -refreshToken",
       option: { $match: { deletedAt: null } },
       populate: [
         { path: "image" },
         {
           path: "addedBy",
-          select: "-password -school -deletedBy -lastUpdatedBy -addedBy",
+          select: "-password -school -deletedBy -lastUpdatedBy -addedBy -refreshToken",
           populate: "image"
         },
       ]
     },
     select.addedBy && {
       path: "addedBy",
-      select: "-password -school -deletedBy -lastUpdatedBy -addedBy",
+      select: "-password -school -deletedBy -lastUpdatedBy -addedBy -refreshToken",
       option: { $match: { deletedAt: null } },
       populate: "image"
     },
@@ -53,13 +53,13 @@ export function globalPopulate(
     },
     select.user && {
       path: "user",
-      select: "-password -school -deletedBy -lastUpdatedBy ",
+      select: "-password -school -deletedBy -lastUpdatedBy -refreshToken",
       option: { $match: { deletedAt: null } },
       populate: [
         { path: "image" },
         {
           path: "addedBy",
-          select: "-password -school -deletedBy -lastUpdatedBy -addedBy",
+          select: "-password -school -deletedBy -lastUpdatedBy -addedBy -refreshToken",
           populate: "image"
         },
       ]

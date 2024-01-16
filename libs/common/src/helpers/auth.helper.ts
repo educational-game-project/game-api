@@ -94,4 +94,9 @@ export class AuthHelper {
       user
     };
   }
+
+  // Logout user
+  public async logout(user: User): Promise<any> {
+    return await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: null } });
+  }
 }
