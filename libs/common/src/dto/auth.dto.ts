@@ -21,3 +21,9 @@ export class LoginAdminDto {
   @IsString()
   password: string;
 }
+
+export class ReauthDto {
+  @IsNotEmpty()
+  @IsString()
+  refreshToken: string;
+}

@@ -82,13 +82,16 @@ export class AuthHelper {
   }
 
   // Validate JWT Token, throw forbidden error if JWT Token is invalid
-  private async validate(token: string): Promise<boolean | IResponseError> {
+  public async validate(token: string): Promise<any | IResponseError> {
     const decoded: unknown = this.jwtService.verify(token);
     if (!decoded) return this.responseService.error(HttpStatus.UNAUTHORIZED, "User Unauthorized!", { value: "", constraint: "", property: "" });
 
     const user: User = await this.validateUser(decoded);
     if (!user) return this.responseService.error(HttpStatus.UNAUTHORIZED, "User Unauthorized!", { value: "", constraint: "", property: "" });
 
-    return true;
+    return {
+      isValid: true,
+      user
+    };
   }
 }

@@ -1,6 +1,6 @@
 import { Request, Controller, Post, Body } from "@nestjs/common";
 import { AuthAdminService } from "../services/auth.service";
-import { LoginAdminDto } from "@app/common/dto/auth.dto";
+import { LoginAdminDto, ReauthDto } from "@app/common/dto/auth.dto";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 
 @Controller("admin/auth")
@@ -11,5 +11,11 @@ export class AuthAdminController {
   @ResponseStatusCode()
   async login(@Body() body: LoginAdminDto, @Request() req) {
     return this.authService.login(body);
+  }
+
+  @Post("refresh-token")
+  @ResponseStatusCode()
+  async verifyRefreshToken(@Body() body: ReauthDto, @Request() req) {
+    return this.authService.verifyRefreshToken(body, req);
   }
 }

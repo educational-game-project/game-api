@@ -1,7 +1,7 @@
 import { HttpStatus, Inject, Injectable, Logger, NotFoundException, BadRequestException, HttpException, } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { LoginAdminDto } from "@app/common/dto/auth.dto";
+import { LoginAdminDto, ReauthDto } from "@app/common/dto/auth.dto";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
@@ -43,6 +43,31 @@ export class AuthAdminService {
       return this.responseService.success(true, StringHelper.successResponse("auth", "login"), { user, tokens },);
     } catch (error) {
       this.logger.error(this.login.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,);
+    }
+  }
+
+  public async verifyRefreshToken(body: ReauthDto, req: any): Promise<any> {
+    try {
+      let { refreshToken } = body;
+
+      let { isValid, user } = await this.authHelper.validate(refreshToken);
+
+      if (user) {
+        user = user.toObject();
+        delete user.password;
+
+        const tokens = await this.authHelper.generateTokens(user?._id, {
+          name: user?.name,
+          role: user?.role,
+          email: user?.email,
+          phoneNumber: user?.phoneNumber,
+        });
+        return this.responseService.success(true, StringHelper.successResponse("auth", "verifyRefreshToken"), { user, tokens });
+      }
+    } catch (error) {
+      this.logger.error(this.verifyRefreshToken.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,);
     }
