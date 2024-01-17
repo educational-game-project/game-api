@@ -63,6 +63,25 @@ export class GameAdminService {
     }
   }
 
+  public async detailGame(body: ByIdDto): Promise<any> {
+    try {
+      let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) })
+        .populate({
+          path: "addedBy",
+          select: "-password -school -deletedBy -lastUpdatedBy -addedBy -refreshToken",
+          populate: { path: "image" },
+        })
+        .populate('images')
+      if (!game) throw new NotFoundException("Game Not Found");
+
+      return this.responseService.success(true, StringHelper.successResponse('game', 'detail'), game);
+    } catch (error) {
+      this.logger.error(this.detailGame.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   public async deleteGame(body: ByIdDto): Promise<any> {
     try {
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) }).populate('images');

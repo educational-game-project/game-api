@@ -79,6 +79,13 @@ export class GameAdminController {
     return this.gameService.listGame(body);
   }
 
+  @Post('detail')
+  @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @ResponseStatusCode()
+  async detailGame(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+    return this.gameService.detailGame(body);
+  }
+
   @Delete()
   @Roles([UserRole.SUPER_ADMIN])
   @ResponseStatusCode()
