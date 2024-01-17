@@ -8,8 +8,8 @@ import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
 import { ImagesService } from "@app/common/helpers/file.helpers";
-import { FileInterceptor, AnyFilesInterceptor } from "@nestjs/platform-express";
-import { DefineGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
+import { AnyFilesInterceptor } from "@nestjs/platform-express";
+import { DefineGameDTO, EditGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
 
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/games")
@@ -41,6 +41,31 @@ export class GameAdminController {
       return this.gameService.defineGame(body, files, req);
     } catch (error) {
       this.logger.error(this.defineGame.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Put()
+  @Roles([UserRole.SUPER_ADMIN])
+  @ResponseStatusCode()
+  @UseInterceptors(
+    AnyFilesInterceptor({
+      fileFilter: imageFilter,
+      limits: limitImageUpload(),
+    }),
+  )
+  async editGame(
+    @Body() body: EditGameDTO,
+    @UploadedFiles() media: Array<Express.Multer.File>,
+    @Req() req: Request,
+  ): Promise<any> {
+    try {
+      const files = media ? await this.imageService.define(media) : [];
+
+      return this.gameService.editGame(body, files, req);
+    } catch (error) {
+      this.logger.error(this.editGame.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }

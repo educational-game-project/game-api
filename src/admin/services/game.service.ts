@@ -1,17 +1,19 @@
-import { DefineGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
+import { DefineGameDTO, EditGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
+import { ImagesService } from "@app/common/helpers/file.helpers";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { Game } from "@app/common/model/schema/game.schema";
 import { User } from "@app/common/model/schema/users.schema";
 import { gamePipeline } from "@app/common/pipeline/game.pipeline";
 import { ResponseService } from "@app/common/response/response.service";
-import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 @Injectable()
 export class GameAdminService {
   constructor(
     @InjectModel(Game.name) private gameModel: Model<Game>,
+    @Inject(ImagesService) private imageService: ImagesService,
     @Inject(ResponseService) private readonly responseService: ResponseService,
   ) { }
 
@@ -32,6 +34,29 @@ export class GameAdminService {
       return this.responseService.success(true, StringHelper.successResponse('game', 'define'), game);
     } catch (error) {
       this.logger.error(this.defineGame.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async editGame(body: EditGameDTO, media: any[], req: any): Promise<any> {
+    const user: User = <User>req.user;
+    try {
+      let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) });
+      delete body.id;
+      if (!game) throw new NotFoundException("Game Not Found");
+
+      if (media?.length) {
+        if (game.images.length) await this.imageService.delete(game.images);
+        game.images = media;
+      }
+
+      game.set({ ...body })
+      await game.save();
+
+      return this.responseService.success(true, StringHelper.successResponse('game', 'edit'), game);
+    } catch (error) {
+      this.logger.error(this.editGame.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }

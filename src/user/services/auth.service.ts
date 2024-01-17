@@ -1,7 +1,6 @@
 import { HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
-import { Request } from "express";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose, { Model, PipelineStage, Types, isValidObjectId, } from "mongoose";
+import { Model } from "mongoose";
 import { LoginUserDto, ReauthDto } from "@app/common/dto/auth.dto";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
@@ -61,8 +60,8 @@ export class AuthService {
   public async logout(req: any): Promise<any> {
     try {
       let user = <User>req.user;
-      console.log(user)
       await this.authHelper.logout(user);
+
       return this.responseService.success(true, StringHelper.successResponse("auth", "logout"));
     } catch (error) {
       this.logger.error(this.logout.name);
