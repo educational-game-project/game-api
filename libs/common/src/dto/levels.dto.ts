@@ -1,13 +1,11 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
-import { PartialType } from "@nestjs/swagger";
-import { GameNameDTO } from "./game.dto";
+import { IsMongoId, IsNotEmpty, IsNumber } from "class-validator";
 
-export class initLevelDTO extends PartialType(GameNameDTO) {
+export class initLevelDTO {
+  @IsNotEmpty()
+  @IsMongoId()
+  game: string;
+
   @IsNotEmpty()
   @IsNumber()
   current: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  max: number;
 }

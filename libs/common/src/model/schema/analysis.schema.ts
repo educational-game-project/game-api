@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Types } from "mongoose";
 import { AbstractDocument } from "./abstract.schema";
 import { User } from "./users.schema";
+import { Game } from "./game.schema";
 
 @Schema({ timestamps: true })
 export class Analysis extends AbstractDocument {
@@ -13,6 +14,9 @@ export class Analysis extends AbstractDocument {
   //================================== Relations ======================================
   @Prop({ type: Types.ObjectId, ref: User.name, default: null })
   user: User;
+
+  @Prop({ type: Types.ObjectId, ref: Game.name, default: null })
+  game: Game;
 }
 
 export const AnalysisSchema = SchemaFactory.createForClass(Analysis);

@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Types } from "mongoose";
 import { AbstractDocument } from "./abstract.schema";
 import { User } from "./users.schema";
-import { GameType } from "../../enums/gameType.enum";
+import { Game } from "./game.schema";
 
 @Schema({ timestamps: true })
 export class Level extends AbstractDocument {
@@ -13,9 +13,6 @@ export class Level extends AbstractDocument {
   @Prop({ type: Number, default: 1 })
   max: number;
 
-  @Prop({ type: String, enum: GameType, default: null })
-  game: string;
-
   @Prop({ type: Boolean, default: true })
   isValid: boolean;
 
@@ -25,6 +22,9 @@ export class Level extends AbstractDocument {
   //================================== Relations ======================================
   @Prop({ type: Types.ObjectId, ref: User.name, default: null })
   user: User;
+
+  @Prop({ type: Types.ObjectId, ref: Game.name, default: null })
+  game: Game;
 }
 
 export const LevelSchema = SchemaFactory.createForClass(Level);
