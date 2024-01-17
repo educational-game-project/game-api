@@ -1,3 +1,4 @@
+import { ByIdDto } from "@app/common/dto/byId.dto";
 import { DefineGameDTO, EditGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { StringHelper } from "@app/common/helpers/string.helpers";
@@ -42,7 +43,7 @@ export class GameAdminService {
   public async editGame(body: EditGameDTO, media: any[], req: any): Promise<any> {
     const user: User = <User>req.user;
     try {
-      let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) });
+      let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) }).populate('images');
       delete body.id;
       if (!game) throw new NotFoundException("Game Not Found");
 
@@ -57,6 +58,24 @@ export class GameAdminService {
       return this.responseService.success(true, StringHelper.successResponse('game', 'edit'), game);
     } catch (error) {
       this.logger.error(this.editGame.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async deleteGame(body: ByIdDto): Promise<any> {
+    try {
+      let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) }).populate('images');
+      if (!game) throw new NotFoundException("Game Not Found");
+
+      if (game.images.length) await this.imageService.delete(game.images)
+      game.images = []
+      game.deletedAt = new Date();
+      await game.save();
+
+      return this.responseService.success(true, StringHelper.successResponse('game', 'delete'));
+    } catch (error) {
+      this.logger.error(this.deleteGame.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
