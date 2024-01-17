@@ -43,3 +43,9 @@ export class EditGameDTO extends PartialType(DefineGameDTO) {
   @IsMongoId()
   id: string;
 }
+
+export class ListGameByAuthorDTO {
+  @IsNotEmpty()
+  @IsString()
+  author: string;
+}
