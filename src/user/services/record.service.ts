@@ -1,17 +1,19 @@
 import { HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { User } from "@app/common/model/schema/users.schema";
 import { Record, StatusRecord } from "@app/common/model/schema/records.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { CreateReportDto, ReportType } from "@app/common/dto/report.dto";
+import { Game } from "@app/common/model/schema/game.schema";
 
 @Injectable()
 export class RecordService {
   constructor(
     @InjectModel(Record.name) private recordModel: Model<Record>,
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Game.name) private gameModel: Model<Game>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
   ) { }
 
@@ -23,9 +25,12 @@ export class RecordService {
       let user = await this.userModel.findOne({ _id: users._id });
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("user"));
 
+      let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.game) });
+      if (!game) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("game"))
+
       let current = await this.recordModel.findOne({
         user: user._id,
-        game: body.game,
+        game: game._id,
         level: body.level,
         isValid: true,
       });
@@ -63,8 +68,11 @@ export class RecordService {
   public async initRecord(body: CreateReportDto, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
+      let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.game) });
+      if (!game) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("game"))
+
       const record = await this.recordModel.create({
-        game: body.game,
+        game,
         level: body.level,
         time: [],
         user: users._id,
