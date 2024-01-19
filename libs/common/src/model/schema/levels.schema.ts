@@ -13,6 +13,9 @@ export class Level extends AbstractDocument {
   @Prop({ type: Number, default: 1 })
   max: number;
 
+  @Prop({ type: Number, default: 3 })
+  liveLeft: number;
+
   @Prop({ type: Boolean, default: true })
   isValid: boolean;
 

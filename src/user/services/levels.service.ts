@@ -42,6 +42,7 @@ export class LevelsService {
       const level = await this.levelModel.create({
         current: body.current,
         max: game.maxLevel,
+        liveLeft: body?.liveLeft ?? 3,
         game,
         isValid: true,
         user: user._id,
@@ -79,38 +80,6 @@ export class LevelsService {
       return this.responseService.success(true, StringHelper.successResponse("level", "initiated"), currentLevel);
     } catch (error) {
       this.logger.error(this.getLevel.name);
-      console.log(error?.message);
-      return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
-    }
-  }
-
-  public async updateLevel(body: ByIdDto, req: any) {
-    const users: User = <User>req.user;
-    try {
-      let user = await this.userModel.findOne({ _id: users._id });
-      if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("user"));
-
-      let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) });
-      if (!game) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("game"))
-
-      let currentLevel = await this.levelModel.findOne({
-        user: user._id,
-        game: game._id,
-        isValid: true,
-        createdAt: { $gte: TimeHelper.getToday() },
-      });
-
-      if (!currentLevel) {
-        const init = await this.initLevel({ current: 1, game: body.id }, req);
-        currentLevel = init.data;
-      }
-
-      currentLevel.current === currentLevel.max ? (currentLevel.isValid = false) : currentLevel.current++;
-      currentLevel = await currentLevel.save();
-
-      return this.responseService.success(true, StringHelper.successResponse("level", "update"), currentLevel);
-    } catch (error) {
-      this.logger.error(this.updateLevel.name);
       console.log(error?.message);
       return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
     }

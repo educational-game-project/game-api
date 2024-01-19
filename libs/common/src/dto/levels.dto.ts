@@ -1,4 +1,4 @@
-import { IsMongoId, IsNotEmpty, IsNumber } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 export class initLevelDTO {
   @IsNotEmpty()
@@ -8,4 +8,8 @@ export class initLevelDTO {
   @IsNotEmpty()
   @IsNumber()
   current: number;
+
+  @IsOptional()
+  @IsNumber()
+  liveLeft?: number = 3;
 }

@@ -26,10 +26,4 @@ export class LevelsController {
   async getLevel(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.levelsService.getLevel(body, req);
   }
-
-  @Put()
-  @ResponseStatusCode()
-  async updateLevel(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
-    return this.levelsService.updateLevel(body, req);
-  }
 }
