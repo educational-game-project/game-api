@@ -129,7 +129,7 @@ export class GameAdminService {
           totalData: Number(total[0]?.total) ?? 0,
           perPage: LIMIT_PAGE,
           currentPage: body?.page ?? 1,
-          totalPage: Math.ceil(total[0]?.total ?? 0 / LIMIT_PAGE),
+          totalPage: Math.ceil((Number(total[0]?.total) ?? 0) / LIMIT_PAGE),
         },
       );
     } catch (error) {

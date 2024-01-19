@@ -9,7 +9,6 @@ import { School } from "@app/common/model/schema/schools.schema";
 import { UserRole } from "@app/common/enums/role.enum";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { ByIdDto } from "@app/common/dto/byId.dto";
-import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { userPipeline } from "@app/common/pipeline/user.pipeline";
@@ -20,7 +19,6 @@ export class StudentsService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(School.name) private schoolModel: Model<School>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-    @Inject(AuthHelper) private readonly authHelper: AuthHelper,
     @Inject(ImagesService) private imageHelper: ImagesService,
   ) { }
 
@@ -121,7 +119,7 @@ export class StudentsService {
           totalData: Number(total[0]?.total) ?? 0,
           perPage: LIMIT_PAGE,
           currentPage: body?.page ?? 1,
-          totalPage: Math.ceil(total[0]?.total ?? 0 / LIMIT_PAGE),
+          totalPage: Math.ceil((Number(total[0]?.total) ?? 0) / LIMIT_PAGE),
         },
       );
     } catch (error) {

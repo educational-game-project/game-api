@@ -130,7 +130,7 @@ export class UserAdminService {
 
       return this.responseService.paging(StringHelper.successResponse("admin", "list"), admin, {
         totalData: Number(total[0]?.total) ?? 0,
-        totalPage: Math.ceil(total[0]?.total ?? 0 / LIMIT_PAGE),
+        totalPage: Math.ceil((Number(total[0]?.total) ?? 0) / LIMIT_PAGE),
         currentPage: body?.page ?? 1,
         perPage: LIMIT_PAGE,
       },);
