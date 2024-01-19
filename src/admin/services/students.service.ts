@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException } from "@nestjs/common";
+import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException, MethodNotAllowedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { CreateUserDto, UpdateUserDto } from "@app/common/dto/user.dto";
@@ -12,6 +12,7 @@ import { ByIdDto } from "@app/common/dto/byId.dto";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { userPipeline } from "@app/common/pipeline/user.pipeline";
+import { Type } from "class-transformer";
 
 @Injectable()
 export class StudentsService {
@@ -30,7 +31,7 @@ export class StudentsService {
       let user = await this.userModel.findOne({ _id: users._id })
       if (!user) throw new NotFoundException("User Not Found");
 
-      let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
+      let school = await this.schoolModel.findOne({ _id: body?.schoolId ? new Types.ObjectId(body?.schoolId) : user?.school });
       if (!school) throw new NotFoundException("School Not Found");
 
       const check = await this.userModel.findOne({
@@ -65,7 +66,14 @@ export class StudentsService {
   public async editStudent(body: UpdateUserDto, media: any, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
-      let user = await this.userModel.findOne({ _id: new Types.ObjectId(body?.id), role: UserRole.USER }).populate('image')
+      let query: any = {
+        _id: new Types.ObjectId(body?.id),
+        role: UserRole.USER,
+        deletedAt: null
+      }
+      if (users.role === UserRole.ADMIN && users?.school) query.school = users?.school;
+
+      let user = await this.userModel.findOne().populate('image')
       if (!user) throw new NotFoundException("User Not Found");
 
       const check = await this.userModel.findOne({
@@ -140,6 +148,7 @@ export class StudentsService {
         role: UserRole.USER,
       }).populate('image');
       if (!student) throw new NotFoundException("Student Not Found");
+      if (users.role == UserRole.ADMIN && users.school !== student.school) throw new MethodNotAllowedException("You Can't Delete Student From Other School");
 
       if (student.image) await this.imageHelper.delete([student.image]);
 
