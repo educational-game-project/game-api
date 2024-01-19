@@ -7,6 +7,9 @@ import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { CreateReportDto, ReportType } from "@app/common/dto/report.dto";
 import { Game } from "@app/common/model/schema/game.schema";
+import { Level } from "@app/common/model/schema/levels.schema";
+import { TimeHelper } from "@app/common/helpers/time.helper";
+import { LevelsService } from "./levels.service";
 
 @Injectable()
 export class RecordService {
@@ -14,7 +17,9 @@ export class RecordService {
     @InjectModel(Record.name) private recordModel: Model<Record>,
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Game.name) private gameModel: Model<Game>,
+    @InjectModel(Level.name) private levelModel: Model<Level>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
+    @Inject(LevelsService) private readonly levelsService: LevelsService,
   ) { }
 
   private readonly logger = new Logger(RecordService.name);
@@ -27,6 +32,9 @@ export class RecordService {
 
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.game) });
       if (!game) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("game"))
+
+      let currentLevel = await this.levelsService.getLevel({ id: users._id.toString() }, req)
+      currentLevel = currentLevel.data
 
       let current = await this.recordModel.findOne({
         user: user._id,
@@ -47,8 +55,10 @@ export class RecordService {
           if (current.liveLeft === 0) {
             current.isValid = false;
             current.status = StatusRecord.FAILED;
+            await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $set: { isValid: false } });
           } else {
             current.liveLeft--;
+            await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $inc: { liveLeft: -1 } });
           }
           break;
       }

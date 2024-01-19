@@ -19,7 +19,7 @@ export class Record extends AbstractDocument {
   @Prop({ type: [Number], default: null })
   time: number[];
 
-  @Prop({ type: Number, default: 5 })
+  @Prop({ type: Number, default: 3 })
   liveLeft: number;
 
   @Prop({ type: Number, default: 0 })
