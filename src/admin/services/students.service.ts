@@ -93,6 +93,7 @@ export class StudentsService {
   }
 
   public async listStudents(body: SearchDTO, req: any): Promise<any> {
+    const users: User = <User>req.user;
     try {
       const searchRegex = new RegExp(body.search?.toString(), "i");
       const LIMIT_PAGE: number = body?.limit ?? 10;
@@ -108,6 +109,8 @@ export class StudentsService {
         role: UserRole.USER,
         deletedAt: null,
       };
+
+      if (users?.school) searchOption.school = users?.school;
 
       const students = await this.userModel.aggregate(userPipeline(searchOption)).skip(SKIP).limit(LIMIT_PAGE);
       const total = await this.userModel.aggregate(userPipeline(searchOption)).count("total");
