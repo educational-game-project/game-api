@@ -1,9 +1,8 @@
-import { HttpException, HttpStatus, Inject, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Image } from "../model/schema/subtype/images.subtype";
 import { Model } from "mongoose";
-import * as fs from "fs";
-import { extname, join } from "path";
+import { extname } from "path";
 import { FileUploader } from "../utils/fileUploader.util";
 
 @Injectable()

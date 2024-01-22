@@ -8,14 +8,8 @@ import { Game } from "./game.schema";
 @Schema({ timestamps: true })
 export class Score extends AbstractDocument {
   //================================== Attributes =======================================
-  @Prop({ type: [{ type: Types.ObjectId, ref: Record.name, default: null }] })
-  records: Record[];
-
   @Prop({ type: Number, required: true })
   value: number;
-
-  @Prop({ type: Number, default: 0 })
-  rank: number;
 
   @Prop({ type: Date, default: null })
   deletedAt?: Date;
@@ -26,6 +20,9 @@ export class Score extends AbstractDocument {
 
   @Prop({ type: Types.ObjectId, ref: Game.name, default: null })
   game: Game;
+
+  @Prop({ type: Types.ObjectId, ref: Record.name, default: null })
+  records: Record[];
 }
 
 export const ScoreSchema = SchemaFactory.createForClass(Score);

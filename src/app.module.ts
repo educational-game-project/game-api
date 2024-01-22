@@ -14,6 +14,7 @@ import { UserAdminService } from "./admin/services/user.service";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { GameAdminService } from "./admin/services/game.service";
 import { AppController } from "./user/controllers/app.controller";
+import { ScoreCalculate } from "@app/common/helpers/score.helper";
 import { FileUploader } from "@app/common/utils/fileUploader.util";
 import { DatabaseModule } from "@app/common/model/database.module";
 import { StudentsService } from "./admin/services/students.service";
@@ -84,6 +85,7 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     ImagesService,
     LevelsService,
     RecordService,
+    ScoreCalculate,
     ResponseService,
     StudentsService,
     GameAdminService,

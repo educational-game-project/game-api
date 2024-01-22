@@ -13,7 +13,7 @@ export enum StatusRecord {
 @Schema({ timestamps: true })
 export class Record extends AbstractDocument {
   //================================== Attributes =======================================
-  @Prop({ type: Number, default: 0 })
+  @Prop({ type: Number, default: 1 })
   level: number;
 
   @Prop({ type: [Number], default: null })

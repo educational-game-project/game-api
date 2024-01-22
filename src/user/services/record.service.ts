@@ -33,39 +33,52 @@ export class RecordService {
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.game) });
       if (!game) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("game"))
 
-      let currentLevel = await this.levelsService.getLevel({ id: users._id.toString() }, req)
+      let currentLevel = await this.levelsService.getLevel({ id: body.game }, req)
       currentLevel = currentLevel.data
 
       let current = await this.recordModel.findOne({
         user: user._id,
         game: game._id,
-        level: body.level,
+        level: currentLevel.level,
         isValid: true,
       });
 
-      if (!current) current = await this.initRecord(body, req);
+      if (!current) {
+        body.level = currentLevel.level;
+        current = await this.initRecord(body, req);
+      }
 
       switch (body.type) {
         case ReportType.SUCCESS:
           current.status = StatusRecord.PASSED;
           current.isValid = false;
+
+          current.count++;
+          current.time.push(body.time);
+          current = await current.save();
           break;
 
         case ReportType.FAILED:
           if (current.liveLeft === 0) {
             current.isValid = false;
             current.status = StatusRecord.FAILED;
-            await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $set: { isValid: false } });
+            let test = await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $set: { isValid: false } });
+            console.log(test);
+
+            current.count++;
+            current.time.push(body.time);
+            current = await current.save();
           } else {
             current.liveLeft--;
-            await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $inc: { liveLeft: -1 } });
+            let test = await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $inc: { liveLeft: -1 } });
+            console.log(test);
+
+            current.count++;
+            current.time.push(body.time);
+            current = await current.save();
           }
           break;
       }
-
-      current.count++;
-      current.time.push(body.time);
-      current = await current.save();
 
       return this.responseService.success(true, StringHelper.successResponse("record", "add"), current);
     } catch (error) {
