@@ -11,6 +11,9 @@ export class Score extends AbstractDocument {
   @Prop({ type: Number, required: true })
   value: number;
 
+  @Prop({ type: Number, default: null })
+  level: number;
+
   @Prop({ type: Date, default: null })
   deletedAt?: Date;
 

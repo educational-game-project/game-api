@@ -41,3 +41,9 @@ export class ListGameByAuthorDTO {
   @IsString()
   author: string;
 }
+
+export class ByGameIdDTO {
+  @IsNotEmpty()
+  @IsMongoId()
+  gameId: string;
+}

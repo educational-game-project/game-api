@@ -40,6 +40,8 @@ import { RecordAdminController } from "./admin/controllers/record.controller";
 import { ReportAdminController } from "./admin/controllers/report.controller";
 import { SchoolAdminController } from "./admin/controllers/schools.controller";
 import { AnalysisAdminController } from "./admin/controllers/analysis.controller";
+import { LeaderboardService } from "./user/services/leaderboard.service";
+import { LeaderBoardController } from "./user/controllers/leaderboard.controller";
 
 @Module({
   imports: [
@@ -69,6 +71,7 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     AuthAdminController,
     UserAdminController,
     ScoreAdminController,
+    LeaderBoardController,
     LevelsAdminController,
     RecordAdminController,
     ReportAdminController,
@@ -92,6 +95,7 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     AuthAdminService,
     UserAdminService,
     ScoreAdminService,
+    LeaderboardService,
     LevelsAdminService,
     RecordAdminService,
     ReportAdminService,
