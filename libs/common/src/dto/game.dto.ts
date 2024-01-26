@@ -1,4 +1,4 @@
-import { IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { PartialType } from "@nestjs/swagger";
 import { SearchDTO } from "./search.dto";
 
@@ -22,6 +22,10 @@ export class DefineGameDTO {
   @IsNotEmpty()
   @IsNumber()
   maxLevel: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  maxRetry: number;
 }
 
 export class ListGameDTO extends PartialType(SearchDTO) {

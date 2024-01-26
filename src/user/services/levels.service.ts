@@ -42,7 +42,7 @@ export class LevelsService {
       const level = await this.levelModel.create({
         current: body.current,
         max: game.maxLevel,
-        liveLeft: body?.liveLeft ?? 3,
+        liveLeft: game?.maxRetry ?? 3,
         game,
         isValid: true,
         user: user._id,

@@ -21,6 +21,9 @@ export class Game extends AbstractDocument {
   @Prop({ type: Number, default: 1 })
   maxLevel: number;
 
+  @Prop({ type: Number, default: 3 })
+  maxRetry: number;
+
   @Prop({ type: Date, default: null })
   deletedAt?: Date;
 

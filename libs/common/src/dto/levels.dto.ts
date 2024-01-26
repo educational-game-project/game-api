@@ -8,8 +8,4 @@ export class initLevelDTO {
   @IsNotEmpty()
   @IsNumber()
   current: number;
-
-  @IsOptional()
-  @IsNumber()
-  liveLeft?: number = 3;
 }
