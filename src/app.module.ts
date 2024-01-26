@@ -14,7 +14,6 @@ import { UserAdminService } from "./admin/services/user.service";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { GameAdminService } from "./admin/services/game.service";
 import { AppController } from "./user/controllers/app.controller";
-import { ScoreCalculate } from "@app/common/helpers/score.helper";
 import { FileUploader } from "@app/common/utils/fileUploader.util";
 import { DatabaseModule } from "@app/common/model/database.module";
 import { StudentsService } from "./admin/services/students.service";
@@ -25,6 +24,7 @@ import { LevelsAdminService } from "./admin/services/levels.service";
 import { ReportAdminService } from "./admin/services/report.service";
 import { ScoreAdminService } from "./admin/services/scoring.service";
 import { SchoolAdminService } from "./admin/services/schools.service";
+import { ScoreCalculateHelper } from "@app/common/helpers/score.helper";
 import { ResponseService } from "@app/common/response/response.service";
 import { RecordController } from "./user/controllers/record.controller";
 import { LevelsController } from "./user/controllers/levels.controller";
@@ -88,7 +88,6 @@ import { LeaderBoardController } from "./user/controllers/leaderboard.controller
     ImagesService,
     LevelsService,
     RecordService,
-    ScoreCalculate,
     ResponseService,
     StudentsService,
     GameAdminService,
@@ -101,6 +100,7 @@ import { LeaderBoardController } from "./user/controllers/leaderboard.controller
     ReportAdminService,
     SchoolAdminService,
     AnalysisAdminService,
+    ScoreCalculateHelper,
   ],
 })
 export class AppModule { }

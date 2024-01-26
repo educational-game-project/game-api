@@ -18,7 +18,7 @@ export class Game extends AbstractDocument {
   @Prop({ type: String, default: null })
   category: string;
 
-  @Prop({ type: Number, required: true })
+  @Prop({ type: Number, default: 1 })
   maxLevel: number;
 
   @Prop({ type: Date, default: null })
@@ -36,15 +36,7 @@ export const GameSchema = SchemaFactory.createForClass(Game);
 
 GameSchema.index({ name: 1 });
 
-GameSchema.pre("find", function () {
-  this.where({ deletedAt: null });
-});
-GameSchema.pre("findOne", function () {
-  this.where({ deletedAt: null });
-});
-GameSchema.pre("findOneAndUpdate", function () {
-  this.where({ deletedAt: null });
-});
-GameSchema.pre("count", function () {
-  this.where({ deletedAt: null });
-});
+GameSchema.pre("find", function () { this.where({ deletedAt: null }) });
+GameSchema.pre("findOne", function () { this.where({ deletedAt: null }) });
+GameSchema.pre("findOneAndUpdate", function () { this.where({ deletedAt: null }) });
+GameSchema.pre("count", function () { this.where({ deletedAt: null }) });

@@ -21,15 +21,7 @@ export class Analysis extends AbstractDocument {
 
 export const AnalysisSchema = SchemaFactory.createForClass(Analysis);
 
-AnalysisSchema.pre("find", function () {
-  this.where({ deletedAt: null });
-});
-AnalysisSchema.pre("findOne", function () {
-  this.where({ deletedAt: null });
-});
-AnalysisSchema.pre("findOneAndUpdate", function () {
-  this.where({ deletedAt: null });
-});
-AnalysisSchema.pre("count", function () {
-  this.where({ deletedAt: null });
-});
+AnalysisSchema.pre("find", function () { this.where({ deletedAt: null }) });
+AnalysisSchema.pre("findOne", function () { this.where({ deletedAt: null }) });
+AnalysisSchema.pre("findOneAndUpdate", function () { this.where({ deletedAt: null }) });
+AnalysisSchema.pre("count", function () { this.where({ deletedAt: null }) });
