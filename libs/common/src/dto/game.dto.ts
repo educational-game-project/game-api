@@ -26,6 +26,10 @@ export class DefineGameDTO {
   @IsNotEmpty()
   @IsNumber()
   maxRetry: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  maxTime: number;
 }
 
 export class ListGameDTO extends PartialType(SearchDTO) {

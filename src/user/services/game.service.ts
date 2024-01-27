@@ -19,7 +19,7 @@ export class GameService {
     try {
       const { author } = body;
       const games = await this.gameModel.find({ author }).populate('images');
-      if (!games.length) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('game'))
+      if (!games?.length) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('game'))
 
       return this.responseService.success(true, StringHelper.successResponse('game', 'list'), games);
     } catch (error) {
