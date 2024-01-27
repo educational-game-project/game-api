@@ -32,7 +32,7 @@ export class AuthService {
       if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("user"));
 
       const tokens = await this.authHelper.generateTokens(user._id, { name: user.name, role: user.role });
-      await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken } });
+      await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken, isActive: true } });
 
       return this.responseService.success(true, StringHelper.successResponse("user", "login"), { user, tokens });
     } catch (error) {

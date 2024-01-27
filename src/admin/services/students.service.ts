@@ -143,10 +143,7 @@ export class StudentsService {
   public async deleteStudent(body: ByIdDto, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
-      let student = await this.userModel.findOne({
-        _id: new Types.ObjectId(body.id),
-        role: UserRole.USER,
-      }).populate('image');
+      let student = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.USER }).populate('image');
       if (!student) throw new NotFoundException("Student Not Found");
       if (users.role == UserRole.ADMIN && users.school !== student.school) throw new MethodNotAllowedException("You Can't Delete Student From Other School");
 
@@ -187,6 +184,20 @@ export class StudentsService {
       return this.responseService.success(true, StringHelper.successResponse("student", "detail"), student)
     } catch (error) {
       this.logger.error(this.deleteStudent.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async getActiveStudent(req: any): Promise<any> {
+    const users: User = <User>req.user;
+    try {
+      let activeAdmin = await this.userModel.count({ role: { $ne: UserRole.USER }, deletedAt: null, isActive: { $eq: true }, school: users.school })
+      let activeUser = await this.userModel.count({ role: UserRole.USER, deletedAt: null, isActive: { $eq: true }, school: users.school })
+
+      return this.responseService.success(true, StringHelper.successResponse("user", "get_active_user"), { activeAdmin, activeUser })
+    } catch (error) {
+      this.logger.error(this.getActiveStudent.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }

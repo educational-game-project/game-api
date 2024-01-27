@@ -40,7 +40,7 @@ export class AuthAdminService {
         phoneNumber: user?.phoneNumber,
       });
 
-      await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken } });
+      await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken, isActive: true } });
 
       return this.responseService.success(true, StringHelper.successResponse("auth", "login"), { user, tokens },);
     } catch (error) {
@@ -104,8 +104,8 @@ export class AuthAdminService {
   public async logout(req: any): Promise<any> {
     try {
       let user = <User>req.user;
-      console.log(user)
       await this.authHelper.logout(user);
+
       return this.responseService.success(true, StringHelper.successResponse("auth", "logout"));
     } catch (error) {
       this.logger.error(this.logout.name);

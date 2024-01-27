@@ -14,6 +14,7 @@ import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { StudentsService } from "../services/students.service";
 
+@UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/user")
 export class UserAdminController {
   constructor(
@@ -28,7 +29,6 @@ export class UserAdminController {
 
   @Post("admin")
   @Roles([UserRole.SUPER_ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   @UseInterceptors(
     FileInterceptor("media", {
@@ -54,7 +54,6 @@ export class UserAdminController {
 
   @Put("admin")
   @Roles([UserRole.SUPER_ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   @UseInterceptors(
     FileInterceptor("media", {
@@ -80,7 +79,6 @@ export class UserAdminController {
 
   @Post("admin/find")
   @Roles([UserRole.SUPER_ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   async find(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
     return this.userService.findAdmin(body, req);
@@ -88,7 +86,6 @@ export class UserAdminController {
 
   @Delete("admin")
   @Roles([UserRole.SUPER_ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   async delete(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.userService.deleteAdmin(body, req);
@@ -96,7 +93,6 @@ export class UserAdminController {
 
   @Post("admin/detail")
   @Roles([UserRole.SUPER_ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   async detailAdmin(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.userService.detailAdmin(body, req);
@@ -104,17 +100,22 @@ export class UserAdminController {
 
   @Get("profile")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   async getProfile(@Req() req: Request,): Promise<any> {
     return this.userService.getUserDetail(req);
+  }
+
+  @Get("active")
+  @Roles([UserRole.SUPER_ADMIN])
+  @ResponseStatusCode()
+  async getActiveUser(@Req() req: Request,): Promise<any> {
+    return this.userService.getActiveUser(req);
   }
 
   //////////////////////////////////////////// STUDENT /////////////////////////////////////////////
 
   @Post("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   @UseInterceptors(
     FileInterceptor("media", {
@@ -140,7 +141,6 @@ export class UserAdminController {
 
   @Put("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   @UseInterceptors(
     FileInterceptor("media", {
@@ -166,7 +166,6 @@ export class UserAdminController {
 
   @Post("student/find")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   async listStudents(
     @Body() body: SearchDTO,
@@ -177,7 +176,6 @@ export class UserAdminController {
 
   @Delete("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   async deleteStudent(
     @Body() body: ByIdDto,
@@ -188,12 +186,18 @@ export class UserAdminController {
 
   @Post("student/detail")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @ResponseStatusCode()
   async detailStudent(
     @Body() body: ByIdDto,
     @Req() req: Request,
   ): Promise<any> {
     return this.studentsService.detailStudent(body, req);
+  }
+
+  @Get("student/active")
+  @Roles([UserRole.ADMIN])
+  @ResponseStatusCode()
+  async getActiveStudent(@Req() req: Request,): Promise<any> {
+    return this.studentsService.getActiveStudent(req);
   }
 }

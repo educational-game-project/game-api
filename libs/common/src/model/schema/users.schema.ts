@@ -29,6 +29,9 @@ export class User extends AbstractDocument {
   @Prop({ type: Date, default: null })
   deletedAt?: Date;
 
+  @Prop({ type: Boolean, default: false })
+  isActive?: boolean;
+
   //================================== Relations ======================================
   @Prop({ type: Types.ObjectId, ref: User.name, default: null, select: false })
   addedBy: User;

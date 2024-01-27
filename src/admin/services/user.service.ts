@@ -218,4 +218,17 @@ export class UserAdminService {
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  public async getActiveUser(req: any): Promise<any> {
+    try {
+      let activeAdmin = await this.userModel.count({ role: { $ne: UserRole.USER }, deletedAt: null, isActive: { $eq: true } })
+      let activeUser = await this.userModel.count({ role: UserRole.USER, deletedAt: null, isActive: { $eq: true } })
+
+      return this.responseService.success(true, StringHelper.successResponse("user", "get_active_user"), { activeAdmin, activeUser })
+    } catch (error) {
+      this.logger.error(this.getActiveUser.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
