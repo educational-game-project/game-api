@@ -5,7 +5,7 @@ export class initLevelDTO {
   @IsMongoId()
   game: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  current: number;
+  current?: number;
 }

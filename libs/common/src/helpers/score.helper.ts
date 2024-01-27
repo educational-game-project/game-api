@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Score } from "../model/schema/scores.schema";
 import { Record } from "../model/schema/records.schema";
-import { User } from "../model/schema/users.schema";
 import { Model } from "mongoose";
 import { Game } from "../model/schema/game.schema";
 import { Level } from "../model/schema/levels.schema";
@@ -10,11 +8,9 @@ import { Level } from "../model/schema/levels.schema";
 @Injectable()
 export class ScoreCalculateHelper {
   constructor(
-    @InjectModel(Score.name) private scoreModel: Model<Score>,
-    @InjectModel(Record.name) private recordModel: Model<Record>,
-    @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Game.name) private gameModel: Model<Game>,
     @InjectModel(Level.name) private levelModel: Model<Level>,
+    @InjectModel(Record.name) private recordModel: Model<Record>,
   ) { }
 
   // Define weights for each factor
