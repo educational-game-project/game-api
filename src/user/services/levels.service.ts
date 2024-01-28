@@ -9,6 +9,8 @@ import { StringHelper } from "@app/common/helpers/string.helpers";
 import { TimeHelper } from "@app/common/helpers/time.helper";
 import { ByIdDto } from "@app/common/dto/byId.dto";
 import { Game } from "@app/common/model/schema/game.schema";
+import { userPopulate } from "@app/common/pipeline/user.pipeline";
+import { gamePopulate } from "@app/common/pipeline/game.pipeline";
 
 @Injectable()
 export class LevelsService {
@@ -35,7 +37,7 @@ export class LevelsService {
         game: game._id,
         isValid: true,
         createdAt: { $gte: TimeHelper.getToday() },
-      });
+      }).populate([...userPopulate, ...gamePopulate]);
 
       if (currentLevel) return this.responseService.success(true, StringHelper.successResponse("level", "initiated"), currentLevel);
 
@@ -48,6 +50,7 @@ export class LevelsService {
         user: user._id,
       });
 
+      await level.populate([...userPopulate, ...gamePopulate])
       return this.responseService.success(true, StringHelper.successResponse("level", "initiated"), level);
     } catch (error) {
       this.logger.error(this.initLevel.name);
@@ -70,7 +73,7 @@ export class LevelsService {
         game: game._id,
         isValid: true,
         createdAt: { $gte: TimeHelper.getToday() },
-      });
+      }).populate([...userPopulate, ...gamePopulate]);
 
       if (!currentLevel) {
         const init = await this.initLevel({ current: 1, game: body.id }, req);

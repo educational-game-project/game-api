@@ -1,4 +1,4 @@
-import { PipelineStage } from "mongoose";
+import { PipelineStage, PopulateOptions } from "mongoose";
 import { dateToString } from "./dateToString.pipeline";
 import { addedByPipeline } from "./global.pipeline";
 
@@ -65,3 +65,17 @@ export function userPipeline(query: any): PipelineStage[] {
     },
   ];
 }
+
+export const userPopulate: PopulateOptions[] = [
+  {
+    path: "user",
+    populate: [{
+      path: "image"
+    },
+    {
+      path: 'school',
+      select: "-admins -addedBy",
+      populate: 'images'
+    }]
+  }
+]

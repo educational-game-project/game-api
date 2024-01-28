@@ -1,4 +1,4 @@
-import { PipelineStage } from "mongoose";
+import { PipelineStage, PopulateOptions } from "mongoose";
 import { dateToString } from "./dateToString.pipeline";
 import { addedByPipeline } from "./global.pipeline";
 
@@ -23,3 +23,5 @@ export function gamePipeline(query: any): PipelineStage[] {
     },
   ]
 }
+
+export const gamePopulate: PopulateOptions[] = [{ path: "game", populate: "images" }]
