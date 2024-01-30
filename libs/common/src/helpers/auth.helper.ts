@@ -58,7 +58,7 @@ export class AuthHelper {
         },
         {
           secret: this.configService.get("JWT_SECRET"),
-          expiresIn: "7d",
+          expiresIn: "3d",
         },
       ),
     ]);
