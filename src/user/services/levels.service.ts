@@ -42,7 +42,7 @@ export class LevelsService {
       if (currentLevel) return this.responseService.success(true, StringHelper.successResponse("level", "initiated"), currentLevel);
 
       const level = await this.levelModel.create({
-        current: body?.current ?? 1,
+        current: 1,
         max: game?.maxLevel,
         liveLeft: game?.maxRetry ?? 3,
         game,
@@ -76,7 +76,7 @@ export class LevelsService {
       }).populate([...userPopulate, ...gamePopulate]);
 
       if (!currentLevel) {
-        const init = await this.initLevel({ current: 1, game: body.id }, req);
+        const init = await this.initLevel({ game: body.id }, req);
         currentLevel = init.data;
       }
 

@@ -8,7 +8,6 @@ import { StringHelper } from "@app/common/helpers/string.helpers";
 import { CreateReportDto, ReportType } from "@app/common/dto/report.dto";
 import { Game } from "@app/common/model/schema/game.schema";
 import { Level } from "@app/common/model/schema/levels.schema";
-import { TimeHelper } from "@app/common/helpers/time.helper";
 import { LevelsService } from "./levels.service";
 
 @Injectable()
@@ -39,7 +38,7 @@ export class RecordService {
       let current = await this.recordModel.findOne({
         user: user._id,
         game: game._id,
-        level: currentLevel.level,
+        level: currentLevel.current,
         isValid: true,
       });
 
@@ -56,22 +55,25 @@ export class RecordService {
           current.count++;
           current.time.push(body.time);
           current = await current.save();
+
+          // Update Current Level
+          await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $inc: { current: 1 } });
+
+          // Calculate Current Record
           break;
 
         case ReportType.FAILED:
           if (current.liveLeft === 0) {
             current.isValid = false;
             current.status = StatusRecord.FAILED;
-            let test = await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $set: { isValid: false } });
-            console.log(test);
+            await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $set: { isValid: false } });
 
             current.count++;
             current.time.push(body.time);
             current = await current.save();
           } else {
             current.liveLeft--;
-            let test = await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $inc: { liveLeft: -1 } });
-            console.log(test);
+            await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $inc: { liveLeft: -1 } });
 
             current.count++;
             current.time.push(body.time);
