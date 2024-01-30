@@ -25,7 +25,7 @@ export class Score extends AbstractDocument {
   game: Game;
 
   @Prop({ type: Types.ObjectId, ref: Record.name, default: null })
-  records: Record[];
+  record: Record;
 }
 
 export const ScoreSchema = SchemaFactory.createForClass(Score);
