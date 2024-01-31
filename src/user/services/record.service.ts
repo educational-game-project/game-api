@@ -9,6 +9,7 @@ import { CreateReportDto, ReportType } from "@app/common/dto/report.dto";
 import { Game } from "@app/common/model/schema/game.schema";
 import { Level } from "@app/common/model/schema/levels.schema";
 import { LevelsService } from "./levels.service";
+import { ScoreService } from "./scoring.service";
 
 @Injectable()
 export class RecordService {
@@ -19,6 +20,7 @@ export class RecordService {
     @InjectModel(Level.name) private levelModel: Model<Level>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(LevelsService) private readonly levelsService: LevelsService,
+    @Inject(ScoreService) private readonly scoreService: ScoreService,
   ) { }
 
   private readonly logger = new Logger(RecordService.name);
@@ -33,7 +35,7 @@ export class RecordService {
       if (!game) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("game"))
 
       let currentLevel = await this.levelsService.getLevel({ id: body.game }, req)
-      currentLevel = currentLevel.data
+      currentLevel = currentLevel.data;
 
       let current = await this.recordModel.findOne({
         user: user._id,
@@ -43,7 +45,7 @@ export class RecordService {
       });
 
       if (!current) {
-        body.level = currentLevel.level;
+        body.level = currentLevel.current;
         current = await this.initRecord(body, req);
       }
 
@@ -57,9 +59,14 @@ export class RecordService {
           current = await current.save();
 
           // Update Current Level
-          await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $inc: { current: 1 } });
+          if (currentLevel.current !== currentLevel.max) {
+            await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $inc: { current: 1 } });
+          } else {
+            await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $set: { isValid: false } });
+          }
 
           // Calculate Current Record
+          await this.scoreService.calculateScore(current?._id);
           break;
 
         case ReportType.FAILED:
