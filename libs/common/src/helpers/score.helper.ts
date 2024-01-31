@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Record } from "../model/schema/records.schema";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { Game } from "../model/schema/game.schema";
 import { Level } from "../model/schema/levels.schema";
 
@@ -19,12 +19,15 @@ export class ScoreCalculateHelper {
   private readonly tryCountWeight = 0.2;
   private readonly lifeLeftBonusWeight = 0.1;
 
-  public calculateScore(timeInSeconds: number, level: number, tryCount: number, lifeLeftBonus: number): number {
+  public async calculateScore(gameId: any, data: { timeInSeconds: number, level: number, tryCount: number, lifeLeftBonus: number }): Promise<number> {
+    let game = await this.gameModel.findOne({ _id: gameId });
+    if (!game) return -1;
+
     // Normalize values within their respective ranges using a custom normalization function
-    const normalizedTime = this.customNormalize(timeInSeconds, 0, 600); // Assuming max time is 600 seconds
-    const normalizedLevel = this.customNormalize(level, 1, 3); // Assuming levels range from 1 to 3
-    const normalizedTryCount = this.customNormalize(tryCount, 1, 3); // Assuming maximum 3 tries
-    const normalizedLifeLeftBonus = this.customNormalize(lifeLeftBonus, 0, 3); // Assuming maximum 3 life left bonus
+    const normalizedTime = this.customNormalize(data.timeInSeconds, 0, game?.maxTime ?? 60); // Assuming max time is 600 seconds
+    const normalizedLevel = this.customNormalize(data.level, 1, game?.maxLevel ?? 3); // Assuming levels range from 1 to 3
+    const normalizedTryCount = this.customNormalize(data.tryCount, 1, game?.maxRetry ?? 3); // Assuming maximum 3 tries
+    const normalizedLifeLeftBonus = this.customNormalize(data.lifeLeftBonus, 0, game?.maxRetry ?? 3); // Assuming maximum 3 life left bonus
 
     // Calculate the weighted sum
     const weightedSum =
@@ -37,10 +40,8 @@ export class ScoreCalculateHelper {
     const scaledScore = this.scaleValue(weightedSum, 0, 1, 1, 100);
 
     // Ensure the final score is within the desired range
-    return Math.max(1, Math.min(100, scaledScore));
+    return Math.max(0, Math.min(100, scaledScore));
   }
-
-  public async calculateScoreAndSave(record: Record) { }
 
   private customNormalize(value: number, min: number, max: number): number {
     // Custom normalization to handle non-linear scaling
