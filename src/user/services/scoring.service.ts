@@ -6,6 +6,7 @@ import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { Record } from "@app/common/model/schema/records.schema";
+import { ScoreCalculateHelper } from "@app/common/helpers/score.helper";
 
 @Injectable()
 export class ScoreService {
@@ -14,6 +15,7 @@ export class ScoreService {
     @InjectModel(Record.name) private recordModel: Model<Record>,
     @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
+    @Inject(ScoreCalculateHelper) private readonly scoreCalculateHelper: ScoreCalculateHelper,
   ) { }
 
   private readonly logger = new Logger(ScoreService.name);
@@ -23,14 +25,22 @@ export class ScoreService {
       let record = await this.recordModel.findOne({ _id: recordId });
       if (!record) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("record"));
 
-      let user = await this.userModel.findOne({ _id: record.user });
-      if (!user) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("user"));
+      let calcScore: number = await this.scoreCalculateHelper.calculateScore(record.game, {
+        timeInSeconds: record.time.pop(),
+        level: record.level,
+        tryCount: record.count,
+        lifeLeftBonus: record.liveLeft,
+      });
 
-      let score = await this.scoreModel.findOne({ user: user._id, game: record.game });
-      if (!score) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("score"));
+      let score = await this.scoreModel.create({
+        value: calcScore,
+        level: record.level,
+        user: record.user,
+        game: record.game,
+        record: record._id,
+      });
 
-      return this.responseService.success(true, StringHelper.successResponse("score", 'init'), score);
-
+      return this.responseService.success(true, StringHelper.successResponse("score", 'calculate'), score);
     } catch (error) {
       this.logger.error(this.calculateScore.name);
       console.log(error?.message);
