@@ -41,7 +41,7 @@ export class RecordService {
         user: user._id,
         game: game._id,
         level: currentLevel.current,
-        isValid: true,
+        isValid: { $eq: true },
       });
 
       if (!current) {
@@ -64,9 +64,6 @@ export class RecordService {
           } else {
             await this.levelModel.findOneAndUpdate({ _id: currentLevel?._id }, { $set: { isValid: false } });
           }
-
-          // Calculate Current Record
-          await this.scoreService.calculateScore(current?._id);
           break;
 
         case ReportType.FAILED:
@@ -88,6 +85,8 @@ export class RecordService {
           }
           break;
       }
+
+      if (!current.isValid) await this.scoreService.calculateScore(current?._id);
 
       return this.responseService.success(true, StringHelper.successResponse("record", "add"), current);
     } catch (error) {
