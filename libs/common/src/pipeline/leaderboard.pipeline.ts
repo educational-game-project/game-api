@@ -11,6 +11,16 @@ export function leaderboardPipeline(game: any): PipelineStage[] {
     },
     {
       $group: {
+        _id: { user: "$user", level: "$level" },
+        value: {
+          $max: "$value",
+        },
+        level: { $first: "$level" },
+        user: { $first: "$user" },
+      },
+    },
+    {
+      $group: {
         _id: "$user",
         value: {
           $sum: "$value",
@@ -20,11 +30,11 @@ export function leaderboardPipeline(game: any): PipelineStage[] {
     },
     {
       $sort: {
-        value: -1
-      }
+        value: -1,
+      },
     },
     {
-      $limit: 10
+      $limit: 10,
     },
     {
       $lookup: {
