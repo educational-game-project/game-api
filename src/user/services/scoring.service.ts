@@ -1,6 +1,6 @@
 import { HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, PipelineStage, Types, isValidObjectId } from "mongoose";
+import { Model, Types } from "mongoose";
 import { Score } from "@app/common/model/schema/scores.schema";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
