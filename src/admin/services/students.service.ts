@@ -12,7 +12,6 @@ import { ByIdDto } from "@app/common/dto/byId.dto";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { userPipeline } from "@app/common/pipeline/user.pipeline";
-import { Type } from "class-transformer";
 
 @Injectable()
 export class StudentsService {
@@ -192,8 +191,8 @@ export class StudentsService {
   public async getActiveStudent(req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
-      let activeAdmin = await this.userModel.count({ role: { $ne: UserRole.USER }, deletedAt: null, isActive: { $eq: true }, school: users.school })
-      let activeUser = await this.userModel.count({ role: UserRole.USER, deletedAt: null, isActive: { $eq: true }, school: users.school })
+      let activeAdmin = await this.userModel.count({ role: { $ne: UserRole.USER }, deletedAt: null, isActive: { $eq: true }, school: users?.school })
+      let activeUser = await this.userModel.count({ role: UserRole.USER, deletedAt: null, isActive: { $eq: true }, school: users?.school })
 
       return this.responseService.success(true, StringHelper.successResponse("user", "get_active_user"), { activeAdmin, activeUser })
     } catch (error) {

@@ -1,6 +1,6 @@
 import { FileInterceptor, AnyFilesInterceptor } from "@nestjs/platform-express";
 import { SchoolAdminService } from "../services/schools.service";
-import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, HttpException, } from "@nestjs/common";
+import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, HttpException, HttpCode, } from "@nestjs/common";
 import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
 import { ImagesService } from "@app/common/helpers/file.helpers";
@@ -27,6 +27,7 @@ export class SchoolAdminController {
   private readonly logger = new Logger(SchoolAdminService.name);
 
   @Post()
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @UseInterceptors(
     FileInterceptor("media", {
@@ -51,6 +52,7 @@ export class SchoolAdminController {
   }
 
   @Put()
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @UseInterceptors(
     AnyFilesInterceptor({
@@ -75,18 +77,21 @@ export class SchoolAdminController {
   }
 
   @Post("find")
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async find(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
     return this.schoolService.find(body, req);
   }
 
   @Post("detail")
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async detail(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.schoolService.detail(body, req);
   }
 
   @Delete()
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async delete(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.schoolService.delete(body, req);

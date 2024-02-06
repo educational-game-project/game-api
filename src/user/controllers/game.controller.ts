@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
 import { GameService } from "../services/game.service";
 import { ListGameByAuthorDTO } from "@app/common/dto/game.dto";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
@@ -14,6 +14,7 @@ export class GameController {
   constructor(private readonly gameService: GameService) { }
 
   @Post()
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async updateLevel(@Body() body: ListGameByAuthorDTO): Promise<any> {
     return this.gameService.getListGame(body);

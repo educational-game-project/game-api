@@ -1,4 +1,4 @@
-import { Request, Controller, Post, Body, UseGuards } from "@nestjs/common";
+import { Request, Controller, Post, Body, UseGuards, HttpStatus, HttpCode } from "@nestjs/common";
 import { AuthAdminService } from "../services/auth.service";
 import { LoginAdminDto, ReauthDto } from "@app/common/dto/auth.dto";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
@@ -12,12 +12,14 @@ export class AuthAdminController {
   constructor(private readonly authService: AuthAdminService) { }
 
   @Post("login")
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async login(@Body() body: LoginAdminDto) {
     return this.authService.login(body);
   }
 
   @Post("refresh-token")
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async verifyRefreshToken(@Body() body: ReauthDto, @Request() req) {
     return this.authService.verifyRefreshToken(body, req);
@@ -26,6 +28,7 @@ export class AuthAdminController {
   @Post('change-password')
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async changePassword(@Body() body: any, @Request() req) {
     return this.authService.changePassword(body, req);
@@ -34,6 +37,7 @@ export class AuthAdminController {
   @Post('logout')
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async logout(@Request() req) {
     return this.authService.logout(req);

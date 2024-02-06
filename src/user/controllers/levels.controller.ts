@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request as Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, Request as Req, UseGuards } from "@nestjs/common";
 import { Request } from "express";
 import { LevelsService } from "../services/levels.service";
 import { initLevelDTO } from "@app/common/dto/levels.dto";
@@ -16,12 +16,14 @@ export class LevelsController {
   constructor(private readonly levelsService: LevelsService) { }
 
   @Post("init")
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async initLevel(@Body() body: initLevelDTO, @Req() req: Request): Promise<any> {
     return this.levelsService.initLevel(body, req);
   }
 
   @Post("find")
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async getLevel(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.levelsService.getLevel(body, req);

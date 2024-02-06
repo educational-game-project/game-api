@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, HttpException, } from "@nestjs/common";
+import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, HttpException, HttpCode, } from "@nestjs/common";
 import { GameAdminService } from "../services/game.service";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { Roles } from "@app/common/decorators/roles.decorator";
@@ -24,6 +24,7 @@ export class GameAdminController {
 
   @Post()
   @Roles([UserRole.SUPER_ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @UseInterceptors(
     AnyFilesInterceptor({
@@ -49,6 +50,7 @@ export class GameAdminController {
 
   @Put()
   @Roles([UserRole.SUPER_ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @UseInterceptors(
     AnyFilesInterceptor({
@@ -74,6 +76,7 @@ export class GameAdminController {
 
   @Post('find')
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async listGame(@Body() body: ListGameDTO, @Req() req: Request): Promise<any> {
     return this.gameService.listGame(body);
@@ -81,6 +84,7 @@ export class GameAdminController {
 
   @Post('detail')
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async detailGame(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.gameService.detailGame(body);
@@ -88,6 +92,7 @@ export class GameAdminController {
 
   @Delete()
   @Roles([UserRole.SUPER_ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async deleteGame(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.gameService.deleteGame(body);

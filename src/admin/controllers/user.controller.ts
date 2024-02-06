@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Req, UploadedFile, UseGuards, UseInterceptors, HttpException, Get, Put, } from "@nestjs/common";
+import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Req, UploadedFile, UseGuards, UseInterceptors, HttpException, Get, Put, HttpCode, } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
@@ -29,6 +29,7 @@ export class UserAdminController {
 
   @Post("admin")
   @Roles([UserRole.SUPER_ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @UseInterceptors(
     FileInterceptor("media", {
@@ -54,6 +55,7 @@ export class UserAdminController {
 
   @Put("admin")
   @Roles([UserRole.SUPER_ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @UseInterceptors(
     FileInterceptor("media", {
@@ -79,6 +81,7 @@ export class UserAdminController {
 
   @Post("admin/find")
   @Roles([UserRole.SUPER_ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async find(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
     return this.userService.findAdmin(body, req);
@@ -86,6 +89,7 @@ export class UserAdminController {
 
   @Delete("admin")
   @Roles([UserRole.SUPER_ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async delete(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.userService.deleteAdmin(body, req);
@@ -93,6 +97,7 @@ export class UserAdminController {
 
   @Post("admin/detail")
   @Roles([UserRole.SUPER_ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async detailAdmin(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
     return this.userService.detailAdmin(body, req);
@@ -100,6 +105,7 @@ export class UserAdminController {
 
   @Get("profile")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async getProfile(@Req() req: Request,): Promise<any> {
     return this.userService.getUserDetail(req);
@@ -107,6 +113,7 @@ export class UserAdminController {
 
   @Get("active")
   @Roles([UserRole.SUPER_ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async getActiveUser(@Req() req: Request,): Promise<any> {
     return this.userService.getActiveUser(req);
@@ -116,6 +123,7 @@ export class UserAdminController {
 
   @Post("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @UseInterceptors(
     FileInterceptor("media", {
@@ -141,6 +149,7 @@ export class UserAdminController {
 
   @Put("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @UseInterceptors(
     FileInterceptor("media", {
@@ -166,6 +175,7 @@ export class UserAdminController {
 
   @Post("student/find")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async listStudents(
     @Body() body: SearchDTO,
@@ -176,6 +186,7 @@ export class UserAdminController {
 
   @Delete("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async deleteStudent(
     @Body() body: ByIdDto,
@@ -186,6 +197,7 @@ export class UserAdminController {
 
   @Post("student/detail")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async detailStudent(
     @Body() body: ByIdDto,
@@ -196,6 +208,7 @@ export class UserAdminController {
 
   @Get("student/active")
   @Roles([UserRole.ADMIN])
+  @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async getActiveStudent(@Req() req: Request,): Promise<any> {
     return this.studentsService.getActiveStudent(req);
