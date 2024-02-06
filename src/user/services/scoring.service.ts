@@ -15,7 +15,6 @@ export class ScoreService {
   constructor(
     @InjectModel(Score.name) private scoreModel: Model<Score>,
     @InjectModel(Record.name) private recordModel: Model<Record>,
-    @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Game.name) private gameModel: Model<Game>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(ScoreCalculateHelper) private readonly scoreCalculateHelper: ScoreCalculateHelper,
@@ -59,11 +58,15 @@ export class ScoreService {
 
       let score = await this.scoreModel.aggregate(leaderboardPipeline(game._id));
 
-      if (score?.length) score = score.filter(i => i._id.toString() == users.school.toString());
+      let leaderboard = [];
+      if (score?.length) {
+        score = score.filter(i => i._id.toString() == users.school.toString());
+        leaderboard = score[0].scores.map(i => i.user._id.toString() == users._id.toString() ? { ...i, isCurrentUser: true } : { ...i, isCurrentUser: false })
+      }
 
       let result = {
         game,
-        leaderboard: score[0].scores
+        leaderboard,
       }
 
       return this.responseService.success(true, StringHelper.successResponse("score", 'get'), result);

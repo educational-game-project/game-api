@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Request as Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, Request as Req, UseGuards } from "@nestjs/common";
 import { Request } from "express";
 import { LevelsService } from "../services/levels.service";
 import { initLevelDTO } from "@app/common/dto/levels.dto";

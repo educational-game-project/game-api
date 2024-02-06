@@ -5,7 +5,7 @@ import { Roles } from "@app/common/decorators/roles.decorator";
 import { CreateReportDto } from "@app/common/dto/report.dto";
 import { UserRole } from "@app/common/enums/role.enum";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request as Req } from "@nestjs/common";
+import { Controller, Post, Body, UseGuards, Request as Req } from "@nestjs/common";
 import { RecordService } from "src/user/services/record.service";
 
 @Roles([UserRole.USER])
