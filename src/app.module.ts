@@ -19,9 +19,6 @@ import { DatabaseModule } from "@app/common/model/database.module";
 import { StudentsService } from "./admin/services/students.service";
 import { AuthController } from "./user/controllers/auth.controller";
 import { GameController } from "./user/controllers/game.controller";
-import { RecordAdminService } from "./admin/services/record.service";
-import { LevelsAdminService } from "./admin/services/levels.service";
-import { ReportAdminService } from "./admin/services/report.service";
 import { ScoreAdminService } from "./admin/services/scoring.service";
 import { SchoolAdminService } from "./admin/services/schools.service";
 import { ScoreCalculateHelper } from "@app/common/helpers/score.helper";
@@ -34,10 +31,7 @@ import { AuthAdminController } from "./admin/controllers/auth.controller";
 import { UserAdminController } from "./admin/controllers/user.controller";
 import { GameAdminController } from "./admin/controllers/game.controller";
 import { MongooseModulesImport } from "@app/common/model/database.service";
-import { LevelsAdminController } from "./admin/controllers/levels.controller";
 import { ScoreAdminController } from "./admin/controllers/scoring.controller";
-import { RecordAdminController } from "./admin/controllers/record.controller";
-import { ReportAdminController } from "./admin/controllers/report.controller";
 import { SchoolAdminController } from "./admin/controllers/schools.controller";
 import { AnalysisAdminController } from "./admin/controllers/analysis.controller";
 
@@ -69,9 +63,6 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     AuthAdminController,
     UserAdminController,
     ScoreAdminController,
-    LevelsAdminController,
-    RecordAdminController,
-    ReportAdminController,
     SchoolAdminController,
     AnalysisAdminController,
   ],
@@ -91,9 +82,6 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     AuthAdminService,
     UserAdminService,
     ScoreAdminService,
-    LevelsAdminService,
-    RecordAdminService,
-    ReportAdminService,
     SchoolAdminService,
     AnalysisAdminService,
     ScoreCalculateHelper,
