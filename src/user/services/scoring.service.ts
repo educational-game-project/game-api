@@ -60,7 +60,7 @@ export class ScoreService {
 
       let leaderboard = [];
       if (score?.length) {
-        score = score.filter(i => i._id.toString() == users.school.toString());
+        score = score.filter(i => i?._id?.toString() == users?.school?.toString());
         leaderboard = score[0].scores.map(i => i.user._id.toString() == users._id.toString() ? { ...i, isCurrentUser: true } : { ...i, isCurrentUser: false })
       }
 

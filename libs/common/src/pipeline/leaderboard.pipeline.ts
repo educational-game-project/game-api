@@ -42,6 +42,34 @@ export function leaderboardPipeline(game: any): PipelineStage[] {
         localField: "user",
         foreignField: "_id",
         as: "user",
+        pipeline: [
+          {
+            $lookup: {
+              from: "images",
+              localField: "image",
+              foreignField: "_id",
+              as: "image",
+            },
+          },
+          {
+            $set: {
+              image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] },
+            }
+          },
+          {
+            $project: {
+              name: 1,
+              role: 1,
+              email: 1,
+              phoneNumber: 1,
+              image: 1,
+              school: 1,
+              deletedAt: 1,
+              createdAt: 1,
+              updatedAt: 1,
+            }
+          }
+        ]
       },
     },
     {
