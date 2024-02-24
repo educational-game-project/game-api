@@ -98,7 +98,7 @@ export class ScoreAdminService {
       if (!game) throw new HttpException(StringHelper.notFoundResponse('game'), HttpStatus.BAD_REQUEST);
 
       let scores = await this.scoreModel.aggregate(leaderboardPipeline(game._id))
-      console.log(scores[0].scores, users)
+
       let leaderboard = [];
       let result: any = {}
       if (scores?.length) {
