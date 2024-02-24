@@ -28,3 +28,9 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsMongoId()
   id: string;
 }
+
+export class ByUserIdDto {
+  @IsNotEmpty()
+  @IsMongoId()
+  userId: string;
+}
