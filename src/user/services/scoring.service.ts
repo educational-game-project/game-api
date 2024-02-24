@@ -64,12 +64,7 @@ export class ScoreService {
         leaderboard = score[0].scores.map(i => i.user._id.toString() == users._id.toString() ? { ...i, isCurrentUser: true } : { ...i, isCurrentUser: false })
       }
 
-      let result = {
-        game,
-        leaderboard,
-      }
-
-      return this.responseService.success(true, StringHelper.successResponse("score", 'get'), result);
+      return this.responseService.success(true, StringHelper.successResponse("score", 'get'), { game, leaderboard, });
     } catch (error) {
       this.logger.error(this.getLeaderBoard.name);
       console.log(error?.message);
