@@ -81,13 +81,20 @@ export class UserAdminService {
       admin.$set(body)
       admin.lastUpdatedBy = users
       if (media.length) {
-        if (admin.image) await this.imageHelper.delete([admin.image])
+        if (admin?.image) await this.imageHelper.delete([admin.image])
         admin.image = media[0]
       }
 
       if (body?.schoolId && body?.schoolId !== admin.school.toString()) {
         let school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
         if (school) {
+          let oldSchool = await this.schoolModel.findOne({ _id: admin.school });
+          if (oldSchool) {
+            oldSchool.admins = oldSchool.admins.filter(item => item.toString() !== admin._id.toString())
+            oldSchool.adminsCount = oldSchool.admins.length
+            await oldSchool.save();
+          }
+
           admin.school = school
           school.admins.push(admin)
           school.adminsCount = school.admins.length
