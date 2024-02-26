@@ -5,6 +5,9 @@ import { addedByPipeline } from "./global.pipeline";
 export function userPipeline(query: any): PipelineStage[] {
   return [
     {
+      $match: query,
+    },
+    {
       $lookup: {
         from: "schools",
         foreignField: "_id",
@@ -47,9 +50,6 @@ export function userPipeline(query: any): PipelineStage[] {
         school: { $ifNull: [{ $arrayElemAt: ["$school", 0] }, null] },
         image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] },
       },
-    },
-    {
-      $match: query,
     },
     {
       $project: {
