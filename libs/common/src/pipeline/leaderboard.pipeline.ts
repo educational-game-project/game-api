@@ -12,9 +12,7 @@ export function leaderboardPipeline(game: any): PipelineStage[] {
     {
       $group: {
         _id: { user: "$user", level: "$level" },
-        value: {
-          $avg: "$value",
-        },
+        value: { $avg: "$value" },
         level: { $first: "$level" },
         user: { $first: "$user" },
       },
@@ -22,9 +20,7 @@ export function leaderboardPipeline(game: any): PipelineStage[] {
     {
       $group: {
         _id: "$user",
-        value: {
-          $avg: "$value",
-        },
+        value: { $avg: "$value" },
         user: { $first: "$user" },
       },
     },
@@ -52,9 +48,7 @@ export function leaderboardPipeline(game: any): PipelineStage[] {
             },
           },
           {
-            $set: {
-              image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] },
-            }
+            $set: { image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] } }
           },
           {
             $project: {
