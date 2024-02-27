@@ -144,7 +144,7 @@ export class StudentsService {
     try {
       let student = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.USER }).populate('image');
       if (!student) throw new NotFoundException("Student Not Found");
-      if (users.role == UserRole.ADMIN && users.school !== student.school) throw new MethodNotAllowedException("You Can't Delete Student From Other School");
+      if (users.role == UserRole.ADMIN && users.school.toString() !== student.school.toString()) throw new MethodNotAllowedException("You Can't Delete Student From Other School");
 
       if (student.image) await this.imageHelper.delete([student.image]);
 
