@@ -13,7 +13,7 @@ export function leaderboardPipeline(game: any): PipelineStage[] {
       $group: {
         _id: { user: "$user", level: "$level" },
         value: {
-          $max: "$value",
+          $avg: "$value",
         },
         level: { $first: "$level" },
         user: { $first: "$user" },
@@ -23,7 +23,7 @@ export function leaderboardPipeline(game: any): PipelineStage[] {
       $group: {
         _id: "$user",
         value: {
-          $sum: "$value",
+          $avg: "$value",
         },
         user: { $first: "$user" },
       },
