@@ -12,3 +12,13 @@ export class IdsDTO {
   @IsMongoId({ each: true })
   ids: string[];
 }
+
+export class ByUserIdAndGameIdDTO {
+  @IsNotEmpty()
+  @IsMongoId()
+  userId: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  gameId: string;
+}

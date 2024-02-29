@@ -5,6 +5,13 @@ import { User } from "./users.schema";
 import { Record } from "./records.schema";
 import { Game } from "./game.schema";
 
+export interface IScore {
+  level: number;
+  value: number;
+  gamePlayed: number;
+  createdAt: string;
+}
+
 @Schema({ timestamps: true })
 export class Score extends AbstractDocument {
   //================================== Attributes =======================================
@@ -13,6 +20,9 @@ export class Score extends AbstractDocument {
 
   @Prop({ type: Number, default: null })
   level: number;
+
+  @Prop({ type: Number, default: 0 })
+  gamePlayed: number;
 
   @Prop({ type: Date, default: null })
   deletedAt?: Date;

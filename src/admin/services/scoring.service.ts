@@ -4,10 +4,11 @@ import { Model, PipelineStage, Types } from "mongoose";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
-import { Score } from "@app/common/model/schema/scores.schema";
+import { IScore, Score } from "@app/common/model/schema/scores.schema";
 import { Game } from "@app/common/model/schema/game.schema";
 import { leaderboardPipeline } from "@app/common/pipeline/leaderboard.pipeline";
 import { School } from "@app/common/model/schema/schools.schema";
+import { scorePipeline } from "@app/common/pipeline/score.pipeline";
 
 @Injectable()
 export class ScoreAdminService {
@@ -26,56 +27,7 @@ export class ScoreAdminService {
       const user = await this.userModel.findOne({ _id: new Types.ObjectId(userId) });
       if (!user) throw new HttpException(StringHelper.notFoundResponse('user'), HttpStatus.BAD_REQUEST);
 
-      let pipeline: PipelineStage[] = [
-        {
-          $match: {
-            user: user._id
-          }
-        },
-        {
-          $lookup: {
-            from: "games",
-            localField: "game",
-            foreignField: "_id",
-            as: "game",
-          },
-        },
-        {
-          $set: {
-            game: {
-              $ifNull: [
-                { $arrayElemAt: ["$game", 0] },
-                null,
-              ],
-            },
-          },
-        },
-        {
-          $project: {
-            record: 0,
-            user: 0,
-          },
-        },
-        {
-          $sort: {
-            createdAt: 1
-          }
-        },
-        {
-          $group: {
-            _id: "$game",
-            scores: {
-              $push: {
-                level: "$level",
-                value: "$value",
-                createdAt: "$createdAt"
-              }
-            },
-          },
-        },
-      ];
-
-      let result = await this.scoreModel.aggregate(pipeline);
+      let result = await this.scoreModel.aggregate(scorePipeline(user._id));
 
       if (result.length) result.map((item) => {
         item.game = item._id;
@@ -129,5 +81,50 @@ export class ScoreAdminService {
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  async getScoresChartData(userId: string, gameId: string) {
+    try {
+      const user = await this.userModel.findOne({ _id: new Types.ObjectId(userId) });
+      if (!user) throw new HttpException(StringHelper.notFoundResponse('user'), HttpStatus.BAD_REQUEST);
+
+      let result: any = await this.scoreModel.aggregate(scorePipeline(user._id));
+
+      result = result.filter(i => i?._id?._id?.toString() === gameId)[0]
+      if (!result) return this.responseService.success(true, StringHelper.successResponse('get', 'score'), []);
+
+      result.game = result?._id;
+      delete result?._id;
+
+      result.scores = this.groupScoresByGamePlayed(result.scores);
+
+      return this.responseService.success(true, StringHelper.successResponse('get', 'score'), result);
+    } catch (error) {
+      this.logger.error(this.getLeaderboard.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  private groupScoresByGamePlayed(scores: IScore[]): IScore[][] {
+    const groupedScores: IScore[][] = [];
+
+    const scoresMap = new Map<number, IScore[]>();
+
+    scores.forEach(score => {
+      const gamePlayed = score.gamePlayed;
+
+      if (!scoresMap.has(gamePlayed)) {
+        scoresMap.set(gamePlayed, []);
+      }
+
+      scoresMap.get(gamePlayed)?.push(score);
+    });
+
+    scoresMap.forEach((scoresForGamePlayed) => {
+      groupedScores.push(scoresForGamePlayed);
+    });
+
+    return groupedScores;
   }
 }

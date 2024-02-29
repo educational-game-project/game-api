@@ -27,7 +27,6 @@ import { ResponseService } from "@app/common/response/response.service";
 import { RecordController } from "./user/controllers/record.controller";
 import { LevelsController } from "./user/controllers/levels.controller";
 import { ScoreController } from "./user/controllers/scoring.controller";
-import { AnalysisAdminService } from "./admin/services/analysis.service";
 import { AuthAdminController } from "./admin/controllers/auth.controller";
 import { UserAdminController } from "./admin/controllers/user.controller";
 import { GameAdminController } from "./admin/controllers/game.controller";
@@ -35,7 +34,6 @@ import { MongooseModulesImport } from "@app/common/model/database.service";
 import { ScoreAdminController } from "./admin/controllers/scoring.controller";
 import { SchoolAdminController } from "./admin/controllers/schools.controller";
 import { DashboardController } from "./admin/controllers/dashboard.controller";
-import { AnalysisAdminController } from "./admin/controllers/analysis.controller";
 
 @Module({
   imports: [
@@ -67,7 +65,6 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     DashboardController,
     ScoreAdminController,
     SchoolAdminController,
-    AnalysisAdminController,
   ],
   providers: [
     AuthHelper,
@@ -87,7 +84,6 @@ import { AnalysisAdminController } from "./admin/controllers/analysis.controller
     UserAdminService,
     ScoreAdminService,
     SchoolAdminService,
-    AnalysisAdminService,
     ScoreCalculateHelper,
   ],
 })

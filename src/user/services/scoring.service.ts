@@ -34,12 +34,19 @@ export class ScoreService {
         lifeLeftBonus: record.liveLeft,
       });
 
+      let curr = await this.scoreModel.count({
+        level: record.level,
+        user: record.user,
+        game: record.game,
+      })
+
       let score = await this.scoreModel.create({
         value: calcScore,
         level: record.level,
         user: record.user,
         game: record.game,
         record: record._id,
+        gamePlayed: curr + 1,
       });
 
       return this.responseService.success(true, StringHelper.successResponse("score", 'calculate'), score);

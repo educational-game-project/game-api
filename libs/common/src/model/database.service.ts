@@ -1,4 +1,3 @@
-import { Analysis, AnalysisSchema } from "./schema/analysis.schema";
 import { Image, ImageSchema } from "./schema/subtype/images.subtype";
 import { Record, RecordSchema } from "./schema/records.schema";
 import { School, SchoolSchema } from "./schema/schools.schema";
@@ -8,7 +7,6 @@ import { Level, LevelSchema } from "./schema/levels.schema";
 import { Game, GameSchema } from "./schema/game.schema";
 
 export const MongooseModulesImport = [
-  { name: Analysis.name, schema: AnalysisSchema },
   { name: Game.name, schema: GameSchema },
   { name: Image.name, schema: ImageSchema },
   { name: Level.name, schema: LevelSchema },
