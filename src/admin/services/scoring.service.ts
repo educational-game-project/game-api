@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose, { Model, PipelineStage, Types, isValidObjectId } from "mongoose";
-import { Score } from "@app/common/model/schema/scores.schema";
+import { Model, PipelineStage, Types } from "mongoose";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
+import { Score } from "@app/common/model/schema/scores.schema";
 import { Game } from "@app/common/model/schema/game.schema";
 import { leaderboardPipeline } from "@app/common/pipeline/leaderboard.pipeline";
 import { School } from "@app/common/model/schema/schools.schema";

@@ -37,5 +37,4 @@ export class ScoreAdminController {
 
     return this.scoreService.getLeaderboard(gameId, req);
   }
-
 }
