@@ -60,7 +60,6 @@ export class DashboardService {
       gameCount = await this.gameModel.countDocuments({ deletedAt: null });
       games = await this.gameModel.find({ deletedAt: null }).populate('images')
 
-
       result = {
         studentsCount,
         activeStudents,
