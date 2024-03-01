@@ -7,6 +7,8 @@ import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { UserRole } from "@app/common/enums/role.enum";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
+import { LogsService } from "./log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class AuthAdminService {
@@ -14,6 +16,7 @@ export class AuthAdminService {
     @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
+    private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(AuthAdminService.name);
@@ -42,8 +45,21 @@ export class AuthAdminService {
 
       await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken, isActive: true } });
 
+      await this.logsService.logging({
+        target: TargetLogEnum.AUTH,
+        description: `${user.name} login into admin dashboard`,
+        success: true,
+        summary: JSON.stringify(body)
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("auth", "login"), { user, tokens },);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.AUTH,
+        description: `${body.email} failed login into admin dashboard`,
+        success: false,
+        summary: error?.message
+      })
       this.logger.error(this.login.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,);

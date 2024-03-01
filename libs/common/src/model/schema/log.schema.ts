@@ -11,9 +11,6 @@ export class Log extends AbstractDocument {
   @Prop({ type: String, default: null })
   target: string;
 
-  @Prop({ required: true })
-  url: string;
-
   @Prop({ type: String, default: null })
   type: string;
 

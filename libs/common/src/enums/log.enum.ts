@@ -9,5 +9,6 @@ export enum TargetLogEnum {
   SCHOOL = "SCHOOL",
   LOG = "LOG",
   AUTH = "AUTH",
-  DASHBOARD = "DASHBOARD"
+  DASHBOARD = "DASHBOARD",
+  MEDIA = "MEDIA",
 }
