@@ -8,19 +8,19 @@ export class Log extends AbstractDocument {
   @Prop({ type: Types.ObjectId, ref: "User" })
   actor: User;
 
-  @Prop()
+  @Prop({ type: String, default: null })
   target: string;
 
   @Prop({ required: true })
   url: string;
 
-  @Prop()
+  @Prop({ type: String, default: null })
   type: string;
 
-  @Prop()
+  @Prop({ type: String, default: null })
   method: string;
 
-  @Prop()
+  @Prop({ type: String, default: null })
   userAgent: string;
 
   @Prop({ required: true })
@@ -31,6 +31,9 @@ export class Log extends AbstractDocument {
 
   @Prop({ type: String, default: null })
   summary: string;
+
+  @Prop({ type: Boolean, default: true })
+  success: boolean;
 }
 
 export const LogSchema = SchemaFactory.createForClass(Log)

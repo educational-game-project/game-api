@@ -3,12 +3,7 @@ import { Types } from "mongoose";
 import { AbstractDocument } from "./abstract.schema";
 import { User } from "./users.schema";
 import { Game } from "./game.schema";
-
-export enum StatusRecord {
-  PASSED = "Passed",
-  ONGOING = "On Going",
-  FAILED = "Failed",
-}
+import { StatusRecord } from "@app/common/enums/statusRecord.enum";
 
 @Schema({ timestamps: true })
 export class Record extends AbstractDocument {

@@ -34,6 +34,8 @@ import { MongooseModulesImport } from "@app/common/model/database.service";
 import { ScoreAdminController } from "./admin/controllers/scoring.controller";
 import { SchoolAdminController } from "./admin/controllers/schools.controller";
 import { DashboardController } from "./admin/controllers/dashboard.controller";
+import { LogsController } from "./admin/controllers/log.controller";
+import { LogsService } from "./admin/services/log.service";
 
 @Module({
   imports: [
@@ -54,6 +56,7 @@ import { DashboardController } from "./admin/controllers/dashboard.controller";
   ],
   controllers: [
     AppController,
+    LogsController,
     GameController,
     AuthController,
     ScoreController,
@@ -69,6 +72,7 @@ import { DashboardController } from "./admin/controllers/dashboard.controller";
   providers: [
     AuthHelper,
     AppService,
+    LogsService,
     GameService,
     AuthService,
     ScoreService,

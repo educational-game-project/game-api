@@ -2,14 +2,16 @@ import { HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { User } from "@app/common/model/schema/users.schema";
-import { Record, StatusRecord } from "@app/common/model/schema/records.schema";
+import { Record } from "@app/common/model/schema/records.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
-import { CreateReportDto, ReportType } from "@app/common/dto/report.dto";
+import { CreateReportDto } from "@app/common/dto/report.dto";
 import { Game } from "@app/common/model/schema/game.schema";
 import { Level } from "@app/common/model/schema/levels.schema";
 import { LevelsService } from "./levels.service";
 import { ScoreService } from "./scoring.service";
+import { StatusRecord } from "@app/common/enums/statusRecord.enum";
+import { ReportType } from "@app/common/enums/reportType.enum";
 
 @Injectable()
 export class RecordService {
