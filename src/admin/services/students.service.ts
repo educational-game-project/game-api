@@ -119,7 +119,7 @@ export class StudentsService {
 
       if (users?.school) searchOption.school = users?.school;
 
-      const students = await this.userModel.aggregate(userPipeline(searchOption)).skip(SKIP).limit(LIMIT_PAGE);
+      const students = await this.userModel.aggregate(userPipeline(searchOption, SKIP, LIMIT_PAGE));
       const total = await this.userModel.aggregate(userPipeline(searchOption)).count("total");
 
       return this.responseService.paging(

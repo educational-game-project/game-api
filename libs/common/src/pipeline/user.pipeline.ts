@@ -2,11 +2,13 @@ import { PipelineStage, PopulateOptions } from "mongoose";
 import { dateToString } from "./dateToString.pipeline";
 import { addedByPipeline } from "./global.pipeline";
 
-export function userPipeline(query: any): PipelineStage[] {
+export function userPipeline(query: any, skip?: number, limit?: number): PipelineStage[] {
   return [
-    {
+    query && {
       $match: query,
     },
+    skip && { $skip: skip },
+    limit && { $limit: limit },
     {
       $lookup: {
         from: "schools",

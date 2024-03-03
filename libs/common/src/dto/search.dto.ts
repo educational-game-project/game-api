@@ -1,4 +1,4 @@
-import { IsMongoId, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsMongoId, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class SearchDTO {
   @IsOptional()
@@ -16,4 +16,8 @@ export class SearchDTO {
   @IsOptional()
   @IsMongoId()
   public readonly schoolId?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  status?: boolean;
 }
