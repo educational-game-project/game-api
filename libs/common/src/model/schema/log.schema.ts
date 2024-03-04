@@ -3,6 +3,15 @@ import { Types } from "mongoose";
 import { AbstractDocument } from "./abstract.schema";
 import { User } from "./users.schema";
 
+export interface ILogsData {
+  target: string,
+  description: string,
+  summary?: string,
+  type?: string,
+  success?: boolean,
+  actor?: string
+}
+
 @Schema({ timestamps: true })
 export class Log extends AbstractDocument {
   @Prop({ type: Types.ObjectId, ref: "User" })
