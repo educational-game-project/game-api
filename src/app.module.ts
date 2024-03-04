@@ -1,8 +1,10 @@
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { MongooseModule } from "@nestjs/mongoose";
+import { ScheduleModule } from "@nestjs/schedule";
 import { AppService } from "./user/services/app.service";
 import { AuthService } from "./user/services/auth.service";
+import { LogsService } from "./admin/services/log.service";
 import { GameService } from "./user/services/game.service";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { ConfigModule, ConfigService } from "@nestjs/config";
@@ -19,9 +21,11 @@ import { DatabaseModule } from "@app/common/model/database.module";
 import { StudentsService } from "./admin/services/students.service";
 import { AuthController } from "./user/controllers/auth.controller";
 import { GameController } from "./user/controllers/game.controller";
+import { LogsController } from "./admin/controllers/log.controller";
 import { ScoreAdminService } from "./admin/services/scoring.service";
 import { DashboardService } from "./admin/services/dashboard.service";
 import { SchoolAdminService } from "./admin/services/schools.service";
+import { SchedulerService } from "./admin/services/scheduler.service";
 import { ScoreCalculateHelper } from "@app/common/helpers/score.helper";
 import { ResponseService } from "@app/common/response/response.service";
 import { RecordController } from "./user/controllers/record.controller";
@@ -34,8 +38,6 @@ import { MongooseModulesImport } from "@app/common/model/database.service";
 import { ScoreAdminController } from "./admin/controllers/scoring.controller";
 import { SchoolAdminController } from "./admin/controllers/schools.controller";
 import { DashboardController } from "./admin/controllers/dashboard.controller";
-import { LogsController } from "./admin/controllers/log.controller";
-import { LogsService } from "./admin/services/log.service";
 
 @Module({
   imports: [
@@ -53,6 +55,7 @@ import { LogsService } from "./admin/services/log.service";
     }),
     DatabaseModule,
     MongooseModule.forFeature(MongooseModulesImport),
+    ScheduleModule.forRoot(),
   ],
   controllers: [
     AppController,
@@ -85,6 +88,7 @@ import { LogsService } from "./admin/services/log.service";
     GameAdminService,
     DashboardService,
     AuthAdminService,
+    SchedulerService,
     UserAdminService,
     ScoreAdminService,
     SchoolAdminService,
