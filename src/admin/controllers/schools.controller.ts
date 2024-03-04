@@ -5,7 +5,6 @@ import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { CreateSchoolDTO, EditSchoolDTO } from "@app/common/dto/school.dto";
-import { ResponseService } from "@app/common/response/response.service";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { ByIdDto } from "@app/common/dto/byId.dto";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
@@ -21,7 +20,6 @@ export class SchoolAdminController {
   constructor(
     private schoolService: SchoolAdminService,
     @Inject(ImagesService) private imageService: ImagesService,
-    @Inject(ResponseService) private readonly responseService: ResponseService,
   ) { }
 
   private readonly logger = new Logger(SchoolAdminService.name);

@@ -2,8 +2,13 @@ import { PipelineStage } from "mongoose";
 import { dateToString } from "./dateToString.pipeline";
 import { addedByPipeline } from "./global.pipeline";
 
-export function schoolPipeline(query: any): PipelineStage[] {
-  return [
+export function schoolPipeline(query: any, skip?: number, limit?: number): PipelineStage[] {
+  let pipeline: any[] = [
+    {
+      $match: query,
+    },
+    skip && { $skip: skip },
+    limit && { $limit: limit },
     {
       $lookup: {
         from: "images",
@@ -15,13 +20,12 @@ export function schoolPipeline(query: any): PipelineStage[] {
     ...addedByPipeline,
     ...dateToString,
     {
-      $match: query,
-    },
-    {
       $project: { admins: 0 }
     },
     {
       $sort: { createdAt: -1 },
     },
-  ]
+  ];
+
+  return pipeline.filter(Boolean) as PipelineStage[];
 }
