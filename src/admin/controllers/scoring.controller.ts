@@ -36,11 +36,6 @@ export class ScoreAdminController {
   ) {
     const { userId, gameId } = body;
 
-    console.log({
-      url: req.url,
-      method: req.method,
-      userAgent: req.headers['user-agent'],
-    })
     return this.scoreService.getScoresChartData(userId, gameId);
   }
 

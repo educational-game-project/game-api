@@ -49,7 +49,8 @@ export class AuthAdminService {
         target: TargetLogEnum.AUTH,
         description: `${user.name} login into admin dashboard`,
         success: true,
-        summary: JSON.stringify(body)
+        summary: JSON.stringify(body),
+        actor: user._id.toString(),
       })
 
       return this.responseService.success(true, StringHelper.successResponse("auth", "login"), { user, tokens },);
