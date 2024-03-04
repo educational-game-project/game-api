@@ -9,6 +9,8 @@ import { ResponseService } from "@app/common/response/response.service";
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
+import { LogsService } from "./log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class GameAdminService {
@@ -16,6 +18,7 @@ export class GameAdminService {
     @InjectModel(Game.name) private gameModel: Model<Game>,
     @Inject(ImagesService) private imageService: ImagesService,
     @Inject(ResponseService) private readonly responseService: ResponseService,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(GameAdminService.name);
@@ -32,8 +35,21 @@ export class GameAdminService {
         addedBy: user,
       });
 
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${user?.name} success add game ${game?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse('game', 'define'), game);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${user?.name} failed to add game`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.defineGame.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -55,15 +71,29 @@ export class GameAdminService {
       game.set({ ...body })
       await game.save();
 
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${user?.name} success edit game ${game?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse('game', 'edit'), game);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${user?.name} failed to edit game`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.editGame.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  public async detailGame(body: ByIdDto): Promise<any> {
+  public async detailGame(body: ByIdDto, req: any): Promise<any> {
+    const user: User = <User>req.user;
     try {
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) })
         .populate({
@@ -74,15 +104,29 @@ export class GameAdminService {
         .populate('images')
       if (!game) throw new NotFoundException("Game Not Found");
 
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${user?.name} success get detail game ${game?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse('game', 'detail'), game);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${user?.name} failed to get detail game`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.detailGame.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  public async deleteGame(body: ByIdDto): Promise<any> {
+  public async deleteGame(body: ByIdDto, req: any): Promise<any> {
+    const user: User = <User>req.user;
     try {
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) }).populate('images');
       if (!game) throw new NotFoundException("Game Not Found");
@@ -92,15 +136,29 @@ export class GameAdminService {
       game.deletedAt = new Date();
       await game.save();
 
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${user?.name} success delete game ${game?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse('game', 'delete'));
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${user?.name} failed to delete game`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.deleteGame.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  public async listGame(body: ListGameDTO): Promise<any> {
+  public async listGame(body: ListGameDTO, req: any): Promise<any> {
+    const user: User = <User>req.user;
     try {
       const searchRegex = new RegExp(body.search?.toString(), "i");
       const LIMIT_PAGE: number = body?.limit ?? 10;
@@ -119,8 +177,14 @@ export class GameAdminService {
       };
 
       let games = await this.gameModel.aggregate(gamePipeline(searchOption, SKIP, LIMIT_PAGE));
-
       const total = await this.gameModel.aggregate(gamePipeline(searchOption)).count("total");
+
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${user?.name} success get list game`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
 
       return this.responseService.paging(
         StringHelper.successResponse("game", "list"),
@@ -133,6 +197,12 @@ export class GameAdminService {
         },
       );
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${user?.name} failed to get list game`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.listGame.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);

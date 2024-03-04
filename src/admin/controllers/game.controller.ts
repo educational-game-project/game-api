@@ -79,7 +79,7 @@ export class GameAdminController {
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async listGame(@Body() body: ListGameDTO, @Req() req: Request): Promise<any> {
-    return this.gameService.listGame(body);
+    return this.gameService.listGame(body, req);
   }
 
   @Post('detail')
@@ -87,7 +87,7 @@ export class GameAdminController {
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async detailGame(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
-    return this.gameService.detailGame(body);
+    return this.gameService.detailGame(body, req);
   }
 
   @Delete()
@@ -95,6 +95,6 @@ export class GameAdminController {
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async deleteGame(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
-    return this.gameService.deleteGame(body);
+    return this.gameService.deleteGame(body, req);
   }
 }
