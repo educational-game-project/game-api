@@ -12,6 +12,8 @@ import { LevelsService } from "./levels.service";
 import { ScoreService } from "./scoring.service";
 import { StatusRecord } from "@app/common/enums/statusRecord.enum";
 import { ReportType } from "@app/common/enums/reportType.enum";
+import { LogsService } from "src/admin/services/log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class RecordService {
@@ -23,6 +25,7 @@ export class RecordService {
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(LevelsService) private readonly levelsService: LevelsService,
     @Inject(ScoreService) private readonly scoreService: ScoreService,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(RecordService.name);
@@ -90,8 +93,21 @@ export class RecordService {
 
       if (!current.isValid) await this.scoreService.calculateScore(current?._id, req);
 
+      await this.logsService.logging({
+        target: TargetLogEnum.RECORD,
+        description: `${users?.name} success add record of game ${game?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("record", "add"), current);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.RECORD,
+        description: `${users?.name} success add record of game `,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.record.name);
       console.log(error?.message);
       return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
@@ -111,8 +127,21 @@ export class RecordService {
         user: users._id,
       });
 
+      await this.logsService.logging({
+        target: TargetLogEnum.RECORD,
+        description: `${users?.name} success init record of game ${game?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return record;
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.RECORD,
+        description: `${users?.name} failed init record of game `,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.initRecord.name);
       console.log(error?.message);
       return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });

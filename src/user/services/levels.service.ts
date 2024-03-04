@@ -11,6 +11,8 @@ import { ByIdDto } from "@app/common/dto/byId.dto";
 import { Game } from "@app/common/model/schema/game.schema";
 import { userPopulate } from "@app/common/pipeline/user.pipeline";
 import { gamePopulate } from "@app/common/pipeline/game.pipeline";
+import { LogsService } from "src/admin/services/log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class LevelsService {
@@ -19,6 +21,7 @@ export class LevelsService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Game.name) private gameModel: Model<Game>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(LevelsService.name);
@@ -50,9 +53,22 @@ export class LevelsService {
         user: user._id,
       });
 
+      await this.logsService.logging({
+        target: TargetLogEnum.LEVEL,
+        description: `${users?.name} success init level of game ${game?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       await level.populate([...userPopulate, ...gamePopulate])
       return this.responseService.success(true, StringHelper.successResponse("level", "initiated"), level);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.LEVEL,
+        description: `${users?.name} success init level of game `,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.initLevel.name);
       console.log(error?.message);
       return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
@@ -80,8 +96,21 @@ export class LevelsService {
         currentLevel = init.data;
       }
 
+      await this.logsService.logging({
+        target: TargetLogEnum.LEVEL,
+        description: `${users?.name} success get level of game ${game?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("level", "initiated"), currentLevel);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.LEVEL,
+        description: `${users?.name} failed get level`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.getLevel.name);
       console.log(error?.message);
       return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });

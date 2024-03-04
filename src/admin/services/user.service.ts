@@ -13,6 +13,8 @@ import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { userPipeline } from "@app/common/pipeline/user.pipeline";
+import { LogsService } from "./log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class UserAdminService {
@@ -22,6 +24,7 @@ export class UserAdminService {
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
     @Inject(ImagesService) private imageHelper: ImagesService,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(UserAdminService.name);
@@ -54,10 +57,23 @@ export class UserAdminService {
       admin.school = school;
       admin = admin.toObject();
       delete admin.password;
-      delete admin.school.admins
+      delete admin.school.admins;
+
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} success add admin ${admin?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
 
       return this.responseService.success(true, StringHelper.successResponse("user", "add_admin"), admin,);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} failed to add admin`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.addAdmin.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -104,8 +120,21 @@ export class UserAdminService {
 
       admin = await admin.save();
 
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} success edit admin ${admin?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("user", "edit_admin"), admin,);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} failed to edit admin`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.updateAdmin.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -113,6 +142,7 @@ export class UserAdminService {
   }
 
   public async findAdmin(body: SearchDTO, req: any): Promise<any> {
+    const users: User = <User>req.user;
     try {
       const searchRegex = new RegExp(body.search?.toString(), "i");
       const LIMIT_PAGE: number = body?.limit ?? 10;
@@ -132,8 +162,14 @@ export class UserAdminService {
       if (body?.schoolId) searchOption.school = new Types.ObjectId(body?.schoolId);
 
       const admin = await this.userModel.aggregate(userPipeline(searchOption, SKIP, LIMIT_PAGE));
-
       const total = await this.userModel.aggregate(userPipeline(searchOption)).count("total");
+
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} success get admin list`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
 
       return this.responseService.paging(StringHelper.successResponse("admin", "list"), admin, {
         totalData: Number(total[0]?.total) ?? 0,
@@ -142,6 +178,12 @@ export class UserAdminService {
         perPage: LIMIT_PAGE,
       },);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} failed to get admin list`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.findAdmin.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -171,8 +213,21 @@ export class UserAdminService {
       school.adminsCount--;
       await school.save();
 
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${users?.name} success delete admin ${admin?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("admin", "delete"));
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} failed to delete admin`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.deleteAdmin.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -180,6 +235,7 @@ export class UserAdminService {
   }
 
   public async detailAdmin(body: ByIdDto, req: any): Promise<any> {
+    const users: User = <User>req.user;
     try {
       let admin = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.ADMIN })
         .populate(globalPopulate(
@@ -194,8 +250,21 @@ export class UserAdminService {
         ))
       if (!admin) throw new NotFoundException("Admin Not Found");
 
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} success get detail admin ${admin?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("admin", "detail"), admin);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} failed to get admin detail`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.detailAdmin.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -203,8 +272,9 @@ export class UserAdminService {
   }
 
   public async getUserDetail(req: any): Promise<any> {
+    const users: User = <User>req.user;
     try {
-      let user = await this.userModel.findOne({ _id: new Types.ObjectId(req.user._id) })
+      let user = await this.userModel.findOne({ _id: new Types.ObjectId(users._id) })
         .populate(globalPopulate(
           {
             school: true,
@@ -216,10 +286,21 @@ export class UserAdminService {
           }
         ))
 
-      if (!user) throw new NotFoundException("User Not Found")
+      if (!user) throw new NotFoundException("User Not Found");
+
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} success get detail user`,
+        success: true,
+      })
 
       return this.responseService.success(true, StringHelper.successResponse("user", "get_Student"), user)
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} failed to get user detail`,
+        success: false,
+      })
       this.logger.error(this.getUserDetail.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -227,12 +308,24 @@ export class UserAdminService {
   }
 
   public async getActiveUser(req: any): Promise<any> {
+    const users: User = <User>req.user;
     try {
       let activeAdmin = await this.userModel.count({ role: { $ne: UserRole.USER }, deletedAt: null, isActive: { $eq: true } })
       let activeUser = await this.userModel.count({ role: UserRole.USER, deletedAt: null, isActive: { $eq: true } })
 
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} success get active users`,
+        success: true,
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("user", "get_active_user"), { activeAdmin, activeUser })
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} failed to get active users`,
+        success: false,
+      })
       this.logger.error(this.getActiveUser.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);

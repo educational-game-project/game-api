@@ -126,7 +126,7 @@ export class SchoolAdminService {
       await this.logsService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${users?.name} success get school list`,
-        success: false,
+        success: true,
         summary: JSON.stringify(body),
       })
 

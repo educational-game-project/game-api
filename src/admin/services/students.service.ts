@@ -12,6 +12,8 @@ import { ByIdDto } from "@app/common/dto/byId.dto";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { userPipeline } from "@app/common/pipeline/user.pipeline";
+import { LogsService } from "./log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class StudentsService {
@@ -20,6 +22,7 @@ export class StudentsService {
     @InjectModel(School.name) private schoolModel: Model<School>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(ImagesService) private imageHelper: ImagesService,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(StudentsService.name);
@@ -54,8 +57,21 @@ export class StudentsService {
       school.studentsCount++;
       school.save();
 
+      await this.logsService.logging({
+        target: TargetLogEnum.STUDENT,
+        description: `${users?.name} success add student ${student?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("user", "add_student"), student);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.STUDENT,
+        description: `${users?.name} failed to add student`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.addStudent.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -91,8 +107,21 @@ export class StudentsService {
       }
       await user.save();
 
+      await this.logsService.logging({
+        target: TargetLogEnum.STUDENT,
+        description: `${users?.name} success edit student ${user?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("user", "edit_student"), user);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.STUDENT,
+        description: `${users?.name} failed to edit student`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.editStudent.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -122,6 +151,13 @@ export class StudentsService {
       const students = await this.userModel.aggregate(userPipeline(searchOption, SKIP, LIMIT_PAGE));
       const total = await this.userModel.aggregate(userPipeline(searchOption)).count("total");
 
+      await this.logsService.logging({
+        target: TargetLogEnum.STUDENT,
+        description: `${users?.name} success get student list`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.paging(
         StringHelper.successResponse("student", "list"),
         students,
@@ -133,6 +169,12 @@ export class StudentsService {
         },
       );
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.STUDENT,
+        description: `${users?.name} failed to get student list`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.addStudent.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -159,8 +201,21 @@ export class StudentsService {
       school.studentsCount--;
       await school.save();
 
+      await this.logsService.logging({
+        target: TargetLogEnum.STUDENT,
+        description: `${users?.name} success delete student ${student?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("student", "delete"));
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.STUDENT,
+        description: `${users?.name} failed to student admin`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.deleteStudent.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -168,6 +223,7 @@ export class StudentsService {
   }
 
   public async detailStudent(body: ByIdDto, req: any): Promise<any> {
+    const users: User = <User>req.user;
     try {
       let student = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.USER })
         .populate(globalPopulate({
@@ -178,10 +234,23 @@ export class StudentsService {
           images: false,
           admins: false,
         }))
-      if (!student) throw new NotFoundException("Student Not Found")
+      if (!student) throw new NotFoundException("Student Not Found");
+
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} success get detail student ${student?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
 
       return this.responseService.success(true, StringHelper.successResponse("student", "detail"), student)
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} failed to get student detail`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.deleteStudent.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -191,11 +260,22 @@ export class StudentsService {
   public async getActiveStudent(req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
-      let activeAdmin = await this.userModel.count({ role: { $ne: UserRole.USER }, deletedAt: null, isActive: { $eq: true }, school: users?.school })
-      let activeUser = await this.userModel.count({ role: UserRole.USER, deletedAt: null, isActive: { $eq: true }, school: users?.school })
+      let activeAdmin = await this.userModel.count({ role: { $ne: UserRole.USER }, deletedAt: null, isActive: { $eq: true }, school: users?.school });
+      let activeUser = await this.userModel.count({ role: UserRole.USER, deletedAt: null, isActive: { $eq: true }, school: users?.school });
+
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} success get active users`,
+        success: true,
+      })
 
       return this.responseService.success(true, StringHelper.successResponse("user", "get_active_user"), { activeAdmin, activeUser })
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${users?.name} failed to get active users`,
+        success: false,
+      })
       this.logger.error(this.getActiveStudent.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);

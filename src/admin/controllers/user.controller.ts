@@ -13,6 +13,8 @@ import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { StudentsService } from "../services/students.service";
+import { LogsService } from "../services/log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/user")
@@ -21,6 +23,7 @@ export class UserAdminController {
     private readonly userService: UserAdminService,
     private readonly studentsService: StudentsService,
     @Inject(ImagesService) private imageHelper: ImagesService,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(UserAdminController.name);
@@ -40,13 +43,19 @@ export class UserAdminController {
   async create(
     @Body() body: CreateUserDto,
     @UploadedFile() media: Express.Multer.File,
-    @Req() req: Request,
+    @Req() req: any,
   ): Promise<any> {
     try {
       const files = media ? await this.imageHelper.define([media]) : [];
 
       return this.userService.addAdmin(body, files, req);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${req?.user?.name} failed to add admin`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.create.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -66,13 +75,19 @@ export class UserAdminController {
   async updateAdmin(
     @Body() body: UpdateUserDto,
     @UploadedFile() media: Express.Multer.File,
-    @Req() req: Request,
+    @Req() req: any,
   ): Promise<any> {
     try {
       const files = media ? await this.imageHelper.define([media]) : [];
 
       return this.userService.updateAdmin(body, files, req);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.ADMIN,
+        description: `${req?.user?.name} failed to edit admin`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.updateAdmin.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -134,13 +149,19 @@ export class UserAdminController {
   async addStudent(
     @Body() body: CreateUserDto,
     @UploadedFile() media: Express.Multer.File,
-    @Req() req: Request,
+    @Req() req: any,
   ): Promise<any> {
     try {
       const files = media ? await this.imageHelper.define([media]) : [];
 
       return this.studentsService.addStudent(body, files, req);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.STUDENT,
+        description: `${req?.user?.name} failed to add student`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.addStudent.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -160,13 +181,19 @@ export class UserAdminController {
   async editStudent(
     @Body() body: UpdateUserDto,
     @UploadedFile() media: Express.Multer.File,
-    @Req() req: Request,
+    @Req() req: any,
   ): Promise<any> {
     try {
       const files = media ? await this.imageHelper.define([media]) : [];
 
       return this.studentsService.editStudent(body, files, req);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.STUDENT,
+        description: `${req?.user?.name} failed to edit student list`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.editStudent.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
