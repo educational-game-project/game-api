@@ -9,6 +9,8 @@ import { Record } from "@app/common/model/schema/records.schema";
 import { ScoreCalculateHelper } from "@app/common/helpers/score.helper";
 import { leaderboardPipeline } from "@app/common/pipeline/leaderboard.pipeline";
 import { Game } from "@app/common/model/schema/game.schema";
+import { LogsService } from "src/admin/services/log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class ScoreService {
@@ -18,11 +20,13 @@ export class ScoreService {
     @InjectModel(Game.name) private gameModel: Model<Game>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(ScoreCalculateHelper) private readonly scoreCalculateHelper: ScoreCalculateHelper,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(ScoreService.name);
 
-  public async calculateScore(recordId: any): Promise<any> {
+  public async calculateScore(recordId: any, req: any): Promise<any> {
+    const users: User = <User>req.user;
     try {
       let record = await this.recordModel.findOne({ _id: recordId });
       if (!record) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("record"));
@@ -49,8 +53,21 @@ export class ScoreService {
         gamePlayed: curr + 1,
       });
 
+      await this.logsService.logging({
+        target: TargetLogEnum.SCORE,
+        description: `${users?.name} success calculate score`,
+        success: true,
+        summary: recordId,
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("score", 'calculate'), score);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.SCORE,
+        description: `${users?.name} failed to calculate score`,
+        success: false,
+        summary: recordId,
+      })
       this.logger.error(this.calculateScore.name);
       console.log(error?.message);
       return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
@@ -71,8 +88,21 @@ export class ScoreService {
         leaderboard = score[0].scores.map(i => i.user._id.toString() == users._id.toString() ? { ...i, isCurrentUser: true } : { ...i, isCurrentUser: false })
       }
 
+      await this.logsService.logging({
+        target: TargetLogEnum.SCORE,
+        description: `${users?.name} success get leaderboard data of game ${game?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("score", 'get'), { game, leaderboard, });
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.SCORE,
+        description: `${users?.name} failed get leaderboard data of game `,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.getLeaderBoard.name);
       console.log(error?.message);
       return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });

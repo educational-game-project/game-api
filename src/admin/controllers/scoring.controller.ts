@@ -26,7 +26,7 @@ export class ScoreAdminController {
   ) {
     const { userId } = body;
 
-    return this.scoreService.getScores(userId);
+    return this.scoreService.getScores(userId, req);
   }
 
   @Post('chart')
@@ -38,7 +38,7 @@ export class ScoreAdminController {
   ) {
     const { userId, gameId } = body;
 
-    return this.scoreService.getScoresChartData(userId, gameId);
+    return this.scoreService.getScoresChartData(userId, gameId, req);
   }
 
   @Post('leaderboard')

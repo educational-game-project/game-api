@@ -9,6 +9,8 @@ import { Game } from "@app/common/model/schema/game.schema";
 import { leaderboardPipeline } from "@app/common/pipeline/leaderboard.pipeline";
 import { School } from "@app/common/model/schema/schools.schema";
 import { scorePipeline } from "@app/common/pipeline/score.pipeline";
+import { LogsService } from "./log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class ScoreAdminService {
@@ -18,11 +20,13 @@ export class ScoreAdminService {
     @InjectModel(Game.name) private gameModel: Model<Game>,
     @InjectModel(School.name) private schoolModel: Model<School>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(ScoreAdminService.name);
 
-  async getScores(userId: string) {
+  async getScores(userId: string, req: any) {
+    const users: User = <User>req.user;
     try {
       const user = await this.userModel.findOne({ _id: new Types.ObjectId(userId) });
       if (!user) throw new HttpException(StringHelper.notFoundResponse('user'), HttpStatus.BAD_REQUEST);
@@ -35,8 +39,21 @@ export class ScoreAdminService {
         return item;
       })
 
+      await this.logsService.logging({
+        target: TargetLogEnum.SCORE,
+        description: `${users?.name} success get score data of ${user?.name}`,
+        success: true,
+        summary: userId,
+      })
+
       return this.responseService.success(true, StringHelper.successResponse('get', 'score'), result);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.SCORE,
+        description: `${users?.name} failed get score data`,
+        success: false,
+        summary: userId,
+      })
       this.logger.error(this.getScores.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -75,15 +92,29 @@ export class ScoreAdminService {
         }
       };
 
+      await this.logsService.logging({
+        target: TargetLogEnum.SCORE,
+        description: `${users?.name} success get leaderboard data of game ${game?.name}`,
+        success: true,
+        summary: gameId,
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("score", 'get'), result);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.SCORE,
+        description: `${users?.name} failed get leaderboard data of game `,
+        success: false,
+        summary: gameId,
+      })
       this.logger.error(this.getLeaderboard.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async getScoresChartData(userId: string, gameId: string) {
+  async getScoresChartData(userId: string, gameId: string, req: any) {
+    const users: User = <User>req.user;
     try {
       const user = await this.userModel.findOne({ _id: new Types.ObjectId(userId) });
       if (!user) throw new HttpException(StringHelper.notFoundResponse('user'), HttpStatus.BAD_REQUEST);
@@ -97,9 +128,21 @@ export class ScoreAdminService {
       delete result?._id;
 
       result.scores = this.groupScoresByGamePlayed(result.scores);
+      await this.logsService.logging({
+        target: TargetLogEnum.SCORE,
+        description: `${users?.name} success get scores chart data of user ${user?.name}`,
+        success: true,
+        summary: gameId,
+      })
 
       return this.responseService.success(true, StringHelper.successResponse('get', 'score'), result);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.SCORE,
+        description: `${users?.name} failed get scores chart data of user`,
+        success: false,
+        summary: gameId,
+      })
       this.logger.error(this.getLeaderboard.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);

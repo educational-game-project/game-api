@@ -16,7 +16,7 @@ export class ScoreController {
   @Post("leaderboard")
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async initLevel(@Body() body: any, @Req() req: Request): Promise<any> {
+  async getLeaderBoard(@Body() body: any, @Req() req: Request): Promise<any> {
     return this.scoreService.getLeaderBoard(body, req);
   }
 }

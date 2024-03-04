@@ -88,7 +88,7 @@ export class RecordService {
           break;
       }
 
-      if (!current.isValid) await this.scoreService.calculateScore(current?._id);
+      if (!current.isValid) await this.scoreService.calculateScore(current?._id, req);
 
       return this.responseService.success(true, StringHelper.successResponse("record", "add"), current);
     } catch (error) {
