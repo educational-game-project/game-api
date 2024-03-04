@@ -121,7 +121,6 @@ export class StudentsService {
 
       const students = await this.userModel.aggregate(userPipeline(searchOption, SKIP, LIMIT_PAGE));
       const total = await this.userModel.aggregate(userPipeline(searchOption)).count("total");
-
       return this.responseService.paging(
         StringHelper.successResponse("student", "list"),
         students,

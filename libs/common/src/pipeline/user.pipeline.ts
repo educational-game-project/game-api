@@ -3,7 +3,7 @@ import { dateToString } from "./dateToString.pipeline";
 import { addedByPipeline } from "./global.pipeline";
 
 export function userPipeline(query: any, skip?: number, limit?: number): PipelineStage[] {
-  return [
+  let pipeline: any[] = [
     query && {
       $match: query,
     },
@@ -66,6 +66,8 @@ export function userPipeline(query: any, skip?: number, limit?: number): Pipelin
       $sort: { createdAt: -1 },
     },
   ];
+
+  return pipeline.filter(Boolean) as PipelineStage[];
 }
 
 export const userPopulate: PopulateOptions[] = [

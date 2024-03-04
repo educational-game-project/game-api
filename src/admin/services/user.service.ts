@@ -131,7 +131,7 @@ export class UserAdminService {
 
       if (body?.schoolId) searchOption.school = new Types.ObjectId(body?.schoolId);
 
-      const admin = await this.userModel.aggregate(userPipeline(searchOption)).skip(SKIP).limit(LIMIT_PAGE);
+      const admin = await this.userModel.aggregate(userPipeline(searchOption, SKIP, LIMIT_PAGE));
 
       const total = await this.userModel.aggregate(userPipeline(searchOption)).count("total");
 
