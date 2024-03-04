@@ -118,7 +118,7 @@ export class GameAdminService {
         deletedAt: null,
       };
 
-      let games = await this.gameModel.aggregate(gamePipeline(searchOption)).skip(SKIP).limit(LIMIT_PAGE);
+      let games = await this.gameModel.aggregate(gamePipeline(searchOption, SKIP, LIMIT_PAGE));
 
       const total = await this.gameModel.aggregate(gamePipeline(searchOption)).count("total");
 
