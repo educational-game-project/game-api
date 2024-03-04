@@ -9,7 +9,9 @@ import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 
 @Controller("admin/auth")
 export class AuthAdminController {
-  constructor(private readonly authService: AuthAdminService) { }
+  constructor(
+    private readonly authService: AuthAdminService
+  ) { }
 
   @Post("login")
   @HttpCode(HttpStatus.OK)

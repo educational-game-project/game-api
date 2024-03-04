@@ -22,7 +22,7 @@ export class LogsService {
 
     @Inject(REQUEST) private request: Request,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-    private authHelper: AuthHelper,
+    @Inject(AuthHelper) private readonly authHelper: AuthHelper,
   ) { }
 
   private readonly logger = new Logger(LogsService.name);

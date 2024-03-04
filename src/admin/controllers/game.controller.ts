@@ -11,6 +11,8 @@ import { ImagesService } from "@app/common/helpers/file.helpers";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { DefineGameDTO, EditGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
 import { ByIdDto } from "@app/common/dto/byId.dto";
+import { LogsService } from "../services/log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/games")
@@ -18,6 +20,7 @@ export class GameAdminController {
   constructor(
     private readonly gameService: GameAdminService,
     @Inject(ImagesService) private imageService: ImagesService,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(GameAdminController.name);
@@ -35,13 +38,19 @@ export class GameAdminController {
   async defineGame(
     @Body() body: DefineGameDTO,
     @UploadedFiles() media: Array<Express.Multer.File>,
-    @Req() req: Request,
+    @Req() req: any,
   ): Promise<any> {
     try {
       const files = media ? await this.imageService.define(media) : [];
 
       return this.gameService.defineGame(body, files, req);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${req?.user?.name} failed to add game`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.defineGame.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -61,13 +70,19 @@ export class GameAdminController {
   async editGame(
     @Body() body: EditGameDTO,
     @UploadedFiles() media: Array<Express.Multer.File>,
-    @Req() req: Request,
+    @Req() req: any,
   ): Promise<any> {
     try {
       const files = media ? await this.imageService.define(media) : [];
 
       return this.gameService.editGame(body, files, req);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.GAME,
+        description: `${req?.user?.name} failed to edit game`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.editGame.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);

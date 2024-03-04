@@ -19,7 +19,7 @@ export class DashboardService {
     @InjectModel(School.name) private readonly schoolModel: Model<School>,
     @InjectModel(Game.name) private readonly gameModel: Model<Game>,
     @Inject(LogsService) private readonly logsService: LogsService,
-    private readonly responseService: ResponseService
+    @Inject(ResponseService) private readonly responseService: ResponseService,
   ) { }
 
   async getDashboardInfo(user: User): Promise<any> {

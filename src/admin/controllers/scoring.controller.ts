@@ -13,7 +13,9 @@ import { ByUserIdAndGameIdDTO } from "@app/common/dto/byId.dto";
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/score")
 export class ScoreAdminController {
-  constructor(private scoreService: ScoreAdminService) { }
+  constructor(
+    private scoreService: ScoreAdminService
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.OK)

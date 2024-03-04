@@ -1,5 +1,4 @@
 import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException } from "@nestjs/common";
-import { Request } from "express";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types, } from "mongoose";
 import { User } from "@app/common/model/schema/users.schema";
@@ -13,6 +12,8 @@ import { Image } from "@app/common/model/schema/subtype/images.subtype";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { schoolPipeline } from "@app/common/pipeline/school.pipeline";
+import { LogsService } from "./log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class SchoolAdminService {
@@ -21,6 +22,7 @@ export class SchoolAdminService {
     @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ImagesService) private imageService: ImagesService,
     @Inject(ResponseService) private readonly responseService: ResponseService,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(SchoolAdminService.name);
@@ -40,8 +42,21 @@ export class SchoolAdminService {
         addedBy: users._id,
       });
 
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${users?.name} success add school ${school?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("schoool", "create"), school);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${users?.name} failed to add school`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.create.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -72,15 +87,29 @@ export class SchoolAdminService {
 
       school = await school.save();
 
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${users?.name} success edit school ${school?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("schoool", "edit"), school);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${users?.name} failed to edit school`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.edit.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  public async find(body: SearchDTO, req: Request): Promise<any> {
+  public async find(body: SearchDTO, req: any): Promise<any> {
+    const users: User = <User>req.user;
     try {
       const searchRegex = new RegExp(body.search?.toString(), "i");
       const LIMIT_PAGE: number = body?.limit ?? 10;
@@ -94,6 +123,13 @@ export class SchoolAdminService {
       const schools = await this.schoolModel.aggregate(schoolPipeline(searchOption, SKIP, LIMIT_PAGE));
       const total = await this.schoolModel.aggregate(schoolPipeline(searchOption)).count("total");
 
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${users?.name} success get school list`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.paging(StringHelper.successResponse("schoool", "list"),
         schools,
         {
@@ -104,13 +140,20 @@ export class SchoolAdminService {
         },
       );
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${users?.name} failed to get school list`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.find.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  public async detail(body: ByIdDto, req: Request): Promise<any> {
+  public async detail(body: ByIdDto, req: any): Promise<any> {
+    const users: User = <User>req.user;
     try {
       const school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body.id) })
         .populate(globalPopulate(
@@ -125,8 +168,21 @@ export class SchoolAdminService {
         ))
       if (!school) throw new NotFoundException("School Not Found");
 
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${users?.name} success get detail school ${school?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("school", "get_detail"), school);
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${users?.name} failed to get school detail`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.detail.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
@@ -155,8 +211,21 @@ export class SchoolAdminService {
         await item.save();
       });
 
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${user?.name} success delete school ${school?.name}`,
+        success: true,
+        summary: JSON.stringify(body),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("school", "delete"));
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.SCHOOL,
+        description: `${user?.name} failed to delete school`,
+        success: false,
+        summary: JSON.stringify(body),
+      })
       this.logger.error(this.delete.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
