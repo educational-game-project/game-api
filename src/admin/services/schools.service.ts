@@ -91,9 +91,7 @@ export class SchoolAdminService {
         deletedAt: null,
       };
 
-      const schools = await this.schoolModel.aggregate(schoolPipeline(searchOption))
-        .skip(SKIP)
-        .limit(LIMIT_PAGE);
+      const schools = await this.schoolModel.aggregate(schoolPipeline(searchOption, SKIP, LIMIT_PAGE));
       const total = await this.schoolModel.aggregate(schoolPipeline(searchOption)).count("total");
 
       return this.responseService.paging(StringHelper.successResponse("schoool", "list"),
