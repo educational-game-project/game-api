@@ -8,6 +8,8 @@ import { StringHelper } from "@app/common/helpers/string.helpers";
 import { UserRole } from "@app/common/enums/role.enum";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
+import { LogsService } from "src/admin/services/log.service";
+import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class AuthService {
@@ -15,6 +17,7 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
+    @Inject(LogsService) private readonly logsService: LogsService,
   ) { }
 
   private readonly logger = new Logger(AuthService.name);
@@ -34,8 +37,22 @@ export class AuthService {
       const tokens = await this.authHelper.generateTokens(user._id, { name: user.name, role: user.role });
       await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken, isActive: true } });
 
+      await this.logsService.logging({
+        target: TargetLogEnum.AUTH,
+        description: `${user.name} login into game`,
+        success: true,
+        summary: JSON.stringify(body),
+        actor: user._id.toString(),
+      })
+
       return this.responseService.success(true, StringHelper.successResponse("user", "login"), { user, tokens });
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.AUTH,
+        description: `${body.name} failed login into game`,
+        success: false,
+        summary: error?.message
+      })
       this.logger.error(this.login.name);
       console.log(error?.message);
       return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
@@ -43,11 +60,10 @@ export class AuthService {
   }
 
   public async verifyRefreshToken(body: ReauthDto, req: any): Promise<any> {
+    let { refreshToken } = body;
+    let { isValid, user } = await this.authHelper.validate(refreshToken);
+
     try {
-      let { refreshToken } = body;
-
-      let { isValid, user } = await this.authHelper.validate(refreshToken);
-
       if (!user) user = await this.userModel.findOne({ refreshToken })
 
       if (user) {
@@ -56,9 +72,24 @@ export class AuthService {
 
         const tokens = await this.authHelper.generateTokens(user._id, { name: user.name, role: user.role });
         await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken } });
+
+        await this.logsService.logging({
+          target: TargetLogEnum.AUTH,
+          description: `${user.name} reverify refresh token`,
+          success: true,
+          summary: JSON.stringify(body),
+          actor: user._id.toString(),
+        })
+
         return this.responseService.success(true, StringHelper.successResponse("auth", "verifyRefreshToken"), { user, tokens });
       }
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.AUTH,
+        description: `${user?.name} failed reverify refresh token`,
+        success: false,
+        summary: error?.message
+      })
       this.logger.error(this.verifyRefreshToken.name);
       console.log(error?.message);
       return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
@@ -66,12 +97,24 @@ export class AuthService {
   }
 
   public async logout(req: any): Promise<any> {
+    let user = <User>req.user;
     try {
-      let user = <User>req.user;
       await this.authHelper.logout(user);
+
+      await this.logsService.logging({
+        target: TargetLogEnum.AUTH,
+        description: `${user?.name} logout successfully.`,
+        success: true,
+      })
 
       return this.responseService.success(true, StringHelper.successResponse("auth", "logout"));
     } catch (error) {
+      await this.logsService.logging({
+        target: TargetLogEnum.AUTH,
+        description: `${user?.name} failed to logout`,
+        success: false,
+        summary: error?.message
+      })
       this.logger.error(this.logout.name);
       console.log(error?.message);
       return this.responseService.error(HttpStatus.INTERNAL_SERVER_ERROR, StringHelper.internalServerError, { value: error, constraint: "", property: "" });
