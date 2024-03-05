@@ -44,7 +44,12 @@ export class SchedulerService {
       let scores = await this.scoreModel.deleteMany({ deletedAt: { $ne: null, $gte: startDay, $lte: endDay } });
       let records = await this.recordModel.deleteMany({ deletedAt: { $ne: null, $gte: startDay, $lte: endDay } });
 
-      let logs = await this.logsModel.deleteMany({ deletedAt: { $gte: startDay, $lte: endDay } });
+      let logs = await this.logsModel.deleteMany({
+        $or: [
+          { createdAt: { $gte: startDay, $lte: endDay } },
+          { deletedAt: { $ne: null, $gte: startDay, $lte: endDay } }
+        ]
+      });
 
       console.log(users, images, logs, schools, games, levels, scores, records);
     } catch (error) {
