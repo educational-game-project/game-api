@@ -36,7 +36,7 @@ export class DashboardService {
       let result: any = {}
 
       let studentQuery: any = { deletedAt: null, role: UserRole.USER }
-      let adminQuery: any = { deletedAt: null, role: UserRole.USER }
+      let adminQuery: any = { deletedAt: null, role: UserRole.ADMIN }
 
       if (user.role === UserRole.ADMIN) {
         studentQuery = { ...studentQuery, school: user.school }
