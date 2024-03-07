@@ -24,7 +24,7 @@ export class Game extends AbstractDocument {
   @Prop({ type: Number, default: 3 })
   maxRetry: number;
 
-  @Prop({ type: Number, default: 100 })
+  @Prop({ type: Number, default: 60 })
   maxTime: number;
 
   @Prop({ type: Date, default: null })
