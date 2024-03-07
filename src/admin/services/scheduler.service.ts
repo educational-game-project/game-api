@@ -66,7 +66,7 @@ export class SchedulerService {
     }
   }
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_30_MINUTES)
   async updateActiveUser() {
     try {
       let users = await this.userModel.find({ isActive: true });
