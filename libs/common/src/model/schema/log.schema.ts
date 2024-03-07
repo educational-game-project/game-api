@@ -14,7 +14,7 @@ export interface ILogsData {
 
 @Schema({ timestamps: true })
 export class Log extends AbstractDocument {
-  @Prop({ type: Types.ObjectId, ref: "User" })
+  @Prop({ type: Types.ObjectId, ref: "User", default: null })
   actor: User;
 
   @Prop({ type: String, default: null })

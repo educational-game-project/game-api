@@ -131,7 +131,7 @@ export class GameAdminService {
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) }).populate('images');
       if (!game) throw new NotFoundException("Game Not Found");
 
-      if (game.images.length) await this.imageService.delete(game.images)
+      if (game?.images?.length) await this.imageService.delete(game.images)
       game.images = []
       game.deletedAt = new Date();
       await game.save();

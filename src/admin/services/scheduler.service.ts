@@ -27,32 +27,39 @@ export class SchedulerService {
 
   private readonly logger = new Logger(SchedulerService.name);
 
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_MINUTE)
   async clearDeletedContent() {
     try {
-      let sevenDaysLater = new Date();
-      sevenDaysLater.setDate(sevenDaysLater.getDate() - 7);
-      let startDay = new Date(sevenDaysLater)
-      startDay.setHours(0, 0, 0, 0);
-      const endDay = new Date(sevenDaysLater);
+      let sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const endDay = new Date(sevenDaysAgo);
       endDay.setHours(23, 59, 59, 999);
 
-      let users = await this.userModel.deleteMany({ deletedAt: { $ne: null, $gte: startDay, $lte: endDay }, });
-      let images = await this.imagesModel.deleteMany({ deletedAt: { $ne: null, $gte: startDay, $lte: endDay } });
-      let schools = await this.schoolModel.deleteMany({ deletedAt: { $ne: null, $gte: startDay, $lte: endDay } });
-      let games = await this.gameModel.deleteMany({ deletedAt: { $ne: null, $gte: startDay, $lte: endDay } });
-      let levels = await this.levelModel.deleteMany({ deletedAt: { $ne: null, $gte: startDay, $lte: endDay } });
-      let scores = await this.scoreModel.deleteMany({ deletedAt: { $ne: null, $gte: startDay, $lte: endDay } });
-      let records = await this.recordModel.deleteMany({ deletedAt: { $ne: null, $gte: startDay, $lte: endDay } });
+      let users = await this.userModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay }, });
+      let schools = await this.schoolModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
+      let games = await this.gameModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
+      let levels = await this.levelModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
+      let scores = await this.scoreModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
+      let records = await this.recordModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
+      let images = await this.imagesModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
 
       let logs = await this.logsModel.deleteMany({
         $or: [
-          { createdAt: { $gte: startDay, $lte: endDay } },
-          { deletedAt: { $ne: null, $gte: startDay, $lte: endDay } }
+          { createdAt: { $lt: endDay } },
+          { deletedAt: { $ne: null, $lt: endDay } }
         ]
       });
 
-      console.log(users, images, logs, schools, games, levels, scores, records);
+      console.log({
+        users: users.deletedCount,
+        images: images.deletedCount,
+        logs: logs.deletedCount,
+        schools: schools.deletedCount,
+        games: games.deletedCount,
+        levels: levels.deletedCount,
+        scores: scores.deletedCount,
+        records: records.deletedCount,
+      });
     } catch (error) {
       this.logger.error(this.clearDeletedContent.name);
       console.log(error?.message);
@@ -66,7 +73,7 @@ export class SchedulerService {
 
       console.log("Total Active User: ", users.length);
       if (users.length) await Promise.all(users.map(async (user) => {
-        let logs = await this.logsModel.find({ userId: user._id }).sort({ createdAt: -1 });
+        let logs = await this.logsModel.find({ actor: user._id }).sort({ createdAt: -1 });
         if (!logs.length) return await this.userModel.updateOne({ _id: user._id }, { isActive: false });
 
         let lastLog = logs[0];

@@ -35,7 +35,7 @@ export class LogsService {
       if (auth) {
         let decoded = this.authHelper.validateToken(auth);
         user = await this.authHelper.validateUser(decoded);
-        await this.usersModel.updateOne({ _id: user._id }, { isActive: true });
+        if (!user?.isActive) await this.usersModel.updateOne({ _id: user._id }, { $set: { isActive: true } });
       } else {
         user = data?.actor ? await this.usersModel.findOne({ _id: new Types.ObjectId(data.actor) }) : null;
       }

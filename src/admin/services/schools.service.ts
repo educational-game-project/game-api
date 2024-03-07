@@ -197,7 +197,7 @@ export class SchoolAdminService {
       }).populate('images');
       if (!school) throw new NotFoundException("School Not Found");
 
-      if (school.images.length) await this.imageService.delete(school.images);
+      if (school?.images?.length) await this.imageService.delete(school.images);
 
       school.images = [];
       school.deletedBy = user
