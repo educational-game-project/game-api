@@ -10,6 +10,7 @@ import { Game } from "@app/common/model/schema/game.schema";
 import { Level } from "@app/common/model/schema/levels.schema";
 import { Score } from "@app/common/model/schema/scores.schema";
 import { Record } from "@app/common/model/schema/records.schema";
+import { StringHelper } from "@app/common/helpers/string.helpers";
 
 @Injectable()
 export class SchedulerService {
@@ -54,6 +55,30 @@ export class SchedulerService {
       console.log(users, images, logs, schools, games, levels, scores, records);
     } catch (error) {
       this.logger.error(this.clearDeletedContent.name);
+      console.log(error?.message);
+    }
+  }
+
+  @Cron(CronExpression.EVERY_MINUTE)
+  async updateActiveUser() {
+    try {
+      let users = await this.userModel.find({ isActive: true });
+
+      console.log("Total Active User: ", users.length);
+      if (users.length) await Promise.all(users.map(async (user) => {
+        let logs = await this.logsModel.find({ userId: user._id }).sort({ createdAt: -1 });
+        if (!logs.length) return await this.userModel.updateOne({ _id: user._id }, { isActive: false });
+
+        let lastLog = logs[0];
+        const lastTime = StringHelper.CalculateTime(lastLog.createdAt, true);
+        if (lastTime > 60) return await this.userModel.updateOne({ _id: user._id }, { isActive: false });
+      }));
+
+      users = await this.userModel.find({ isActive: true });
+
+      console.log("New Total Active User: ", users.length);
+    } catch (error) {
+      this.logger.error(this.updateActiveUser.name);
       console.log(error?.message);
     }
   }
