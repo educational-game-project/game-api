@@ -27,7 +27,7 @@ export class SchedulerService {
 
   private readonly logger = new Logger(SchedulerService.name);
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async clearDeletedContent() {
     try {
       let sevenDaysAgo = new Date();
