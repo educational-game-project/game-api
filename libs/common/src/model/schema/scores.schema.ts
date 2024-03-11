@@ -18,7 +18,7 @@ export class Score extends AbstractDocument {
   @Prop({ type: Number, required: true })
   value: number;
 
-  @Prop({ type: Number, default: null })
+  @Prop({ type: Number, default: 1 })
   level: number;
 
   @Prop({ type: Number, default: 0 })
@@ -28,10 +28,10 @@ export class Score extends AbstractDocument {
   deletedAt?: Date;
 
   //================================== Relations ======================================
-  @Prop({ type: Types.ObjectId, ref: User.name, default: null })
+  @Prop({ type: Types.ObjectId, ref: User.name, required: true })
   user: User;
 
-  @Prop({ type: Types.ObjectId, ref: Game.name, default: null })
+  @Prop({ type: Types.ObjectId, ref: Game.name, required: true })
   game: Game;
 
   @Prop({ type: Types.ObjectId, ref: Record.name, default: null })
