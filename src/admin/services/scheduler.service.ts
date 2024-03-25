@@ -71,19 +71,20 @@ export class SchedulerService {
     try {
       let users = await this.userModel.find({ isActive: true });
 
-      console.log("Total Active User: ", users.length);
-      if (users.length) await Promise.all(users.map(async (user) => {
-        let logs = await this.logsModel.find({ actor: user._id }).sort({ createdAt: -1 });
-        if (!logs.length) return await this.userModel.updateOne({ _id: user._id }, { isActive: false });
+      console.log("Total Active User: ", users?.length);
+      if (users?.length) await Promise.all(users.map(async (user) => {
+        let logs = await this.logsModel.find({ actor: user?._id }).sort({ createdAt: -1 });
+        if (!logs?.length) return await this.userModel.updateOne({ _id: user._id }, { isActive: false });
 
         let lastLog = logs[0];
         const lastTime = StringHelper.CalculateTime(lastLog.createdAt, true);
-        if (lastTime > 60) return await this.userModel.updateOne({ _id: user._id }, { isActive: false });
+
+        if (lastTime >= 30) return await this.userModel.updateOne({ _id: user._id }, { isActive: false });
       }));
 
       users = await this.userModel.find({ isActive: true });
 
-      console.log("New Total Active User: ", users.length);
+      console.log("New Total Active User: ", users?.length);
     } catch (error) {
       this.logger.error(this.updateActiveUser.name);
       console.log(error?.message);

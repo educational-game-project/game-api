@@ -99,13 +99,13 @@ export class AuthService {
   public async logout(req: any): Promise<any> {
     let user = <User>req.user;
     try {
-      await this.authHelper.logout(user);
-
       await this.logsService.logging({
         target: TargetLogEnum.AUTH,
         description: `${user?.name} logout successfully.`,
         success: true,
       })
+
+      await this.authHelper.logout(user);
 
       return this.responseService.success(true, StringHelper.successResponse("auth", "logout"));
     } catch (error) {
