@@ -5,12 +5,14 @@ import { DashboardService } from "../services/dashboard.service";
 import { Roles } from "@app/common/decorators/roles.decorator";
 import { UserRole } from "@app/common/enums/role.enum";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
+import { SchedulerService } from '../services/scheduler.service';
 
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/dashboard")
 export class DashboardController {
   constructor(
     private readonly dashboardService: DashboardService,
+    private readonly schedulerService: SchedulerService,
   ) { }
 
   @Get()
@@ -19,5 +21,19 @@ export class DashboardController {
   @ResponseStatusCode()
   getDashboard(@Request() req: any) {
     return this.dashboardService.getDashboardInfo(req.user)
+  }
+
+  @Get('scheduler')
+  @HttpCode(HttpStatus.OK)
+  @ResponseStatusCode()
+  clearDeletedContent(@Request() req: any) {
+    return this.schedulerService.clearDeletedContent()
+  }
+
+  @Get('unactive')
+  @HttpCode(HttpStatus.OK)
+  @ResponseStatusCode()
+  updateActiveUser(@Request() req: any) {
+    return this.schedulerService.updateActiveUser()
   }
 }
