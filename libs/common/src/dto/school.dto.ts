@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  ValidateIf,
 } from "class-validator";
 import { PartialType } from "@nestjs/swagger";
 import { ByIdDto } from "./byId.dto";

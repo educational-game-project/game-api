@@ -4,7 +4,7 @@ import { Model, Types } from "mongoose";
 import { Level } from "@app/common/model/schema/levels.schema";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
-import { initLevelDTO } from "@app/common/dto/levels.dto";
+import { InitLevelDTO } from "@app/common/dto/levels.dto";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { TimeHelper } from "@app/common/helpers/time.helper";
 import { ByIdDto } from "@app/common/dto/byId.dto";
@@ -26,7 +26,7 @@ export class LevelsService {
 
   private readonly logger = new Logger(LevelsService.name);
 
-  public async initLevel(body: initLevelDTO, req: any): Promise<any> {
+  public async initLevel(body: InitLevelDTO, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let user = await this.userModel.findOne({ _id: users._id });

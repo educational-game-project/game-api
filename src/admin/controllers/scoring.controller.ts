@@ -5,7 +5,7 @@ import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { Roles } from "@app/common/decorators/roles.decorator";
 import { UserRole } from "@app/common/enums/role.enum";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
-import { ByUserIdDto } from "@app/common/dto/user.dto";
+import { ByUserIdDTO } from "@app/common/dto/user.dto";
 import { ByGameIdDTO } from "@app/common/dto/game.dto";
 import { ByUserIdAndGameIdDTO } from "@app/common/dto/byId.dto";
 
@@ -21,7 +21,7 @@ export class ScoreAdminController {
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async getScore(
-    @Body() body: ByUserIdDto,
+    @Body() body: ByUserIdDTO,
     @Req() req: Request,
   ) {
     const { userId } = body;

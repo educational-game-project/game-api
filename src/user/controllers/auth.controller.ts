@@ -9,7 +9,9 @@ import { UserRole } from "@app/common/enums/role.enum";
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(
+    private readonly authService: AuthService
+  ) { }
 
   @Post("login")
   @HttpCode(HttpStatus.OK)

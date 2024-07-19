@@ -5,7 +5,9 @@ import { ROLES_KEY } from "../decorators/roles.decorator";
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
-  constructor(private reflector: Reflector) { }
+  constructor(
+    private reflector: Reflector
+  ) { }
 
   canActivate(
     context: ExecutionContext,

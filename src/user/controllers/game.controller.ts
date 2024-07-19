@@ -11,7 +11,9 @@ import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller('games')
 export class GameController {
-  constructor(private readonly gameService: GameService) { }
+  constructor(
+    private readonly gameService: GameService
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.OK)

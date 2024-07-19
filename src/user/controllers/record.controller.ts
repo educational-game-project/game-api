@@ -12,7 +12,9 @@ import { RecordService } from "src/user/services/record.service";
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("record")
 export class RecordController {
-  constructor(private readonly recordService: RecordService) { }
+  constructor(
+    private readonly recordService: RecordService
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.OK)

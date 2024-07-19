@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, PipelineStage, Types } from "mongoose";
+import { Model, Types } from "mongoose";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";

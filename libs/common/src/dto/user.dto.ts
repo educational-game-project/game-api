@@ -1,7 +1,7 @@
 import { PartialType } from "@nestjs/swagger";
 import { IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-export class CreateUserDto {
+export class CreateUserDTO {
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -23,13 +23,13 @@ export class CreateUserDto {
   schoolId?: string;
 }
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDTO extends PartialType(CreateUserDTO) {
   @IsNotEmpty()
   @IsMongoId()
   id: string;
 }
 
-export class ByUserIdDto {
+export class ByUserIdDTO {
   @IsNotEmpty()
   @IsMongoId()
   userId: string;

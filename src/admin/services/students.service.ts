@@ -1,7 +1,7 @@
 import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException, MethodNotAllowedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
-import { CreateUserDto, UpdateUserDto } from "@app/common/dto/user.dto";
+import { CreateUserDTO, UpdateUserDTO } from "@app/common/dto/user.dto";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
@@ -27,7 +27,7 @@ export class StudentsService {
 
   private readonly logger = new Logger(StudentsService.name);
 
-  public async addStudent(body: CreateUserDto, media: any, req: any): Promise<any> {
+  public async addStudent(body: CreateUserDTO, media: any, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let user = await this.userModel.findOne({ _id: users._id })
@@ -78,7 +78,7 @@ export class StudentsService {
     }
   }
 
-  public async editStudent(body: UpdateUserDto, media: any, req: any): Promise<any> {
+  public async editStudent(body: UpdateUserDTO, media: any, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let query: any = {

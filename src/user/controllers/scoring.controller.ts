@@ -11,7 +11,9 @@ import { ScoreService } from "src/user/services/scoring.service";
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("score")
 export class ScoreController {
-  constructor(private scoreService: ScoreService) { }
+  constructor(
+    private scoreService: ScoreService
+  ) { }
 
   @Post("leaderboard")
   @HttpCode(HttpStatus.OK)

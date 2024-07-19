@@ -1,6 +1,6 @@
-import { IsMongoId, IsNotEmpty, IsNumber, IsOptional } from "class-validator";
+import { IsMongoId, IsNotEmpty } from "class-validator";
 
-export class initLevelDTO {
+export class InitLevelDTO {
   @IsNotEmpty()
   @IsMongoId()
   game: string;

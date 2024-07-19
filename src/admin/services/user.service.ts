@@ -1,7 +1,7 @@
 import { HttpStatus, Inject, Injectable, Logger, NotFoundException, HttpException, BadRequestException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
-import { CreateUserDto, UpdateUserDto } from "@app/common/dto/user.dto";
+import { CreateUserDTO, UpdateUserDTO } from "@app/common/dto/user.dto";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
@@ -31,7 +31,7 @@ export class UserAdminService {
 
   //////////////////////////////////////////// ADMIN //////////////////////////////////////////////
 
-  public async addAdmin(body: CreateUserDto, media: any, req: any,): Promise<any> {
+  public async addAdmin(body: CreateUserDTO, media: any, req: any,): Promise<any> {
     const users: User = <User>req.user;
     try {
       const password = body?.password ? this.authHelper.encodePassword(body.password) : this.authHelper.encodePassword("Admin1234");
@@ -80,7 +80,7 @@ export class UserAdminService {
     }
   }
 
-  public async updateAdmin(body: UpdateUserDto, media: any, req: any,): Promise<any> {
+  public async updateAdmin(body: UpdateUserDTO, media: any, req: any,): Promise<any> {
     const users: User = <User>req.user;
     try {
       let admin = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.ADMIN }).populate('image');

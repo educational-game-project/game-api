@@ -6,7 +6,7 @@ import { ImagesService } from "@app/common/helpers/file.helpers";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { ByIdDto } from "@app/common/dto/byId.dto";
 import { UserAdminService } from "../services/user.service";
-import { CreateUserDto, UpdateUserDto } from "@app/common/dto/user.dto";
+import { CreateUserDTO, UpdateUserDTO } from "@app/common/dto/user.dto";
 import { Roles } from "@app/common/decorators/roles.decorator";
 import { UserRole } from "@app/common/enums/role.enum";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
@@ -41,7 +41,7 @@ export class UserAdminController {
     }),
   )
   async create(
-    @Body() body: CreateUserDto,
+    @Body() body: CreateUserDTO,
     @UploadedFile() media: Express.Multer.File,
     @Req() req: any,
   ): Promise<any> {
@@ -73,7 +73,7 @@ export class UserAdminController {
     }),
   )
   async updateAdmin(
-    @Body() body: UpdateUserDto,
+    @Body() body: UpdateUserDTO,
     @UploadedFile() media: Express.Multer.File,
     @Req() req: any,
   ): Promise<any> {
@@ -147,7 +147,7 @@ export class UserAdminController {
     }),
   )
   async addStudent(
-    @Body() body: CreateUserDto,
+    @Body() body: CreateUserDTO,
     @UploadedFile() media: Express.Multer.File,
     @Req() req: any,
   ): Promise<any> {
@@ -179,7 +179,7 @@ export class UserAdminController {
     }),
   )
   async editStudent(
-    @Body() body: UpdateUserDto,
+    @Body() body: UpdateUserDTO,
     @UploadedFile() media: Express.Multer.File,
     @Req() req: any,
   ): Promise<any> {

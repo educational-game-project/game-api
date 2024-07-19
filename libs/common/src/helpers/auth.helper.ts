@@ -24,11 +24,6 @@ export class AuthHelper {
     return decoded;
   }
 
-  // Decoding the JWT Token
-  public async decode(token: string): Promise<unknown> {
-    return this.jwtService.decode(token, null);
-  }
-
   // Get User by User ID we get from decode()
   public async validateUser(decoded: any): Promise<User> {
     const user = await this.userModel.findOne({ _id: new Types.ObjectId(decoded._id) });

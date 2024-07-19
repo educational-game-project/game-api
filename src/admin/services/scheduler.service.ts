@@ -10,7 +10,7 @@ import { Game } from "@app/common/model/schema/game.schema";
 import { Level } from "@app/common/model/schema/levels.schema";
 import { Score } from "@app/common/model/schema/scores.schema";
 import { Record } from "@app/common/model/schema/records.schema";
-import { StringHelper } from "@app/common/helpers/string.helpers";
+import { TimeHelper } from "@app/common/helpers/time.helper";
 
 @Injectable()
 export class SchedulerService {
@@ -77,7 +77,7 @@ export class SchedulerService {
         if (!logs?.length) return await this.userModel.updateOne({ _id: user._id }, { isActive: false });
 
         let lastLog = logs[0];
-        const lastTime = StringHelper.CalculateTime(lastLog.createdAt, true);
+        const lastTime = TimeHelper.CalculateTime(lastLog.createdAt, true);
 
         if (lastTime >= 30) return await this.userModel.updateOne({ _id: user._id }, { isActive: false });
       }));
