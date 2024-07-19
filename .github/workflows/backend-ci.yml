@@ -75,7 +75,7 @@ jobs:
             ls -al &&
             echo ${{ secrets.DOCKER_TOKEN }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin &&
             docker pull iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }} &&
-            docker tag iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }} iwansuryaningrat/game-api:game
+            docker tag iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }} iwansuryaningrat/game-api:game-skripsi
             docker compose up -d &&
             docker image prune --force
             '
