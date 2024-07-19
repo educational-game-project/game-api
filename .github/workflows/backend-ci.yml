@@ -70,8 +70,8 @@ jobs:
 
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}  '
-            cd /home/${{ secrets.VM_USERNAME }}/game &&
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} -p $port '
+            cd /home/${{ secrets.VM_USERNAME }}/be-iwan &&
             ls -al &&
             echo ${{ secrets.DOCKER_TOKEN }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin &&
             docker pull iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }} &&
