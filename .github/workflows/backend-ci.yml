@@ -67,6 +67,10 @@ jobs:
       #     calculatedSha=$(git rev-parse --short ${{ github.sha }})
       #     echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
+      - name: Add GitHub.com to known_hosts
+        run: |
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
