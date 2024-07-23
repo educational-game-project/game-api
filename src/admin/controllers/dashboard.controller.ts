@@ -25,7 +25,7 @@ export class DashboardController {
     return this.dashboardService.getDashboardInfo(req.user)
   }
 
-  @Get('scheduler')
+  @Get('clear-content')
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   clearDeletedContent(@Request() req: any) {
