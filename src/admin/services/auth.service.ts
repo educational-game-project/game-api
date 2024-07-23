@@ -1,7 +1,7 @@
 import { HttpStatus, Inject, Injectable, Logger, NotFoundException, BadRequestException, HttpException, } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { LoginAdminDto, ReauthDto } from "@app/common/dto/auth.dto";
+import { ChangePasswordDTO, LoginAdminDTO, ReauthDTO } from "@app/common/dto/auth.dto";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
@@ -21,11 +21,12 @@ export class AuthAdminService {
 
   private readonly logger = new Logger(AuthAdminService.name);
 
-  public async login(body: LoginAdminDto): Promise<any> {
+  public async login(body: LoginAdminDTO): Promise<any> {
     try {
-      let q: any = { role: { $ne: UserRole.USER }, };
-      if (body.email) q.email = body.email;
-      if (body.phoneNumber) q.phoneNumber = body.phoneNumber;
+      let q: any = {
+        role: { $ne: UserRole.USER },
+        email: body.email
+      };
       let user = await this.userModel.findOne(q).select("+password").populate("image");
       if (!user) throw new NotFoundException("User Not Found!")
 
@@ -53,7 +54,7 @@ export class AuthAdminService {
         actor: user._id.toString(),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("auth", "login"), { user, tokens },);
+      return this.responseService.success(true, StringHelper.successResponse("Auth", "Login"), { user, tokens });
     } catch (error) {
       await this.logsService.logging({
         target: TargetLogEnum.AUTH,
@@ -67,9 +68,9 @@ export class AuthAdminService {
     }
   }
 
-  public async verifyRefreshToken(body: ReauthDto, req: any): Promise<any> {
+  public async verifyRefreshToken(body: ReauthDTO, req: any): Promise<any> {
     let { refreshToken } = body;
-    let { isValid, user } = await this.authHelper.validate(refreshToken);
+    let { user } = await this.authHelper.validate(refreshToken);
 
     try {
       if (!user) user = await this.userModel.findOne({ refreshToken })
@@ -94,7 +95,7 @@ export class AuthAdminService {
           actor: user._id.toString(),
         })
 
-        return this.responseService.success(true, StringHelper.successResponse("auth", "verifyRefreshToken"), { user, tokens });
+        return this.responseService.success(true, StringHelper.successResponseAdmin("Auth", "Verify Refresh Token"), { user, tokens });
       }
     } catch (error) {
       await this.logsService.logging({
@@ -109,7 +110,7 @@ export class AuthAdminService {
     }
   }
 
-  public async changePassword(body: any, req: any): Promise<any> {
+  public async changePassword(body: ChangePasswordDTO, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let { oldPassword, newPassword } = body;
@@ -129,7 +130,7 @@ export class AuthAdminService {
         success: true,
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("auth", "changePassword"));
+      return this.responseService.success(true, StringHelper.successResponseAdmin("Auth", "Change Password"));
     } catch (error) {
       await this.logsService.logging({
         target: TargetLogEnum.AUTH,
@@ -154,7 +155,7 @@ export class AuthAdminService {
 
       await this.authHelper.logout(user);
 
-      return this.responseService.success(true, StringHelper.successResponse("auth", "logout"));
+      return this.responseService.success(true, StringHelper.successResponseAdmin("Auth", "Logout"));
     } catch (error) {
       await this.logsService.logging({
         target: TargetLogEnum.AUTH,

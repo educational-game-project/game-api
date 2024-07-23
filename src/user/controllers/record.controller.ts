@@ -2,7 +2,7 @@ import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { Request } from "express";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { Roles } from "@app/common/decorators/roles.decorator";
-import { CreateReportDto } from "@app/common/dto/report.dto";
+import { CreateReportDTO } from "@app/common/dto/report.dto";
 import { UserRole } from "@app/common/enums/role.enum";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { Controller, Post, Body, UseGuards, Request as Req, HttpStatus, HttpCode } from "@nestjs/common";
@@ -19,7 +19,7 @@ export class RecordController {
   @Post()
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async record(@Body() body: CreateReportDto, @Req() req: Request): Promise<any> {
+  async record(@Body() body: CreateReportDTO, @Req() req: Request): Promise<any> {
     return this.recordService.record(body, req);
   }
 }

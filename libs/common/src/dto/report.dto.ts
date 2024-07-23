@@ -1,7 +1,7 @@
 import { IsEnum, IsMongoId, IsNotEmpty, IsNumber } from "class-validator";
 import { ReportType } from "../enums/reportType.enum";
 
-export class CreateReportDto {
+export class CreateReportDTO {
   @IsNotEmpty()
   @IsMongoId()
   game: string;

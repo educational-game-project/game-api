@@ -8,7 +8,7 @@ import { StringHelper } from "@app/common/helpers/string.helpers";
 import { School } from "@app/common/model/schema/schools.schema";
 import { UserRole } from "@app/common/enums/role.enum";
 import { SearchDTO } from "@app/common/dto/search.dto";
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
@@ -190,7 +190,7 @@ export class UserAdminService {
     }
   }
 
-  public async deleteAdmin(body: ByIdDto, req: any): Promise<any> {
+  public async deleteAdmin(body: ByIdDTO, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let admin = await this.userModel.findOne({
@@ -234,7 +234,7 @@ export class UserAdminService {
     }
   }
 
-  public async detailAdmin(body: ByIdDto, req: any): Promise<any> {
+  public async detailAdmin(body: ByIdDTO, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let admin = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.ADMIN })

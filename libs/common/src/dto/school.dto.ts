@@ -6,7 +6,7 @@ import {
   IsString,
 } from "class-validator";
 import { PartialType } from "@nestjs/swagger";
-import { ByIdDto } from "./byId.dto";
+import { ByIdDTO } from "./byId.dto";
 
 export class CreateSchoolDTO {
   @IsNotEmpty()
@@ -18,7 +18,7 @@ export class CreateSchoolDTO {
   address?: string;
 }
 
-export class EditSchoolDTO extends PartialType(ByIdDto) {
+export class EditSchoolDTO extends PartialType(ByIdDTO) {
   @IsOptional()
   @IsString()
   name: string;

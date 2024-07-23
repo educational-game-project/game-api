@@ -7,7 +7,7 @@ import { UserRole } from "@app/common/enums/role.enum";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 
 @Roles([UserRole.USER])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
@@ -27,7 +27,7 @@ export class LevelsController {
   @Post("find")
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async getLevel(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+  async getLevel(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.levelsService.getLevel(body, req);
   }
 }

@@ -7,7 +7,7 @@ import { School } from "@app/common/model/schema/schools.schema";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { CreateSchoolDTO, EditSchoolDTO } from "@app/common/dto/school.dto";
 import { SearchDTO } from "@app/common/dto/search.dto";
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { Image } from "@app/common/model/schema/subtype/images.subtype";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
@@ -152,7 +152,7 @@ export class SchoolAdminService {
     }
   }
 
-  public async detail(body: ByIdDto, req: any): Promise<any> {
+  public async detail(body: ByIdDTO, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       const school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body.id) })
@@ -189,7 +189,7 @@ export class SchoolAdminService {
     }
   }
 
-  public async delete(body: ByIdDto, req: any): Promise<any> {
+  public async delete(body: ByIdDTO, req: any): Promise<any> {
     const user: User = <User>req.user;
     try {
       let school = await this.schoolModel.findOne({

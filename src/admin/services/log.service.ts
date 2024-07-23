@@ -1,4 +1,4 @@
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 import { UserRole } from "@app/common/enums/role.enum";
@@ -101,7 +101,7 @@ export class LogsService {
     }
   }
 
-  async deleteLog(body: ByIdDto, req: any) {
+  async deleteLog(body: ByIdDTO, req: any) {
     try {
       let log = await this.logsModel.findOne({ _id: body.id })
       if (!log) throw new NotFoundException("Log Not Found");

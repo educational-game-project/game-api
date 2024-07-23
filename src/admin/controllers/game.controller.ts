@@ -10,7 +10,7 @@ import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/fil
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { DefineGameDTO, EditGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { LogsService } from "../services/log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 
@@ -101,7 +101,7 @@ export class GameAdminController {
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async detailGame(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+  async detailGame(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.gameService.detailGame(body, req);
   }
 
@@ -109,7 +109,7 @@ export class GameAdminController {
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async deleteGame(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+  async deleteGame(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.gameService.deleteGame(body, req);
   }
 }

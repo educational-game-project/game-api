@@ -12,8 +12,7 @@ import { map } from "rxjs/operators";
 // This interceptor for restructure response success
 @Injectable()
 export class ResponseInterceptor
-  implements NestInterceptor<Promise<any> | string>
-{
+  implements NestInterceptor<Promise<any> | string> {
   async intercept(
     context: ExecutionContext,
     next: CallHandler,
@@ -34,7 +33,7 @@ export class ResponseInterceptor
 
         const { statusCode, ...others } = data;
         return {
-          status_code: statusCode || status,
+          statusCode: statusCode || status,
           ...others,
         };
       }),

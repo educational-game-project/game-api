@@ -7,7 +7,7 @@ import { ResponseService } from "@app/common/response/response.service";
 import { InitLevelDTO } from "@app/common/dto/levels.dto";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { TimeHelper } from "@app/common/helpers/time.helper";
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { Game } from "@app/common/model/schema/game.schema";
 import { userPopulate } from "@app/common/pipeline/user.pipeline";
 import { gamePopulate } from "@app/common/pipeline/game.pipeline";
@@ -75,7 +75,7 @@ export class LevelsService {
     }
   }
 
-  public async getLevel(body: ByIdDto, req: any): Promise<any> {
+  public async getLevel(body: ByIdDTO, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let user = await this.userModel.findOne({ _id: users._id });

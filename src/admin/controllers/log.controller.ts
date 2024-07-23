@@ -7,7 +7,7 @@ import { Request } from "express";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
@@ -27,7 +27,7 @@ export class LogsController {
   @Delete()
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async deleteLog(@Body() body: ByIdDto, @Req() req: Request) {
+  async deleteLog(@Body() body: ByIdDTO, @Req() req: Request) {
     return await this.logsService.deleteLog(body, req);
   }
 }

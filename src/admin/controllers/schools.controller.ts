@@ -6,7 +6,7 @@ import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/fil
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { CreateSchoolDTO, EditSchoolDTO } from "@app/common/dto/school.dto";
 import { SearchDTO } from "@app/common/dto/search.dto";
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { Roles } from "@app/common/decorators/roles.decorator";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
@@ -99,14 +99,14 @@ export class SchoolAdminController {
   @Post("detail")
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async detail(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+  async detail(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.schoolService.detail(body, req);
   }
 
   @Delete()
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async delete(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+  async delete(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.schoolService.delete(body, req);
   }
 }

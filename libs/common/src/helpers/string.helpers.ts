@@ -8,4 +8,8 @@ export const StringHelper = {
   successResponse(section: string, method: string) {
     return `${section}_${method}_success`;
   },
+
+  successResponseAdmin(section: string, method: string) {
+    return `${section} ${method} Success!`;
+  },
 };

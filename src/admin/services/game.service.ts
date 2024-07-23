@@ -1,4 +1,4 @@
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { DefineGameDTO, EditGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { StringHelper } from "@app/common/helpers/string.helpers";
@@ -92,7 +92,7 @@ export class GameAdminService {
     }
   }
 
-  public async detailGame(body: ByIdDto, req: any): Promise<any> {
+  public async detailGame(body: ByIdDTO, req: any): Promise<any> {
     const user: User = <User>req.user;
     try {
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) })
@@ -125,7 +125,7 @@ export class GameAdminService {
     }
   }
 
-  public async deleteGame(body: ByIdDto, req: any): Promise<any> {
+  public async deleteGame(body: ByIdDTO, req: any): Promise<any> {
     const user: User = <User>req.user;
     try {
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) }).populate('images');

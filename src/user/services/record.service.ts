@@ -5,7 +5,7 @@ import { User } from "@app/common/model/schema/users.schema";
 import { Record } from "@app/common/model/schema/records.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
-import { CreateReportDto } from "@app/common/dto/report.dto";
+import { CreateReportDTO } from "@app/common/dto/report.dto";
 import { Game } from "@app/common/model/schema/game.schema";
 import { Level } from "@app/common/model/schema/levels.schema";
 import { LevelsService } from "./levels.service";
@@ -30,7 +30,7 @@ export class RecordService {
 
   private readonly logger = new Logger(RecordService.name);
 
-  public async record(body: CreateReportDto, req: any): Promise<any> {
+  public async record(body: CreateReportDTO, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let user = await this.userModel.findOne({ _id: users._id });
@@ -114,7 +114,7 @@ export class RecordService {
     }
   }
 
-  public async initRecord(body: CreateReportDto, req: any): Promise<any> {
+  public async initRecord(body: CreateReportDTO, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.game) });

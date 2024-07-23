@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Request, UseGuards, HttpCode, HttpStatus } from "@nestjs/common";
 import { AuthService } from "../services/auth.service";
-import { LoginUserDto, ReauthDto } from "@app/common/dto/auth.dto";
+import { LoginUserDTO, ReauthDTO } from "@app/common/dto/auth.dto";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
@@ -16,14 +16,14 @@ export class AuthController {
   @Post("login")
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async login(@Body() body: LoginUserDto): Promise<any> {
+  async login(@Body() body: LoginUserDTO): Promise<any> {
     return this.authService.login(body);
   }
 
   @Post("refresh-token")
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async verifyRefreshToken(@Body() body: ReauthDto, @Request() req) {
+  async verifyRefreshToken(@Body() body: ReauthDTO, @Request() req) {
     return this.authService.verifyRefreshToken(body, req);
   }
 

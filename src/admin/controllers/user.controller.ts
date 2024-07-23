@@ -4,7 +4,7 @@ import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { SearchDTO } from "@app/common/dto/search.dto";
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { UserAdminService } from "../services/user.service";
 import { CreateUserDTO, UpdateUserDTO } from "@app/common/dto/user.dto";
 import { Roles } from "@app/common/decorators/roles.decorator";
@@ -106,7 +106,7 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async delete(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+  async delete(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.userService.deleteAdmin(body, req);
   }
 
@@ -114,7 +114,7 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
-  async detailAdmin(@Body() body: ByIdDto, @Req() req: Request): Promise<any> {
+  async detailAdmin(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.userService.detailAdmin(body, req);
   }
 
@@ -216,7 +216,7 @@ export class UserAdminController {
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async deleteStudent(
-    @Body() body: ByIdDto,
+    @Body() body: ByIdDTO,
     @Req() req: Request,
   ): Promise<any> {
     return this.studentsService.deleteStudent(body, req);
@@ -227,7 +227,7 @@ export class UserAdminController {
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   async detailStudent(
-    @Body() body: ByIdDto,
+    @Body() body: ByIdDTO,
     @Req() req: Request,
   ): Promise<any> {
     return this.studentsService.detailStudent(body, req);

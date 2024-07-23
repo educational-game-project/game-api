@@ -1,7 +1,7 @@
 import { HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { LoginUserDto, ReauthDto } from "@app/common/dto/auth.dto";
+import { LoginUserDTO, ReauthDTO } from "@app/common/dto/auth.dto";
 import { User } from "@app/common/model/schema/users.schema";
 import { ResponseService } from "@app/common/response/response.service";
 import { StringHelper } from "@app/common/helpers/string.helpers";
@@ -22,7 +22,7 @@ export class AuthService {
 
   private readonly logger = new Logger(AuthService.name);
 
-  public async login(body: LoginUserDto): Promise<any> {
+  public async login(body: LoginUserDTO): Promise<any> {
     try {
       let user = await this.userModel.findOne({ name: body.name, role: UserRole.USER }).populate(globalPopulate({
         school: true,
@@ -59,7 +59,7 @@ export class AuthService {
     }
   }
 
-  public async verifyRefreshToken(body: ReauthDto, req: any): Promise<any> {
+  public async verifyRefreshToken(body: ReauthDTO, req: any): Promise<any> {
     let { refreshToken } = body;
     let { isValid, user } = await this.authHelper.validate(refreshToken);
 

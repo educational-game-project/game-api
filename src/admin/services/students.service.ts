@@ -8,7 +8,7 @@ import { StringHelper } from "@app/common/helpers/string.helpers";
 import { School } from "@app/common/model/schema/schools.schema";
 import { UserRole } from "@app/common/enums/role.enum";
 import { SearchDTO } from "@app/common/dto/search.dto";
-import { ByIdDto } from "@app/common/dto/byId.dto";
+import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { ImagesService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { userPipeline } from "@app/common/pipeline/user.pipeline";
@@ -181,7 +181,7 @@ export class StudentsService {
     }
   }
 
-  public async deleteStudent(body: ByIdDto, req: any): Promise<any> {
+  public async deleteStudent(body: ByIdDTO, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let student = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.USER }).populate('image');
@@ -222,7 +222,7 @@ export class StudentsService {
     }
   }
 
-  public async detailStudent(body: ByIdDto, req: any): Promise<any> {
+  public async detailStudent(body: ByIdDTO, req: any): Promise<any> {
     const users: User = <User>req.user;
     try {
       let student = await this.userModel.findOne({ _id: new Types.ObjectId(body.id), role: UserRole.USER })
