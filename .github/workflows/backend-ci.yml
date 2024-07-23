@@ -10,54 +10,54 @@ on:
       - backend
 
 jobs:
-  Build-Image:
-    runs-on: ubuntu-latest
-    if: ${{ contains(github.event.head_commit.message, '#build') }}
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+  # Build-Image:
+  #   runs-on: ubuntu-latest
+  #   if: ${{ contains(github.event.head_commit.message, '#build') }}
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@v3
 
-      - name: Get Short SHA
-        id: vars
-        shell: bash
-        run: |
-          calculatedSha=$(git rev-parse --short ${{ github.sha }})
-          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+  #     - name: Get Short SHA
+  #       id: vars
+  #       shell: bash
+  #       run: |
+  #         calculatedSha=$(git rev-parse --short ${{ github.sha }})
+  #         echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
-      - id: qemu
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+  #     - id: qemu
+  #       name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v3
 
-      - id: buildx
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+  #     - id: buildx
+  #       name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
 
-      - id: auth
-        name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
+  #     - id: auth
+  #       name: Login to Docker Hub
+  #       uses: docker/login-action@v3
+  #       with:
+  #         username: ${{ secrets.DOCKER_USERNAME }}
+  #         password: ${{ secrets.DOCKER_TOKEN }}
 
-      - id: build
-        name: Build and Push
-        uses: docker/build-push-action@v5
-        with:
-          # context: .
-          push: true
-          tags: iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }}
+  #     - id: build
+  #       name: Build and Push
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         # context: .
+  #         push: true
+  #         tags: iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }}
 
-      - id: buildSkripsi
-        name: Build and Push Skripsi Image
-        uses: docker/build-push-action@v5
-        with:
-          # context: .
-          push: true
-          tags: iwansuryaningrat/game-api:game-skripsi
+  #     - id: buildSkripsi
+  #       name: Build and Push Skripsi Image
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         # context: .
+  #         push: true
+  #         tags: iwansuryaningrat/game-api:game-skripsi
 
   Deploy-to-VM:
     runs-on: ubuntu-latest
-    needs: build-image
+    # needs: Build-Image
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -77,8 +77,7 @@ jobs:
           OFFICE_USER: ${{ secrets.OFFICE_USER }}
 
         run: |
-          echo "${USER_NAME}@${HOSTNAME}"
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
             # ssh developer@ec2-13-213-135-152.ap-southeast-1.compute.amazonaws.com './deploy-game.sh'
-            ssh ${USER_NAME}@${HOSTNAME} './deploy-game.sh'
+            ssh ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} './deploy-game.sh'
           '
