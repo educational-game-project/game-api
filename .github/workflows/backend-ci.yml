@@ -92,6 +92,6 @@ jobs:
           OFFICE_USER: ${{ secrets.OFFICE_USER }}
 
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${{ secrets.OFFICE_USER }}@${{ secrets.OFFICE_IP }} -p ${OFFICE_PORT} '
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key iwan@103.125.48.74 -p ${OFFICE_PORT} '
             ssh ${USER_NAME}@${HOSTNAME} './deploy-game.sh'
           '
