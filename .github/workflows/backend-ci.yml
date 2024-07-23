@@ -77,6 +77,12 @@ jobs:
       #     # mkdir -p ~/.ssh
       #     ssh-keyscan -H ${{ secrets.OFFICE_IP }} >> ~/.ssh/known_hosts
 
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/private_key
+          chmod 600 ~/.ssh/private_key
+
       - name: Deploy in VM
         env:
           PRIVATE_KEY: ${{ secrets.SSH_KEY }}
@@ -92,7 +98,7 @@ jobs:
           # passphrase: ${{ secrets.SSH_PASSPHRASE }}
 
         run: |
-          echo "${PRIVATE_KEY}" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
+          # echo "${PRIVATE_KEY}" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
             ssh ${USER_NAME}@${HOSTNAME} './deploy-game.sh'}
           '
