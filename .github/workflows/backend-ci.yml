@@ -9,46 +9,48 @@ on:
       - backend
 
 jobs:
-  # build-image:
-  #   runs-on: ubuntu-latest
-  #   if: ${{ contains(github.event.head_commit.message, '#build') }}
-  #   steps:
-  #     - name: Check out code
-  #       uses: actions/checkout@v3
+  build-image:
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, '#build') }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
 
-  #     - name: Get Short SHA
-  #       id: vars
-  #       shell: bash
-  #       run: |
-  #         calculatedSha=$(git rev-parse --short ${{ github.sha }})
-  #         echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+      - name: Get Short SHA
+        id: vars
+        shell: bash
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
-  #     - id: qemu
-  #       name: Set up QEMU
-  #       uses: docker/setup-qemu-action@v3
-  #     - id: buildx
-  #       name: Set up Docker Buildx
-  #       uses: docker/setup-buildx-action@v3
-  #     - id: auth
-  #       name: Login to Docker Hub
-  #       uses: docker/login-action@v3
-  #       with:
-  #         username: ${{ secrets.DOCKER_USERNAME }}
-  #         password: ${{ secrets.DOCKER_TOKEN }}
-  #     - id: build
-  #       name: Build and push
-  #       uses: docker/build-push-action@v5
-  #       with:
-  #         # context: .
-  #         push: true
-  #         tags: iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }}
-  # - id: build
-  #   name: Build and push skripsi image
-  #   uses: docker/build-push-action@v5
-  #   with:
-  #     # context: .
-  #     push: true
-  #     tags: iwansuryaningrat/game-api:game-skripsi
+      - id: qemu
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - id: buildx
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - id: auth
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      #     - id: build
+      #       name: Build and push
+      #       uses: docker/build-push-action@v5
+      #       with:
+      #         # context: .
+      #         push: true
+      #         tags: iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }}
+      - id: build
+        name: Build and push skripsi image
+        uses: docker/build-push-action@v5
+        with:
+          # context: .
+          push: true
+          tags: iwansuryaningrat/game-api:game-skripsi
 
   Deploy-to-VM:
     runs-on: ubuntu-latest
