@@ -35,13 +35,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      - id: build
-        name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          # context: .
-          push: true
-          tags: iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }}
+      #     - id: build
+      #       name: Build and push
+      #       uses: docker/build-push-action@v5
+      #       with:
+      #         # context: .
+      #         push: true
+      #         tags: iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }}
       - id: build
         name: Build and push skripsi image
         uses: docker/build-push-action@v5
@@ -83,12 +83,6 @@ jobs:
           ssh -i private_key ${OFFICE_IP} -l ${OFFICE_USER} -p ${OFFICE_PORT} '
             echo "${PRIVATE_KEY}" > private_key && chmod 600 private_key
             ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} -p ${PORT} '
-              cd /home/${{ secrets.VM_USERNAME }}/be-iwan &&
-              ls -al &&
-              echo ${{ secrets.DOCKER_TOKEN }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin &&
-              docker pull iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }} &&
-              docker tag iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }} iwansuryaningrat/game-api:game-skripsi
-              docker compose up -d &&
-              docker image prune --force
+              ./deploy-game.sh
              '
           '
