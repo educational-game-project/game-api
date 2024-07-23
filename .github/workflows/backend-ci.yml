@@ -67,15 +67,15 @@ jobs:
       #     calculatedSha=$(git rev-parse --short ${{ github.sha }})
       #     echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      # - name: Set up SSH
+      #   uses: webfactory/ssh-agent@v0.5.3
+      #   with:
+      #     ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Add remote host to known_hosts
-        run: |
-          # mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.OFFICE_IP }} >> ~/.ssh/known_hosts
+      # - name: Add remote host to known_hosts
+      #   run: |
+      #     # mkdir -p ~/.ssh
+      #     ssh-keyscan -H ${{ secrets.OFFICE_IP }} >> ~/.ssh/known_hosts
 
       - name: Deploy in VM
         env:
@@ -93,9 +93,6 @@ jobs:
 
         run: |
           echo "${PRIVATE_KEY}" > private_key && chmod 600 private_key
-          ssh -i private_key ${OFFICE_IP} -l ${OFFICE_USER} -p ${OFFICE_PORT} '
-            echo "${PRIVATE_KEY}" > private_key && chmod 600 private_key
-            ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} -p ${PORT} '
-              ./deploy-game.sh
-             '
+          ssh -o StrictHostKeyChecking=no -i private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
+            ssh ${USER_NAME}@${HOSTNAME} './deploy-game.sh'}
           '
