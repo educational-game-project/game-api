@@ -99,6 +99,6 @@ jobs:
 
         run: |
           # echo "${PRIVATE_KEY}" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key iwan@103.125.48.74 -p ${OFFICE_PORT} '
             ssh ${USER_NAME}@${HOSTNAME} './deploy-game.sh'}
           '
