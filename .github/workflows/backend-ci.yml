@@ -88,14 +88,9 @@ jobs:
           PRIVATE_KEY: ${{ secrets.SSH_KEY }}
           HOSTNAME: ${{ secrets.VM_HOST }}
           USER_NAME: ${{ secrets.VM_USERNAME }}
-          PORT: ${{ secrets.VM_PORT }}
-          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          SHORT_SHA: ${{ env.COMMIT_SHORT_SHA }}
           OFFICE_IP: ${{ secrets.OFFICE_IP }}
           OFFICE_PORT: ${{ secrets.OFFICE_PORT }}
           OFFICE_USER: ${{ secrets.OFFICE_USER }}
-          # passphrase: ${{ secrets.SSH_PASSPHRASE }}
 
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
