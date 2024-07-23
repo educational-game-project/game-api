@@ -69,6 +69,7 @@ jobs:
 
       - name: Add GitHub.com to known_hosts
         run: |
+          mkdir -p ~/.ssh
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
       - name: Set up SSH
