@@ -100,5 +100,5 @@ jobs:
         run: |
           # echo "${PRIVATE_KEY}" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key iwan@103.125.48.74 -p ${OFFICE_PORT} '
-            ssh developer@ec2-13-213-135-152.ap-southeast-1.compute.amazonaws.com './deploy-game.sh'}
+            ssh developer@ec2-13-213-135-152.ap-southeast-1.compute.amazonaws.com './deploy-game.sh'
           '
