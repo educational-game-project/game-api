@@ -78,5 +78,5 @@ jobs:
 
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
-            ssh ${USER_NAME}@ec2-13-213-135-152.ap-southeast-1.compute.amazonaws.com './deploy-game.sh'
+            ssh developer@${HOSTNAME} './deploy-game.sh'
           '
