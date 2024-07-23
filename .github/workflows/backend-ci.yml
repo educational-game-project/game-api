@@ -10,7 +10,7 @@ on:
       - backend
 
 jobs:
-  build-image:
+  Build-Image:
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.head_commit.message, '#build') }}
     steps:
@@ -79,5 +79,6 @@ jobs:
         run: |
           echo "${USER_NAME}@${HOSTNAME}"
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
-            ssh developer@$ec2-13-213-135-152.ap-southeast-1.compute.amazonaws.com './deploy-game.sh'
+            # ssh developer@ec2-13-213-135-152.ap-southeast-1.compute.amazonaws.com './deploy-game.sh'
+            ssh ${USER_NAME}@${HOSTNAME} './deploy-game.sh'
           '
