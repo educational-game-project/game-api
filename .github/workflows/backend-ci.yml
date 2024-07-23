@@ -98,6 +98,6 @@ jobs:
           # passphrase: ${{ secrets.SSH_PASSPHRASE }}
 
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${ OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
             ssh ${USER_NAME}@${HOSTNAME}} './deploy-game.sh'
           '
