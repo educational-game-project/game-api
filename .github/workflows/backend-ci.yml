@@ -81,8 +81,8 @@ jobs:
           # passphrase: ${{ secrets.SSH_PASSPHRASE }}
 
         run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -i private_key $OFFICE_IP -l $OFFICE_USER -p $OFFICE_PORT '
+          # echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -i $PRIVATE_KEY $OFFICE_IP -l $OFFICE_USER -p $OFFICE_PORT '
             echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
             ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} -p $PORT '
               ./deploy-game.sh
