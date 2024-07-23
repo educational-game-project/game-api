@@ -1,4 +1,5 @@
-name: backend update
+name: Deploy backend
+
 on:
   push:
     branches:
@@ -59,12 +60,21 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Get Short SHA
-        id: vars
-        shell: bash
+      # - name: Get Short SHA
+      #   id: vars
+      #   shell: bash
+      #   run: |
+      #     calculatedSha=$(git rev-parse --short ${{ github.sha }})
+      #     echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add remote host to known_hosts
         run: |
-          calculatedSha=$(git rev-parse --short ${{ github.sha }})
-          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+          ssh-keyscan -H ${{ secrets.OFFICE_IP }} >> ~/.ssh/known_hosts
 
       - name: Deploy in VM
         env:
