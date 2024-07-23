@@ -69,15 +69,14 @@ jobs:
           chmod 600 ~/.ssh/private_key
 
       - name: Deploy in VM
-        env:
-          HOSTNAME: ${{ secrets.VM_HOST }}
-          USER_NAME: ${{ secrets.VM_USERNAME }}
-          OFFICE_IP: ${{ secrets.OFFICE_IP }}
-          OFFICE_PORT: ${{ secrets.OFFICE_PORT }}
-          OFFICE_USER: ${{ secrets.OFFICE_USER }}
+        # env:
+        #   HOSTNAME: ${{ secrets.VM_HOST }}
+        #   USER_NAME: ${{ secrets.VM_USERNAME }}
+        #   OFFICE_IP: ${{ secrets.OFFICE_IP }}
+        #   OFFICE_PORT: ${{ secrets.OFFICE_PORT }}
+        #   OFFICE_USER: ${{ secrets.OFFICE_USER }}
 
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
-            # ssh developer@ec2-13-213-135-152.ap-southeast-1.compute.amazonaws.com './deploy-game.sh'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${{ secrets.OFFICE_USER }}@${{ secrets.OFFICE_IP }} -p ${{ secrets.OFFICE_PORT }} '
             ssh ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} './deploy-game.sh'
           '
