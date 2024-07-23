@@ -79,7 +79,8 @@ jobs:
 
       - name: Deploy in VM
         env:
-          PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          # PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOSTNAME: ${{ secrets.VM_HOST }}
           USER_NAME: ${{ secrets.VM_USERNAME }}
           PORT: ${{ secrets.VM_PORT }}
