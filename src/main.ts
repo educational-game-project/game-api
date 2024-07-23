@@ -38,12 +38,13 @@ async function bootstrap() {
     yamlDocumentUrl: "/docs/yaml",
     swaggerOptions: {
       filter: true,
+      tagsSorter: 'alpha',
       showRequestDuration: true,
       deepLinking: true,
       displayOperationId: false,
       syntaxHighlight: {
         activate: true,
-        theme: 'obsidian',
+        theme: 'shades-of-purple',
       },
     },
   };
