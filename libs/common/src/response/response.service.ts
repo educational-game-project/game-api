@@ -1,22 +1,10 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-  Injectable,
-  ValidationError,
-} from "@nestjs/common";
-import {
-  IResponseError,
-  IResponsePaging,
-  RMessage,
-  RSuccessMessage,
-} from "./response.interface";
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, Injectable, ValidationError, } from "@nestjs/common";
+import { IResponseError, IResponsePaging, RMessage, RSuccessMessage, } from "./response.interface";
 import { Request, Response } from "express";
 
 @Injectable()
 export class ResponseService {
-  constructor() {}
+  constructor() { }
 
   error(
     statusCode: number,
