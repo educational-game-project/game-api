@@ -42,8 +42,8 @@ jobs:
           # context: .
           push: true
           tags: iwansuryaningrat/game-api:game-${{ env.COMMIT_SHORT_SHA }}
-      - id: build skripsi image
-        name: Build and push
+      - id: build
+        name: Build and push skripsi image
         uses: docker/build-push-action@v5
         with:
           # context: .
