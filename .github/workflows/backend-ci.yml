@@ -85,7 +85,6 @@ jobs:
 
       - name: Deploy in VM
         env:
-          PRIVATE_KEY: ${{ secrets.SSH_KEY }}
           HOSTNAME: ${{ secrets.VM_HOST }}
           USER_NAME: ${{ secrets.VM_USERNAME }}
           OFFICE_IP: ${{ secrets.OFFICE_IP }}
@@ -93,6 +92,6 @@ jobs:
           OFFICE_USER: ${{ secrets.OFFICE_USER }}
 
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${OFFICE_USER}@${OFFICE_IP} -p ${OFFICE_PORT} '
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key $OFFICE_USER@$OFFICE_IP -p ${OFFICE_PORT} '
             ssh ${USER_NAME}@${HOSTNAME} './deploy-game.sh'
           '
