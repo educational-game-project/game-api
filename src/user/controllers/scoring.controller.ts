@@ -4,9 +4,11 @@ import { Roles } from "@app/common/decorators/roles.decorator";
 import { UserRole } from "@app/common/enums/role.enum";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { Controller, Post, Body, Request as Req, UseGuards, HttpCode, HttpStatus } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
 import { ScoreService } from "src/user/services/scoring.service";
 
+@ApiTags("Scores")
 @Roles([UserRole.USER])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("score")

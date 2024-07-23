@@ -8,7 +8,9 @@ import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { ByIdDTO } from "@app/common/dto/byId.dto";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Levels")
 @Roles([UserRole.USER])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("levels")

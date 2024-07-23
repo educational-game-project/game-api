@@ -18,6 +18,11 @@ export class AuthAdminController {
   @Post("login")
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: 'Login Admin',
+    description: 'Login Admin',
+    tags: ["Admin", "Auth", "Login"],
+  })
   @ApiOkResponse({
     description: "Login successfully",
     schema: {
@@ -198,6 +203,11 @@ export class AuthAdminController {
   @Post("refresh-token")
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: 'Refresh Access Token',
+    description: 'Refresh Access Token',
+    tags: ["Admin", "Auth", "Access Token"],
+  })
   @ApiOkResponse({
     description: "Auth Verify RefreshToken successfully",
     schema: {
@@ -357,10 +367,9 @@ export class AuthAdminController {
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @ApiOperation({
-    summary: 'Change User Password',
+    summary: 'Change Admin Password',
     description: 'This endpoint allows admins to change their password.',
     tags: ["Admin", "Auth", "Change Password"],
-    operationId: 'changePassword',
   })
   @ApiBearerAuth('Authorization')
   @ApiOkResponse({
@@ -496,6 +505,11 @@ export class AuthAdminController {
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: 'Logout Admin',
+    description: 'This endpoint allows admins to logout.',
+    tags: ["Admin", "Auth", "Logout"],
+  })
   @ApiBearerAuth('Authorization')
   @ApiOkResponse({
     description: "Auth Logout successfully",

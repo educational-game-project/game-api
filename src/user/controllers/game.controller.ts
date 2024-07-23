@@ -6,7 +6,9 @@ import { Roles } from "@app/common/decorators/roles.decorator";
 import { UserRole } from "@app/common/enums/role.enum";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Games')
 @Roles([UserRole.USER])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller('games')

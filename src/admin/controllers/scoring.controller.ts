@@ -8,7 +8,9 @@ import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { ByUserIdDTO } from "@app/common/dto/user.dto";
 import { ByGameIdDTO } from "@app/common/dto/game.dto";
 import { ByUserIdAndGameIdDTO } from "@app/common/dto/byId.dto";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Admin - Scores")
 @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/score")

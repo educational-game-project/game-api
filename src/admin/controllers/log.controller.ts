@@ -8,7 +8,9 @@ import { SearchDTO } from "@app/common/dto/search.dto";
 import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { ByIdDTO } from "@app/common/dto/byId.dto";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Admin - Logs")
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
 @Controller('admin/logs')

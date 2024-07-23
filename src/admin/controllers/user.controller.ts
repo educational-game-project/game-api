@@ -15,7 +15,9 @@ import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { StudentsService } from "../services/students.service";
 import { LogsService } from "../services/log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Admin - Users Management")
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/user")
 export class UserAdminController {

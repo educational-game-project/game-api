@@ -13,7 +13,9 @@ import { DefineGameDTO, EditGameDTO, ListGameDTO } from "@app/common/dto/game.dt
 import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { LogsService } from "../services/log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Admin - Games")
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/games")
 export class GameAdminController {

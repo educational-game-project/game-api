@@ -6,7 +6,9 @@ import { Roles } from "@app/common/decorators/roles.decorator";
 import { UserRole } from "@app/common/enums/role.enum";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { SchedulerService } from '../services/scheduler.service';
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Admin - Dashboard")
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/dashboard")
 export class DashboardController {

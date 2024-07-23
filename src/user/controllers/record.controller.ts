@@ -7,7 +7,9 @@ import { UserRole } from "@app/common/enums/role.enum";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { Controller, Post, Body, UseGuards, Request as Req, HttpStatus, HttpCode } from "@nestjs/common";
 import { RecordService } from "src/user/services/record.service";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Records")
 @Roles([UserRole.USER])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("record")

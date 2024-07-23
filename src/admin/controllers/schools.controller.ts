@@ -14,7 +14,9 @@ import { UserRole } from "@app/common/enums/role.enum";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 import { LogsService } from "../services/log.service";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Admin - Schools")
 @Roles([UserRole.SUPER_ADMIN])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/schools")
