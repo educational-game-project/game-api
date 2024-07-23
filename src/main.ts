@@ -22,6 +22,7 @@ async function bootstrap() {
     .addServer('localhost:3000', "Local Server",)
     .addServer('https:game-api.iwansuryaningrat.tech', "Production Server",)
     .setVersion('1.0')
+    .setLicense('MIT', 'https://github.com/nestjs/nest/blob/master/LICENSE')
     .addBearerAuth({
       type: 'http', scheme: 'bearer', bearerFormat: 'token', in: 'header'
     }, 'Authorization')
