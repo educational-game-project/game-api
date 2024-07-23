@@ -72,8 +72,8 @@ jobs:
           # passphrase: ${{ secrets.SSH_PASSPHRASE }}
 
         run: |
-          # ssh ${OFFICE_IP} -l ${OFFICE_USER} -p ${OFFICE_PORT} '
-          ssh 103.125.48.74 -l iwan -p 2288 '
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -i private_key ${OFFICE_IP} -l ${OFFICE_USER} -p ${OFFICE_PORT} '
             echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
             ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} -p ${PORT} '
               cd /home/${{ secrets.VM_USERNAME }}/be-iwan &&
