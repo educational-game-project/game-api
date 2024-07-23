@@ -57,12 +57,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      # - name: Get Short SHA
-      #   id: vars
-      #   shell: bash
-      #   run: |
-      #     calculatedSha=$(git rev-parse --short ${{ github.sha }})
-      #     echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+      - name: Get Short SHA
+        id: vars
+        shell: bash
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
       - name: Deploy in VM
         env:
