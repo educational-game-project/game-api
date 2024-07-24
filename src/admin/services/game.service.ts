@@ -42,7 +42,7 @@ export class GameAdminService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse('game', 'define'), game);
+      return this.responseService.success(true, StringHelper.successResponseAdmin('Game', 'Add'));
     } catch (error) {
       await this.logsService.logging({
         target: TargetLogEnum.GAME,
@@ -78,7 +78,7 @@ export class GameAdminService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse('game', 'edit'), game);
+      return this.responseService.success(true, StringHelper.successResponseAdmin('Game', 'Edit'));
     } catch (error) {
       await this.logsService.logging({
         target: TargetLogEnum.GAME,
@@ -98,8 +98,13 @@ export class GameAdminService {
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.id) })
         .populate({
           path: "addedBy",
-          select: "-password -school -deletedBy -lastUpdatedBy -addedBy -refreshToken",
-          populate: { path: "image" },
+          select: "-password -deletedBy -lastUpdatedBy -addedBy -refreshToken",
+          populate: [{
+            path: "image",
+          }, {
+            path: 'school',
+            select: "name address"
+          }]
         })
         .populate('images')
       if (!game) throw new NotFoundException("Game Not Found");
@@ -111,7 +116,7 @@ export class GameAdminService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse('game', 'detail'), game);
+      return this.responseService.success(true, StringHelper.successResponseAdmin('Game', 'Detail'), game);
     } catch (error) {
       await this.logsService.logging({
         target: TargetLogEnum.GAME,
@@ -143,7 +148,7 @@ export class GameAdminService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse('game', 'delete'));
+      return this.responseService.success(true, StringHelper.successResponseAdmin('Game', 'Delete'));
     } catch (error) {
       await this.logsService.logging({
         target: TargetLogEnum.GAME,
@@ -171,7 +176,6 @@ export class GameAdminService {
           { description: searchRegex },
           { category: searchRegex },
           { maxLevel: searchRegex },
-          { "addedBy.name": searchRegex },
         ],
         deletedAt: null,
       };
@@ -187,7 +191,7 @@ export class GameAdminService {
       })
 
       return this.responseService.paging(
-        StringHelper.successResponse("game", "list"),
+        StringHelper.successResponseAdmin("Game", "List"),
         games,
         {
           totalData: Number(total[0]?.total) ?? 0,
