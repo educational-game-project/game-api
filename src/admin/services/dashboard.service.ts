@@ -83,7 +83,7 @@ export class DashboardService {
         success: true,
       })
 
-      return this.responseService.success(true, StringHelper.successResponse('get', 'dashboard'), result)
+      return this.responseService.success(true, StringHelper.successResponseAdmin('Get', 'Dashboard'), result)
     } catch (error) {
       await this.logsService.logging({
         target: TargetLogEnum.DASHBOARD,

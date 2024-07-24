@@ -22,6 +22,7 @@ export class AuthAdminController {
     summary: 'Login Admin',
     description: 'Login Admin',
     tags: ["Admin", "Auth", "Login"],
+    operationId: "Login-Admin",
   })
   @ApiOkResponse({
     description: "Login successfully",
@@ -207,6 +208,7 @@ export class AuthAdminController {
     summary: 'Refresh Access Token',
     description: 'Refresh Access Token',
     tags: ["Admin", "Auth", "Access Token"],
+    operationId: "Refresh-Access-Token",
   })
   @ApiOkResponse({
     description: "Auth Verify RefreshToken successfully",
@@ -370,6 +372,7 @@ export class AuthAdminController {
     summary: 'Change Admin Password',
     description: 'This endpoint allows admins to change their password.',
     tags: ["Admin", "Auth", "Change Password"],
+    operationId: "Change-Admin-Password",
   })
   @ApiBearerAuth('Authorization')
   @ApiOkResponse({
@@ -509,6 +512,7 @@ export class AuthAdminController {
     summary: 'Logout Admin',
     description: 'This endpoint allows admins to logout.',
     tags: ["Admin", "Auth", "Logout"],
+    operationId: "Admin-Logout",
   })
   @ApiBearerAuth('Authorization')
   @ApiOkResponse({
