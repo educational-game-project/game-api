@@ -48,7 +48,28 @@ export function leaderboardPipeline(game: any): PipelineStage[] {
             },
           },
           {
-            $set: { image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] } }
+            $lookup: {
+              from: "schools",
+              localField: "school",
+              foreignField: "_id",
+              as: "school",
+              pipeline: [
+                { $match: { deletedAt: null } },
+                {
+                  $project: {
+                    _id: 1,
+                    name: 1,
+                    address: 1,
+                  }
+                }
+              ]
+            }
+          },
+          {
+            $set: {
+              image: { $ifNull: [{ $arrayElemAt: ["$image", 0] }, null] },
+              school: { $ifNull: [{ $arrayElemAt: ["$school", 0] }, null] },
+            }
           },
           {
             $project: {
