@@ -84,7 +84,7 @@ export class LogsService {
       let logs = await this.logsModel.aggregate(logsPipeline(searchOption, SKIP, LIMIT_PAGE));
       const total = await this.logsModel.aggregate(logsPipeline(searchOption)).count("total");
 
-      return this.responseService.paging(StringHelper.successResponse("log", "list"),
+      return this.responseService.paging(StringHelper.successResponseAdmin("Log", "Histories"),
         logs,
         {
           totalData: Number(total[0]?.total) ?? 0,
@@ -107,7 +107,7 @@ export class LogsService {
       if (!log) throw new NotFoundException("Log Not Found");
       await this.logsModel.updateOne({ _id: body.id }, { deletedAt: new Date() });
 
-      return this.responseService.success(true, StringHelper.successResponse("log", "delete"));
+      return this.responseService.success(true, StringHelper.successResponseAdmin("Log", "Delete"));
     } catch (error) {
       this.logger.error(this.deleteLog.name);
       this.logging({ target: TargetLogEnum.LOG, description: `${req?.user?.name} failed delete logs.`, success: false, summary: JSON.stringify(body) })

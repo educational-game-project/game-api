@@ -23,6 +23,16 @@ export function logsPipeline(query: any, skip?: number, limit?: number): Pipelin
               localField: "school",
               foreignField: "_id",
               as: "school",
+              pipeline: [
+                { $match: { deletedAt: null } },
+                {
+                  $project: {
+                    _id: 1,
+                    name: 1,
+                    address: 1,
+                  }
+                }
+              ]
             },
           },
           {
@@ -35,11 +45,11 @@ export function logsPipeline(query: any, skip?: number, limit?: number): Pipelin
             $project: {
               _id: 1,
               name: 1,
-              image: 1,
-              school: 1,
               email: 1,
               phoneNumber: 1,
-              isActive: 1
+              isActive: 1,
+              image: 1,
+              school: 1,
             }
           }
         ]
