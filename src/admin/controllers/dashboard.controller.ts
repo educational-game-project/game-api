@@ -18,7 +18,6 @@ export class DashboardController {
 
   @Get()
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @ApiOperation({
@@ -112,7 +111,7 @@ export class DashboardController {
         },
         message: {
           type: "string",
-          example: "Password is incorrect!",
+          example: "Invalid Request Body",
         },
         server_time: {
           type: "string",
