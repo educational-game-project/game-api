@@ -13,7 +13,7 @@ import { DefineGameDTO, EditGameDTO, ListGameDTO } from "@app/common/dto/game.dt
 import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { LogsService } from "../services/log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
-import { ApiBadRequestResponse, ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from "@nestjs/swagger";
 
 @ApiTags("Admin - Games")
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
@@ -43,6 +43,7 @@ export class GameAdminController {
     tags: ["Admin", "Games"],
     operationId: "Add-Game",
   })
+  @ApiBearerAuth('Authorization')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -225,6 +226,7 @@ export class GameAdminController {
     tags: ["Admin", "Games"],
     operationId: "Edit-Game",
   })
+  @ApiBearerAuth('Authorization')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -430,6 +432,7 @@ export class GameAdminController {
     tags: ["Admin", "Games"],
     operationId: "Game-List",
   })
+  @ApiBearerAuth('Authorization')
   @ApiOkResponse({
     description: "Game fetched successfully",
     schema: {
@@ -772,6 +775,7 @@ export class GameAdminController {
     tags: ["Admin", "Games"],
     operationId: "Game-Detail",
   })
+  @ApiBearerAuth('Authorization')
   @ApiOkResponse({
     description: "Game Detail Fetched successfully",
     schema: {
@@ -1090,6 +1094,7 @@ export class GameAdminController {
     tags: ["Admin", "Games"],
     operationId: "Game-Delete",
   })
+  @ApiBearerAuth('Authorization')
   @ApiOkResponse({
     description: "Game deleted successfully",
     schema: {

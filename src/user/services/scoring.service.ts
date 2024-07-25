@@ -95,7 +95,7 @@ export class ScoreService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("score", 'get'), { game, leaderboard, });
+      return this.responseService.success(true, StringHelper.successResponse("score", 'get_leaderboard'), { game, leaderboard, });
     } catch (error) {
       await this.logsService.logging({
         target: TargetLogEnum.SCORE,

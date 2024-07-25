@@ -64,7 +64,14 @@ export class AuthService {
     let { isValid, user } = await this.authHelper.validate(refreshToken);
 
     try {
-      if (!user) user = await this.userModel.findOne({ refreshToken })
+      if (!user) user = await this.userModel.findOne({ refreshToken }).populate(globalPopulate({
+        school: true,
+        user: false,
+        addedBy: false,
+        image: true,
+        images: false,
+        admins: false,
+      }));
 
       if (user) {
         user = user.toObject();
