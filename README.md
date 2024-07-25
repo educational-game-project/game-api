@@ -91,6 +91,10 @@ Contributions are always welcome!
 
 If you have any feedback, please reach out to us at iwan.suryaningrat28@gmail.com
 
+## Support
+
+For support, email iwan.suryaningrat28@gmail.com.
+
 ## License
 
 [MIT](https://github.com/nestjs/nest/blob/master/LICENSE)
