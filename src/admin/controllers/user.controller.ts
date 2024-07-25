@@ -15,9 +15,9 @@ import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { StudentsService } from "../services/students.service";
 import { LogsService } from "../services/log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from "@nestjs/swagger";
 
-@ApiTags("Admin - Users Management")
+@ApiTags("Admin-Users-Management")
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/user")
 export class UserAdminController {
@@ -42,6 +42,110 @@ export class UserAdminController {
       limits: limitImageUpload(),
     }),
   )
+  @ApiOperation({
+    summary: "Add Admin",
+    description: "Add Admin",
+    tags: ["Admin", 'User-Management', 'Add-Admin'],
+    operationId: "Add-Admin",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiConsumes('multipart/form-data')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Already Exist!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async create(
     @Body() body: CreateUserDTO,
     @UploadedFile() media: Express.Multer.File,
@@ -74,6 +178,110 @@ export class UserAdminController {
       limits: limitImageUpload(),
     }),
   )
+  @ApiOperation({
+    summary: "Edit Admin",
+    description: "Edit Admin",
+    tags: ["Admin", 'User-Management', 'Edit-Admin'],
+    operationId: "Edit-Admin",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiConsumes('multipart/form-data')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Already Exist!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async updateAdmin(
     @Body() body: UpdateUserDTO,
     @UploadedFile() media: Express.Multer.File,
@@ -100,6 +308,110 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: "Admin List",
+    description: "Search Admin List",
+    tags: ["Admin", "Admins"],
+    operationId: "Admin-List",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Invalid Request Body!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+
   async find(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
     return this.userService.findAdmin(body, req);
   }
@@ -108,6 +420,109 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: "Delete Admin",
+    description: "Delete Admin",
+    tags: ["Admin", "Admins"],
+    operationId: "Delete-Admin",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Invalid Request Body!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async delete(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.userService.deleteAdmin(body, req);
   }
@@ -116,6 +531,109 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: "Detail Admin",
+    description: "Detail Admin",
+    tags: ["Admin", "Admins"],
+    operationId: "Detail-Admin",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Invalid Request Body!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async detailAdmin(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.userService.detailAdmin(body, req);
   }
@@ -124,6 +642,108 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: "Get Profile",
+    description: "Get Profile",
+    tags: ["Admin", "Admins"],
+    operationId: "Get-Profile",
+  })
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Invalid Request Body!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async getProfile(@Req() req: Request,): Promise<any> {
     return this.userService.getUserDetail(req);
   }
@@ -132,6 +752,85 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: "Get Active User",
+    description: "Get Active User",
+    tags: ["Admin", "Admins"],
+    operationId: "Get-Active-User",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Invalid Request Body!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async getActiveUser(@Req() req: Request,): Promise<any> {
     return this.userService.getActiveUser(req);
   }
@@ -148,6 +847,110 @@ export class UserAdminController {
       limits: limitImageUpload(),
     }),
   )
+  @ApiOperation({
+    summary: "Add Student",
+    description: "Add New Student",
+    tags: ["Admin", "Students"],
+    operationId: "Add-Student",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiConsumes('multipart/form-data')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Already Exist!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async addStudent(
     @Body() body: CreateUserDTO,
     @UploadedFile() media: Express.Multer.File,
@@ -180,6 +983,109 @@ export class UserAdminController {
       limits: limitImageUpload(),
     }),
   )
+  @ApiOperation({
+    summary: "Edit Student",
+    description: "Edit Student",
+    tags: ["Admin", "Students"],
+    operationId: "Edit-Student",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Already Exist!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async editStudent(
     @Body() body: UpdateUserDTO,
     @UploadedFile() media: Express.Multer.File,
@@ -206,6 +1112,85 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: "Search Student",
+    description: "Search Student",
+    tags: ["Admin", "Students"],
+    operationId: "Search-Student",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Already Exist!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async listStudents(
     @Body() body: SearchDTO,
     @Req() req: Request,
@@ -217,6 +1202,109 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: "Delete Student",
+    description: "Delete Student",
+    tags: ["Admin", "Students"],
+    operationId: "Delete-Student",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Already Exist!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async deleteStudent(
     @Body() body: ByIdDTO,
     @Req() req: Request,
@@ -228,6 +1316,109 @@ export class UserAdminController {
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: "Detail Student",
+    description: "Detail Student",
+    tags: ["Admin", "Students"],
+    operationId: "Detail-Student",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Already Exist!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async detailStudent(
     @Body() body: ByIdDTO,
     @Req() req: Request,
@@ -239,6 +1430,85 @@ export class UserAdminController {
   @Roles([UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
+  @ApiOperation({
+    summary: "Get Active Student",
+    description: "Get Active Student",
+    tags: ["Admin", "Students"],
+    operationId: "Get-Active-Student",
+  })
+  @ApiBearerAuth('Authorization')
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Already Exist!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 401,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiInternalServerErrorResponse({
+    description: "Internal Server Error",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 500,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Internal Server Error",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   async getActiveStudent(@Req() req: Request,): Promise<any> {
     return this.studentsService.getActiveStudent(req);
   }

@@ -25,7 +25,7 @@ export class RecordController {
     summary: "Record a new report",
     description: "Record a new report",
     tags: ["Records"],
-    operationId: "record"
+    operationId: "Record"
   })
   @ApiOkResponse({
     description: "Record Success",

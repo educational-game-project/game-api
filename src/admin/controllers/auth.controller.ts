@@ -8,7 +8,7 @@ import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { ApiBadRequestResponse, ApiBearerAuth, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 
-@ApiTags("Admin - Auth")
+@ApiTags("Admin-Auth")
 @Controller("admin/auth")
 export class AuthAdminController {
   constructor(
@@ -423,30 +423,6 @@ export class AuthAdminController {
       }
     },
   })
-  @ApiNotFoundResponse({
-    description: "User Not Found",
-    schema: {
-      type: "object",
-      properties: {
-        statusCode: {
-          type: "number",
-          example: 404,
-        },
-        status: {
-          type: "string",
-          example: "error",
-        },
-        message: {
-          type: "string",
-          example: "User Not Found!",
-        },
-        server_time: {
-          type: "string",
-          example: "2022-05-01T00:00:00Z",
-        },
-      }
-    }
-  })
   @ApiUnauthorizedResponse({
     description: "Unauthorized",
     schema: {
@@ -463,6 +439,30 @@ export class AuthAdminController {
         message: {
           type: "string",
           example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "User Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "User Not Found!",
         },
         server_time: {
           type: "string",

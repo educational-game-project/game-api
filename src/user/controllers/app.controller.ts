@@ -17,7 +17,7 @@ export class AppController {
     summary: "Get Default",
     description: "Get Default",
     tags: ["Default"],
-    operationId: "getHello"
+    operationId: "Get-Hello"
   })
   @ApiOkResponse({
     description: "Get Hello successfully",

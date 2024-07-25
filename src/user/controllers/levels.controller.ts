@@ -26,7 +26,7 @@ export class LevelsController {
     summary: "Init Level",
     description: "Init Level",
     tags: ["Levels"],
-    operationId: "initLevel"
+    operationId: "Init-Level"
   })
   @ApiBearerAuth('Authorization')
   @ApiOkResponse({
@@ -493,7 +493,7 @@ export class LevelsController {
     summary: "Find Level",
     description: "Find Level",
     tags: ["Levels"],
-    operationId: "findLevel"
+    operationId: "Find-Level"
   })
   @ApiBearerAuth('Authorization')
   @ApiOkResponse({

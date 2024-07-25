@@ -15,7 +15,7 @@ import { LogsService } from "../services/log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from "@nestjs/swagger";
 
-@ApiTags("Admin - Games")
+@ApiTags("Admin-Games")
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("admin/games")
 export class GameAdminController {
@@ -328,30 +328,6 @@ export class GameAdminController {
       }
     },
   })
-  @ApiNotFoundResponse({
-    description: "Game Not Found",
-    schema: {
-      type: "object",
-      properties: {
-        statusCode: {
-          type: "number",
-          example: 404,
-        },
-        status: {
-          type: "string",
-          example: "error",
-        },
-        message: {
-          type: "string",
-          example: "Game Not Found!",
-        },
-        server_time: {
-          type: "string",
-          example: "2022-05-01T00:00:00Z",
-        },
-      }
-    }
-  })
   @ApiUnauthorizedResponse({
     description: "Unauthorized",
     schema: {
@@ -368,6 +344,30 @@ export class GameAdminController {
         message: {
           type: "string",
           example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Game Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Not Found!",
         },
         server_time: {
           type: "string",
@@ -689,30 +689,6 @@ export class GameAdminController {
       }
     },
   })
-  @ApiNotFoundResponse({
-    description: "Game Not Found",
-    schema: {
-      type: "object",
-      properties: {
-        statusCode: {
-          type: "number",
-          example: 404,
-        },
-        status: {
-          type: "string",
-          example: "error",
-        },
-        message: {
-          type: "string",
-          example: "Game Not Found!",
-        },
-        server_time: {
-          type: "string",
-          example: "2022-05-01T00:00:00Z",
-        },
-      }
-    }
-  })
   @ApiUnauthorizedResponse({
     description: "Unauthorized",
     schema: {
@@ -729,6 +705,30 @@ export class GameAdminController {
         message: {
           type: "string",
           example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Game Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Not Found!",
         },
         server_time: {
           type: "string",
@@ -1008,30 +1008,6 @@ export class GameAdminController {
       }
     },
   })
-  @ApiNotFoundResponse({
-    description: "Game Not Found",
-    schema: {
-      type: "object",
-      properties: {
-        statusCode: {
-          type: "number",
-          example: 404,
-        },
-        status: {
-          type: "string",
-          example: "error",
-        },
-        message: {
-          type: "string",
-          example: "Game Not Found!",
-        },
-        server_time: {
-          type: "string",
-          example: "2022-05-01T00:00:00Z",
-        },
-      }
-    }
-  })
   @ApiUnauthorizedResponse({
     description: "Unauthorized",
     schema: {
@@ -1048,6 +1024,30 @@ export class GameAdminController {
         message: {
           type: "string",
           example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Game Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Not Found!",
         },
         server_time: {
           type: "string",
@@ -1147,30 +1147,6 @@ export class GameAdminController {
       }
     },
   })
-  @ApiNotFoundResponse({
-    description: "Game Not Found",
-    schema: {
-      type: "object",
-      properties: {
-        statusCode: {
-          type: "number",
-          example: 404,
-        },
-        status: {
-          type: "string",
-          example: "error",
-        },
-        message: {
-          type: "string",
-          example: "Game Not Found!",
-        },
-        server_time: {
-          type: "string",
-          example: "2022-05-01T00:00:00Z",
-        },
-      }
-    }
-  })
   @ApiUnauthorizedResponse({
     description: "Unauthorized",
     schema: {
@@ -1187,6 +1163,30 @@ export class GameAdminController {
         message: {
           type: "string",
           example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Game Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Game Not Found!",
         },
         server_time: {
           type: "string",

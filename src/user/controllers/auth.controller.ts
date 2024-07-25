@@ -340,7 +340,7 @@ export class AuthController {
     summary: 'Refresh Token',
     description: 'This endpoint allows users to refresh token.',
     tags: ["User", "Auth"],
-    operationId: "RefreshToken",
+    operationId: "Refresh-Token",
   })
   async verifyRefreshToken(@Body() body: ReauthDTO, @Request() req) {
     return this.authService.verifyRefreshToken(body, req);

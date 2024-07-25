@@ -11,7 +11,7 @@ import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { ApiBadRequestResponse, ApiBearerAuth, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 
-@ApiTags("Admin - Logs")
+@ApiTags("Admin-Logs")
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
 @Controller('admin/logs')
@@ -345,30 +345,6 @@ export class LogsController {
       }
     },
   })
-  @ApiNotFoundResponse({
-    description: "Log Not Found",
-    schema: {
-      type: "object",
-      properties: {
-        statusCode: {
-          type: "number",
-          example: 404,
-        },
-        status: {
-          type: "string",
-          example: "error",
-        },
-        message: {
-          type: "string",
-          example: "Log Not Found!",
-        },
-        server_time: {
-          type: "string",
-          example: "2022-05-01T00:00:00Z",
-        },
-      }
-    }
-  })
   @ApiUnauthorizedResponse({
     description: "Unauthorized",
     schema: {
@@ -385,6 +361,30 @@ export class LogsController {
         message: {
           type: "string",
           example: "Unauthorized",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
+  @ApiNotFoundResponse({
+    description: "Content Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 404,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "game_not_found",
         },
         server_time: {
           type: "string",

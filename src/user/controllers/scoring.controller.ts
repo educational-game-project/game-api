@@ -24,7 +24,7 @@ export class ScoreController {
     summary: "Get Leaderboard",
     description: "Get leaderboard of user",
     tags: ["Score", 'Leaderboard'],
-    operationId: "getLeaderboard"
+    operationId: "Get-Leaderboard"
   })
   @ApiBearerAuth('Authorization')
   @ApiOkResponse({
