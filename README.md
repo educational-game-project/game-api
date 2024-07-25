@@ -1,6 +1,6 @@
 # Educational Game API
 
-An API for Educational Game with uses, schools management and score statistics and users play histories.
+An API for Educational Game with users, schools management and score statistics and users play histories.
 
 ## Features
 
