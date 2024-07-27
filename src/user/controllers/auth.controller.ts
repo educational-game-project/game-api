@@ -691,6 +691,30 @@ export class AuthController {
       },
     },
   })
+  @ApiBadRequestResponse({
+    description: "Invalid Request Body",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 400,
+        },
+        status: {
+          type: "string",
+          example: "error",
+        },
+        message: {
+          type: "string",
+          example: "Invalid Request Body!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    },
+  })
   @ApiUnauthorizedResponse({
     description: "Unauthorized",
     schema: {
