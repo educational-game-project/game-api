@@ -15,7 +15,7 @@ import { Request } from "express";
 import { Model, Types } from "mongoose";
 
 @Injectable()
-export class LogsService {
+export class LogService {
   constructor(
     @InjectModel(Log.name) private logsModel: Model<Log>,
     @InjectModel(User.name) private usersModel: Model<User>,
@@ -25,7 +25,7 @@ export class LogsService {
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
   ) { }
 
-  private readonly logger = new Logger(LogsService.name);
+  private readonly logger = new Logger(LogService.name);
 
   async logging(data: ILogsData) {
     try {

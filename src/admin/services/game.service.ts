@@ -1,6 +1,6 @@
 import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { DefineGameDTO, EditGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
-import { ImagesService } from "@app/common/helpers/file.helpers";
+import { ImageService } from "@app/common/helpers/file.helpers";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { Game } from "@app/common/model/schema/game.schema";
 import { User } from "@app/common/model/schema/users.schema";
@@ -9,16 +9,16 @@ import { ResponseService } from "@app/common/response/response.service";
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
-import { LogsService } from "./log.service";
+import { LogService } from "./log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
 export class GameAdminService {
   constructor(
     @InjectModel(Game.name) private gameModel: Model<Game>,
-    @Inject(ImagesService) private imageService: ImagesService,
+    @Inject(ImageService) private imageService: ImageService,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(GameAdminService.name);
@@ -35,7 +35,7 @@ export class GameAdminService {
         addedBy: user,
       });
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${user?.name} success add game ${game?.name}`,
         success: true,
@@ -44,7 +44,7 @@ export class GameAdminService {
 
       return this.responseService.success(true, StringHelper.successResponseAdmin('Game', 'Add'));
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${user?.name} failed to add game`,
         success: false,
@@ -71,7 +71,7 @@ export class GameAdminService {
       game.set({ ...body })
       await game.save();
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${user?.name} success edit game ${game?.name}`,
         success: true,
@@ -80,7 +80,7 @@ export class GameAdminService {
 
       return this.responseService.success(true, StringHelper.successResponseAdmin('Game', 'Edit'));
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${user?.name} failed to edit game`,
         success: false,
@@ -109,7 +109,7 @@ export class GameAdminService {
         .populate('images')
       if (!game) throw new NotFoundException("Game Not Found");
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${user?.name} success get detail game ${game?.name}`,
         success: true,
@@ -118,7 +118,7 @@ export class GameAdminService {
 
       return this.responseService.success(true, StringHelper.successResponseAdmin('Game', 'Detail'), game);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${user?.name} failed to get detail game`,
         success: false,
@@ -141,7 +141,7 @@ export class GameAdminService {
       game.deletedAt = new Date();
       await game.save();
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${user?.name} success delete game ${game?.name}`,
         success: true,
@@ -150,7 +150,7 @@ export class GameAdminService {
 
       return this.responseService.success(true, StringHelper.successResponseAdmin('Game', 'Delete'));
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${user?.name} failed to delete game`,
         success: false,
@@ -183,7 +183,7 @@ export class GameAdminService {
       let games = await this.gameModel.aggregate(gamePipeline(searchOption, SKIP, LIMIT_PAGE));
       const total = await this.gameModel.aggregate(gamePipeline(searchOption)).count("total");
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${user?.name} success get list game`,
         success: true,
@@ -201,7 +201,7 @@ export class GameAdminService {
         },
       );
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${user?.name} failed to get list game`,
         success: false,

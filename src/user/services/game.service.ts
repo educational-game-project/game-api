@@ -7,14 +7,14 @@ import { ResponseService } from "@app/common/response/response.service";
 import { HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { LogsService } from "src/admin/services/log.service";
+import { LogService } from "src/admin/services/log.service";
 
 @Injectable()
 export class GameService {
   constructor(
     @InjectModel(Game.name) private gameModel: Model<Game>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(GameService.name);
@@ -26,7 +26,7 @@ export class GameService {
       const games = await this.gameModel.find({ author }).populate('images');
       if (!games?.length) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse('game'))
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${users?.name} success get list game`,
         success: true,
@@ -35,7 +35,7 @@ export class GameService {
 
       return this.responseService.success(true, StringHelper.successResponse('game', 'list'), games);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${users?.name} failed to get list game`,
         success: false,

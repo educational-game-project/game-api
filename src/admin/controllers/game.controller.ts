@@ -7,11 +7,11 @@ import { UserRole } from "@app/common/enums/role.enum";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
-import { ImagesService } from "@app/common/helpers/file.helpers";
+import { ImageService } from "@app/common/helpers/file.helpers";
 import { AnyFilesInterceptor } from "@nestjs/platform-express";
 import { DefineGameDTO, EditGameDTO, ListGameDTO } from "@app/common/dto/game.dto";
 import { ByIdDTO } from "@app/common/dto/byId.dto";
-import { LogsService } from "../services/log.service";
+import { LogService } from "../services/log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from "@nestjs/swagger";
 
@@ -21,8 +21,8 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConsumes, ApiInternal
 export class GameAdminController {
   constructor(
     private readonly gameService: GameAdminService,
-    @Inject(ImagesService) private imageService: ImagesService,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(ImageService) private imageService: ImageService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(GameAdminController.name);
@@ -198,7 +198,7 @@ export class GameAdminController {
 
       return this.gameService.defineGame(body, files, req);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${req?.user?.name} failed to add game`,
         success: false,
@@ -410,7 +410,7 @@ export class GameAdminController {
 
       return this.gameService.editGame(body, files, req);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.GAME,
         description: `${req?.user?.name} failed to edit game`,
         success: false,

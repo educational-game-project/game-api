@@ -4,16 +4,16 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { ScheduleModule } from "@nestjs/schedule";
 import { AppService } from "./user/services/app.service";
 import { AuthService } from "./user/services/auth.service";
-import { LogsService } from "./admin/services/log.service";
+import { LogService } from "./admin/services/log.service";
 import { GameService } from "./user/services/game.service";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { LevelsService } from "./user/services/levels.service";
+import { LevelService } from "./user/services/levels.service";
 import { ScoreService } from "./user/services/scoring.service";
 import { RecordService } from "./user/services/record.service";
 import { AuthAdminService } from "./admin/services/auth.service";
 import { UserAdminService } from "./admin/services/user.service";
-import { ImagesService } from "@app/common/helpers/file.helpers";
+import { ImageService } from "@app/common/helpers/file.helpers";
 import { GameAdminService } from "./admin/services/game.service";
 import { AppController } from "./user/controllers/app.controller";
 import { FileUploader } from "@app/common/utils/fileUploader.util";
@@ -29,7 +29,7 @@ import { SchedulerService } from "./admin/services/scheduler.service";
 import { ScoreCalculateHelper } from "@app/common/helpers/score.helper";
 import { ResponseService } from "@app/common/response/response.service";
 import { RecordController } from "./user/controllers/record.controller";
-import { LevelsController } from "./user/controllers/levels.controller";
+import { LevelController } from "./user/controllers/levels.controller";
 import { ScoreController } from "./user/controllers/scoring.controller";
 import { AuthAdminController } from "./admin/controllers/auth.controller";
 import { UserAdminController } from "./admin/controllers/user.controller";
@@ -63,7 +63,7 @@ import { DashboardController } from "./admin/controllers/dashboard.controller";
     GameController,
     AuthController,
     ScoreController,
-    LevelsController,
+    LevelController,
     RecordController,
     AuthAdminController,
     UserAdminController,
@@ -75,13 +75,13 @@ import { DashboardController } from "./admin/controllers/dashboard.controller";
   providers: [
     AuthHelper,
     AppService,
-    LogsService,
+    LogService,
     GameService,
     AuthService,
     ScoreService,
     FileUploader,
-    ImagesService,
-    LevelsService,
+    ImageService,
+    LevelService,
     RecordService,
     ResponseService,
     StudentsService,

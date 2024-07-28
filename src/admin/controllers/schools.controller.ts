@@ -3,7 +3,7 @@ import { SchoolAdminService } from "../services/schools.service";
 import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Put, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, HttpException, HttpCode, } from "@nestjs/common";
 import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
-import { ImagesService } from "@app/common/helpers/file.helpers";
+import { ImageService } from "@app/common/helpers/file.helpers";
 import { CreateSchoolDTO, EditSchoolDTO } from "@app/common/dto/school.dto";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { ByIdDTO } from "@app/common/dto/byId.dto";
@@ -13,7 +13,7 @@ import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { UserRole } from "@app/common/enums/role.enum";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
-import { LogsService } from "../services/log.service";
+import { LogService } from "../services/log.service";
 import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from "@nestjs/swagger";
 
 @ApiTags("Admin-Schools")
@@ -23,8 +23,8 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConsumes, ApiInternal
 export class SchoolAdminController {
   constructor(
     private schoolService: SchoolAdminService,
-    @Inject(ImagesService) private imageService: ImagesService,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(ImageService) private imageService: ImageService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(SchoolAdminService.name);
@@ -118,7 +118,7 @@ export class SchoolAdminController {
       }
     }
   })
-  async create(
+  async createSchool(
     @Body() body: CreateSchoolDTO,
     @UploadedFile() media: Express.Multer.File,
     @Req() req: any,
@@ -128,13 +128,13 @@ export class SchoolAdminController {
 
       return this.schoolService.create(body, files, req);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${req?.user?.name} failed to add school`,
         success: false,
         summary: JSON.stringify(body),
       })
-      this.logger.error(this.create.name);
+      this.logger.error(this.createSchool.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -253,7 +253,7 @@ export class SchoolAdminController {
       }
     }
   })
-  async edit(
+  async editSchool(
     @Body() body: EditSchoolDTO,
     @UploadedFiles() media: Array<Express.Multer.File>,
     @Req() req: any,
@@ -263,13 +263,13 @@ export class SchoolAdminController {
 
       return this.schoolService.edit(body, files, req);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${req?.user?.name} failed to edit school`,
         success: false,
         summary: JSON.stringify(body),
       })
-      this.logger.error(this.edit.name);
+      this.logger.error(this.editSchool.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -357,7 +357,7 @@ export class SchoolAdminController {
       }
     }
   })
-  async find(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
+  async findSchool(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
     return this.schoolService.find(body, req);
   }
 
@@ -467,7 +467,7 @@ export class SchoolAdminController {
       }
     }
   })
-  async detail(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
+  async detailSchool(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.schoolService.detail(body, req);
   }
 
@@ -577,7 +577,7 @@ export class SchoolAdminController {
       }
     }
   })
-  async delete(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
+  async deleteSchool(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.schoolService.delete(body, req);
   }
 }

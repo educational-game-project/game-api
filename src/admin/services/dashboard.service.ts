@@ -7,7 +7,7 @@ import { School } from "@app/common/model/schema/schools.schema";
 import { Game } from "@app/common/model/schema/game.schema";
 import { StringHelper } from "@app/common/helpers/string.helpers";
 import { UserRole } from "@app/common/enums/role.enum";
-import { LogsService } from "./log.service";
+import { LogService } from "./log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
@@ -18,7 +18,7 @@ export class DashboardService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
     @InjectModel(School.name) private readonly schoolModel: Model<School>,
     @InjectModel(Game.name) private readonly gameModel: Model<Game>,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(LogService) private readonly logService: LogService,
     @Inject(ResponseService) private readonly responseService: ResponseService,
   ) { }
 
@@ -77,7 +77,7 @@ export class DashboardService {
 
       if (user.role === UserRole.SUPER_ADMIN) delete result.admins
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.DASHBOARD,
         description: `${user?.name} success get dashboard data`,
         success: true,
@@ -85,7 +85,7 @@ export class DashboardService {
 
       return this.responseService.success(true, StringHelper.successResponseAdmin('Get', 'Dashboard'), result)
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.DASHBOARD,
         description: `${user?.name} failed get dashboard data`,
         success: false,

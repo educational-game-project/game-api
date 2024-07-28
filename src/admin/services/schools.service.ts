@@ -9,10 +9,10 @@ import { CreateSchoolDTO, EditSchoolDTO } from "@app/common/dto/school.dto";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { Image } from "@app/common/model/schema/subtype/images.subtype";
-import { ImagesService } from "@app/common/helpers/file.helpers";
+import { ImageService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { schoolPipeline } from "@app/common/pipeline/school.pipeline";
-import { LogsService } from "./log.service";
+import { LogService } from "./log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
@@ -20,9 +20,9 @@ export class SchoolAdminService {
   constructor(
     @InjectModel(School.name) private schoolModel: Model<School>,
     @InjectModel(User.name) private userModel: Model<User>,
-    @Inject(ImagesService) private imageService: ImagesService,
+    @Inject(ImageService) private imageService: ImageService,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(SchoolAdminService.name);
@@ -42,7 +42,7 @@ export class SchoolAdminService {
         addedBy: users._id,
       });
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${users?.name} success add school ${school?.name}`,
         success: true,
@@ -51,7 +51,7 @@ export class SchoolAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("schoool", "create"), school);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${users?.name} failed to add school`,
         success: false,
@@ -87,7 +87,7 @@ export class SchoolAdminService {
 
       school = await school.save();
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${users?.name} success edit school ${school?.name}`,
         success: true,
@@ -96,7 +96,7 @@ export class SchoolAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("schoool", "edit"), school);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${users?.name} failed to edit school`,
         success: false,
@@ -123,7 +123,7 @@ export class SchoolAdminService {
       const schools = await this.schoolModel.aggregate(schoolPipeline(searchOption, SKIP, LIMIT_PAGE));
       const total = await this.schoolModel.aggregate(schoolPipeline(searchOption)).count("total");
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${users?.name} success get school list`,
         success: true,
@@ -140,7 +140,7 @@ export class SchoolAdminService {
         },
       );
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${users?.name} failed to get school list`,
         success: false,
@@ -168,7 +168,7 @@ export class SchoolAdminService {
         ))
       if (!school) throw new NotFoundException("School Not Found");
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${users?.name} success get detail school ${school?.name}`,
         success: true,
@@ -177,7 +177,7 @@ export class SchoolAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("school", "get_detail"), school);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${users?.name} failed to get school detail`,
         success: false,
@@ -211,7 +211,7 @@ export class SchoolAdminService {
         await item.save();
       });
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${user?.name} success delete school ${school?.name}`,
         success: true,
@@ -220,7 +220,7 @@ export class SchoolAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("school", "delete"));
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${user?.name} failed to delete school`,
         success: false,

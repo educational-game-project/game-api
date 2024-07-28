@@ -2,7 +2,7 @@ import { Body, Controller, Delete, HttpStatus, Inject, Logger, Post, Request as 
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Request } from "express";
 import { imageFilter, limitImageUpload, } from "@app/common/utils/validators/file.validator";
-import { ImagesService } from "@app/common/helpers/file.helpers";
+import { ImageService } from "@app/common/helpers/file.helpers";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { UserAdminService } from "../services/user.service";
@@ -13,7 +13,7 @@ import { AuthenticationGuard } from "@app/common/auth/authentication.guard";
 import { AuthorizationGuard } from "@app/common/auth/authorization.guard";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
 import { StudentsService } from "../services/students.service";
-import { LogsService } from "../services/log.service";
+import { LogService } from "../services/log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConsumes, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from "@nestjs/swagger";
 
@@ -24,8 +24,8 @@ export class UserAdminController {
   constructor(
     private readonly userService: UserAdminService,
     private readonly studentsService: StudentsService,
-    @Inject(ImagesService) private imageHelper: ImagesService,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(ImageService) private imageHelper: ImageService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(UserAdminController.name);
@@ -146,7 +146,7 @@ export class UserAdminController {
       }
     }
   })
-  async create(
+  async createAdmin(
     @Body() body: CreateUserDTO,
     @UploadedFile() media: Express.Multer.File,
     @Req() req: any,
@@ -156,13 +156,13 @@ export class UserAdminController {
 
       return this.userService.addAdmin(body, files, req);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${req?.user?.name} failed to add admin`,
         success: false,
         summary: JSON.stringify(body),
       })
-      this.logger.error(this.create.name);
+      this.logger.error(this.createAdmin.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -292,7 +292,7 @@ export class UserAdminController {
 
       return this.userService.updateAdmin(body, files, req);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${req?.user?.name} failed to edit admin`,
         success: false,
@@ -411,8 +411,7 @@ export class UserAdminController {
       }
     }
   })
-
-  async find(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
+  async findAdmin(@Body() body: SearchDTO, @Req() req: Request): Promise<any> {
     return this.userService.findAdmin(body, req);
   }
 
@@ -523,7 +522,7 @@ export class UserAdminController {
       }
     }
   })
-  async delete(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
+  async deleteAdmin(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
     return this.userService.deleteAdmin(body, req);
   }
 
@@ -961,7 +960,7 @@ export class UserAdminController {
 
       return this.studentsService.addStudent(body, files, req);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.STUDENT,
         description: `${req?.user?.name} failed to add student`,
         success: false,
@@ -1096,7 +1095,7 @@ export class UserAdminController {
 
       return this.studentsService.editStudent(body, files, req);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.STUDENT,
         description: `${req?.user?.name} failed to edit student list`,
         success: false,

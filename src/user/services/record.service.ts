@@ -8,11 +8,11 @@ import { StringHelper } from "@app/common/helpers/string.helpers";
 import { CreateReportDTO } from "@app/common/dto/report.dto";
 import { Game } from "@app/common/model/schema/game.schema";
 import { Level } from "@app/common/model/schema/levels.schema";
-import { LevelsService } from "./levels.service";
+import { LevelService } from "./levels.service";
 import { ScoreService } from "./scoring.service";
 import { StatusRecord } from "@app/common/enums/statusRecord.enum";
 import { ReportType } from "@app/common/enums/reportType.enum";
-import { LogsService } from "src/admin/services/log.service";
+import { LogService } from "src/admin/services/log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
@@ -23,9 +23,9 @@ export class RecordService {
     @InjectModel(Game.name) private gameModel: Model<Game>,
     @InjectModel(Level.name) private levelModel: Model<Level>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-    @Inject(LevelsService) private readonly levelsService: LevelsService,
+    @Inject(LevelService) private readonly levelService: LevelService,
     @Inject(ScoreService) private readonly scoreService: ScoreService,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(RecordService.name);
@@ -39,7 +39,7 @@ export class RecordService {
       let game = await this.gameModel.findOne({ _id: new Types.ObjectId(body.game) });
       if (!game) return this.responseService.error(HttpStatus.NOT_FOUND, StringHelper.notFoundResponse("game"))
 
-      let currentLevel = await this.levelsService.getLevel({ id: body.game }, req)
+      let currentLevel = await this.levelService.getLevel({ id: body.game }, req)
       currentLevel = currentLevel.data;
 
       let current = await this.recordModel.findOne({
@@ -93,7 +93,7 @@ export class RecordService {
 
       if (!current.isValid) await this.scoreService.calculateScore(current?._id, req);
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.RECORD,
         description: `${users?.name} success add record of game ${game?.name}`,
         success: true,
@@ -102,7 +102,7 @@ export class RecordService {
 
       return this.responseService.success(true, StringHelper.successResponse("record", "add"), current);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.RECORD,
         description: `${users?.name} success add record of game `,
         success: false,
@@ -127,7 +127,7 @@ export class RecordService {
         user: users._id,
       });
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.RECORD,
         description: `${users?.name} success init record of game ${game?.name}`,
         success: true,
@@ -136,7 +136,7 @@ export class RecordService {
 
       return record;
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.RECORD,
         description: `${users?.name} failed init record of game `,
         success: false,

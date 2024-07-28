@@ -6,13 +6,13 @@ import { extname } from "path";
 import { FileUploader } from "../utils/fileUploader.util";
 
 @Injectable()
-export class ImagesService {
+export class ImageService {
   constructor(
     @InjectModel(Image.name) private readonly imageModel: Model<Image>,
     @Inject(FileUploader) private uploader: FileUploader,
   ) { }
 
-  private readonly logger = new Logger(ImagesService.name);
+  private readonly logger = new Logger(ImageService.name);
 
   async define(files: Array<Express.Multer.File>): Promise<any> {
     try {

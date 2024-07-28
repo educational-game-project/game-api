@@ -10,10 +10,10 @@ import { UserRole } from "@app/common/enums/role.enum";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { ByIdDTO } from "@app/common/dto/byId.dto";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
-import { ImagesService } from "@app/common/helpers/file.helpers";
+import { ImageService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { userPipeline } from "@app/common/pipeline/user.pipeline";
-import { LogsService } from "./log.service";
+import { LogService } from "./log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
@@ -23,8 +23,8 @@ export class UserAdminService {
     @InjectModel(School.name) private schoolModel: Model<School>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
-    @Inject(ImagesService) private imageHelper: ImagesService,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(ImageService) private imageHelper: ImageService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(UserAdminService.name);
@@ -59,7 +59,7 @@ export class UserAdminService {
       delete admin.password;
       delete admin.school.admins;
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} success add admin ${admin?.name}`,
         success: true,
@@ -68,7 +68,7 @@ export class UserAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("user", "add_admin"), admin,);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} failed to add admin`,
         success: false,
@@ -120,7 +120,7 @@ export class UserAdminService {
 
       admin = await admin.save();
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} success edit admin ${admin?.name}`,
         success: true,
@@ -129,7 +129,7 @@ export class UserAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("user", "edit_admin"), admin,);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} failed to edit admin`,
         success: false,
@@ -164,7 +164,7 @@ export class UserAdminService {
       const admin = await this.userModel.aggregate(userPipeline(searchOption, SKIP, LIMIT_PAGE));
       const total = await this.userModel.aggregate(userPipeline(searchOption)).count("total");
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} success get admin list`,
         success: true,
@@ -178,7 +178,7 @@ export class UserAdminService {
         perPage: LIMIT_PAGE,
       },);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} failed to get admin list`,
         success: false,
@@ -213,7 +213,7 @@ export class UserAdminService {
       school.adminsCount--;
       await school.save();
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
         description: `${users?.name} success delete admin ${admin?.name}`,
         success: true,
@@ -222,7 +222,7 @@ export class UserAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("admin", "delete"));
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} failed to delete admin`,
         success: false,
@@ -250,7 +250,7 @@ export class UserAdminService {
         ))
       if (!admin) throw new NotFoundException("Admin Not Found");
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} success get detail admin ${admin?.name}`,
         success: true,
@@ -259,7 +259,7 @@ export class UserAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("admin", "detail"), admin);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} failed to get admin detail`,
         success: false,
@@ -288,7 +288,7 @@ export class UserAdminService {
 
       if (!user) throw new NotFoundException("User Not Found");
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} success get detail user`,
         success: true,
@@ -296,7 +296,7 @@ export class UserAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("user", "get_Student"), user)
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} failed to get user detail`,
         success: false,
@@ -313,7 +313,7 @@ export class UserAdminService {
       let activeAdmin = await this.userModel.count({ role: { $ne: UserRole.USER }, deletedAt: null, isActive: { $eq: true } })
       let activeUser = await this.userModel.count({ role: UserRole.USER, deletedAt: null, isActive: { $eq: true } })
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} success get active users`,
         success: true,
@@ -321,7 +321,7 @@ export class UserAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("user", "get_active_user"), { activeAdmin, activeUser })
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} failed to get active users`,
         success: false,

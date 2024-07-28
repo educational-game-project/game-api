@@ -9,7 +9,7 @@ import { Game } from "@app/common/model/schema/game.schema";
 import { leaderboardPipeline } from "@app/common/pipeline/leaderboard.pipeline";
 import { School } from "@app/common/model/schema/schools.schema";
 import { scorePipeline } from "@app/common/pipeline/score.pipeline";
-import { LogsService } from "./log.service";
+import { LogService } from "./log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
@@ -20,7 +20,7 @@ export class ScoreAdminService {
     @InjectModel(Game.name) private gameModel: Model<Game>,
     @InjectModel(School.name) private schoolModel: Model<School>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(ScoreAdminService.name);
@@ -39,7 +39,7 @@ export class ScoreAdminService {
         return item;
       })
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCORE,
         description: `${users?.name} success get score data of ${user?.name}`,
         success: true,
@@ -48,7 +48,7 @@ export class ScoreAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse('get', 'score'), result);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCORE,
         description: `${users?.name} failed get score data`,
         success: false,
@@ -92,7 +92,7 @@ export class ScoreAdminService {
         }
       };
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCORE,
         description: `${users?.name} success get leaderboard data of game ${game?.name}`,
         success: true,
@@ -101,7 +101,7 @@ export class ScoreAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse("score", 'get'), result);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCORE,
         description: `${users?.name} failed get leaderboard data of game `,
         success: false,
@@ -128,7 +128,7 @@ export class ScoreAdminService {
       delete result?._id;
 
       result.scores = this.groupScoresByGamePlayed(result.scores);
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCORE,
         description: `${users?.name} success get scores chart data of user ${user?.name}`,
         success: true,
@@ -137,7 +137,7 @@ export class ScoreAdminService {
 
       return this.responseService.success(true, StringHelper.successResponse('get', 'score'), result);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.SCORE,
         description: `${users?.name} failed get scores chart data of user`,
         success: false,

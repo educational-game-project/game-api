@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, HttpCode, HttpStatus, Post, Request as Req, UseGuards } from "@nestjs/common";
-import { LogsService } from "../services/log.service";
+import { LogService } from "../services/log.service";
 import { UserRole } from "@app/common/enums/role.enum";
 import { Roles } from "@app/common/decorators/roles.decorator";
 import { ResponseStatusCode } from "@app/common/response/response.decorator";
@@ -17,7 +17,7 @@ import { TargetLogEnum } from "@app/common/enums/log.enum";
 @Controller('admin/logs')
 export class LogsController {
   constructor(
-    private readonly logsService: LogsService,
+    private readonly logService: LogService,
   ) { }
 
   @Post()
@@ -280,7 +280,7 @@ export class LogsController {
     }
   })
   async getLogs(@Body() body: SearchDTO, @Req() req: Request) {
-    return await this.logsService.getLogs(body, req);
+    return await this.logService.getLogs(body, req);
   }
 
   @Delete()
@@ -418,6 +418,6 @@ export class LogsController {
     }
   })
   async deleteLog(@Body() body: ByIdDTO, @Req() req: Request) {
-    return await this.logsService.deleteLog(body, req);
+    return await this.logService.deleteLog(body, req);
   }
 }

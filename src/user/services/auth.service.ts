@@ -8,7 +8,7 @@ import { StringHelper } from "@app/common/helpers/string.helpers";
 import { UserRole } from "@app/common/enums/role.enum";
 import { AuthHelper } from "@app/common/helpers/auth.helper";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
-import { LogsService } from "src/admin/services/log.service";
+import { LogService } from "src/admin/services/log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
@@ -17,7 +17,7 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<User>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(AuthHelper) private readonly authHelper: AuthHelper,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(AuthService.name);
@@ -37,7 +37,7 @@ export class AuthService {
       const tokens = await this.authHelper.generateTokens(user._id, { name: user.name, role: user.role });
       await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken, isActive: true } });
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.AUTH,
         description: `${user.name} login into game`,
         success: true,
@@ -47,7 +47,7 @@ export class AuthService {
 
       return this.responseService.success(true, StringHelper.successResponse("user", "login"), { user, tokens });
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.AUTH,
         description: `${body.name} failed login into game`,
         success: false,
@@ -80,7 +80,7 @@ export class AuthService {
         const tokens = await this.authHelper.generateTokens(user._id, { name: user.name, role: user.role });
         await this.userModel.updateOne({ _id: user._id }, { $set: { refreshToken: tokens.refreshToken } });
 
-        await this.logsService.logging({
+        await this.logService.logging({
           target: TargetLogEnum.AUTH,
           description: `${user.name} reverify refresh token`,
           success: true,
@@ -91,7 +91,7 @@ export class AuthService {
         return this.responseService.success(true, StringHelper.successResponse("auth", "verifyRefreshToken"), { user, tokens });
       }
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.AUTH,
         description: `${user?.name} failed reverify refresh token`,
         success: false,
@@ -106,7 +106,7 @@ export class AuthService {
   public async logout(req: any): Promise<any> {
     let user = <User>req.user;
     try {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.AUTH,
         description: `${user?.name} logout successfully.`,
         success: true,
@@ -116,7 +116,7 @@ export class AuthService {
 
       return this.responseService.success(true, StringHelper.successResponse("auth", "logout"));
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.AUTH,
         description: `${user?.name} failed to logout`,
         success: false,

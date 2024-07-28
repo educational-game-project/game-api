@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Request as Req, UseGuards } from "@nestjs/common";
 import { Request } from "express";
-import { LevelsService } from "../services/levels.service";
+import { LevelService } from "../services/levels.service";
 import { InitLevelDTO } from "@app/common/dto/levels.dto";
 import { Roles } from "@app/common/decorators/roles.decorator";
 import { UserRole } from "@app/common/enums/role.enum";
@@ -14,9 +14,9 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiInternalServerErrorResponse, A
 @Roles([UserRole.USER])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller("levels")
-export class LevelsController {
+export class LevelController {
   constructor(
-    private readonly levelsService: LevelsService
+    private readonly levelService: LevelService
   ) { }
 
   @Post("init")
@@ -483,7 +483,7 @@ export class LevelsController {
     }
   })
   async initLevel(@Body() body: InitLevelDTO, @Req() req: Request): Promise<any> {
-    return this.levelsService.initLevel(body, req);
+    return this.levelService.initLevel(body, req);
   }
 
   @Post("find")
@@ -950,6 +950,6 @@ export class LevelsController {
     }
   })
   async getLevel(@Body() body: ByIdDTO, @Req() req: Request): Promise<any> {
-    return this.levelsService.getLevel(body, req);
+    return this.levelService.getLevel(body, req);
   }
 }

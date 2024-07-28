@@ -9,10 +9,10 @@ import { School } from "@app/common/model/schema/schools.schema";
 import { UserRole } from "@app/common/enums/role.enum";
 import { SearchDTO } from "@app/common/dto/search.dto";
 import { ByIdDTO } from "@app/common/dto/byId.dto";
-import { ImagesService } from "@app/common/helpers/file.helpers";
+import { ImageService } from "@app/common/helpers/file.helpers";
 import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { userPipeline } from "@app/common/pipeline/user.pipeline";
-import { LogsService } from "./log.service";
+import { LogService } from "./log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
 
 @Injectable()
@@ -21,8 +21,8 @@ export class StudentsService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(School.name) private schoolModel: Model<School>,
     @Inject(ResponseService) private readonly responseService: ResponseService,
-    @Inject(ImagesService) private imageHelper: ImagesService,
-    @Inject(LogsService) private readonly logsService: LogsService,
+    @Inject(ImageService) private imageHelper: ImageService,
+    @Inject(LogService) private readonly logService: LogService,
   ) { }
 
   private readonly logger = new Logger(StudentsService.name);
@@ -57,7 +57,7 @@ export class StudentsService {
       school.studentsCount++;
       school.save();
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.STUDENT,
         description: `${users?.name} success add student ${student?.name}`,
         success: true,
@@ -66,7 +66,7 @@ export class StudentsService {
 
       return this.responseService.success(true, StringHelper.successResponse("user", "add_student"), student);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.STUDENT,
         description: `${users?.name} failed to add student`,
         success: false,
@@ -107,7 +107,7 @@ export class StudentsService {
       }
       await user.save();
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.STUDENT,
         description: `${users?.name} success edit student ${user?.name}`,
         success: true,
@@ -116,7 +116,7 @@ export class StudentsService {
 
       return this.responseService.success(true, StringHelper.successResponse("user", "edit_student"), user);
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.STUDENT,
         description: `${users?.name} failed to edit student`,
         success: false,
@@ -151,7 +151,7 @@ export class StudentsService {
       const students = await this.userModel.aggregate(userPipeline(searchOption, SKIP, LIMIT_PAGE));
       const total = await this.userModel.aggregate(userPipeline(searchOption)).count("total");
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.STUDENT,
         description: `${users?.name} success get student list`,
         success: true,
@@ -169,7 +169,7 @@ export class StudentsService {
         },
       );
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.STUDENT,
         description: `${users?.name} failed to get student list`,
         success: false,
@@ -201,7 +201,7 @@ export class StudentsService {
       school.studentsCount--;
       await school.save();
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.STUDENT,
         description: `${users?.name} success delete student ${student?.name}`,
         success: true,
@@ -210,7 +210,7 @@ export class StudentsService {
 
       return this.responseService.success(true, StringHelper.successResponse("student", "delete"));
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.STUDENT,
         description: `${users?.name} failed to student admin`,
         success: false,
@@ -236,7 +236,7 @@ export class StudentsService {
         }))
       if (!student) throw new NotFoundException("Student Not Found");
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} success get detail student ${student?.name}`,
         success: true,
@@ -245,7 +245,7 @@ export class StudentsService {
 
       return this.responseService.success(true, StringHelper.successResponse("student", "detail"), student)
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} failed to get student detail`,
         success: false,
@@ -263,7 +263,7 @@ export class StudentsService {
       let activeAdmin = await this.userModel.count({ role: { $ne: UserRole.USER }, deletedAt: null, isActive: { $eq: true }, school: users?.school });
       let activeUser = await this.userModel.count({ role: UserRole.USER, deletedAt: null, isActive: { $eq: true }, school: users?.school });
 
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} success get active users`,
         success: true,
@@ -271,7 +271,7 @@ export class StudentsService {
 
       return this.responseService.success(true, StringHelper.successResponse("user", "get_active_user"), { activeAdmin, activeUser })
     } catch (error) {
-      await this.logsService.logging({
+      await this.logService.logging({
         target: TargetLogEnum.ADMIN,
         description: `${users?.name} failed to get active users`,
         success: false,
