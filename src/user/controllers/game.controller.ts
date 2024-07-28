@@ -259,7 +259,7 @@ export class GameController {
       }
     }
   })
-  async updateLevel(@Body() body: ListGameByAuthorDTO, @Request() req): Promise<any> {
+  async getListGame(@Body() body: ListGameByAuthorDTO, @Request() req): Promise<any> {
     return this.gameService.getListGame(body, req);
   }
 }
