@@ -38,9 +38,9 @@ export class SchedulerService {
       let users = await this.userModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay }, });
       let schools = await this.schoolModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
       let games = await this.gameModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
-      let levels = await this.levelModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
-      let scores = await this.scoreModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
-      let records = await this.recordModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
+      // let levels = await this.levelModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
+      // let scores = await this.scoreModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
+      // let records = await this.recordModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
       let images = await this.imagesModel.deleteMany({ deletedAt: { $ne: null, $lt: endDay } });
 
       let logs = await this.logsModel.deleteMany({
@@ -56,9 +56,9 @@ export class SchedulerService {
         logs: logs.deletedCount,
         schools: schools.deletedCount,
         games: games.deletedCount,
-        levels: levels.deletedCount,
-        scores: scores.deletedCount,
-        records: records.deletedCount,
+        // levels: levels.deletedCount,
+        // scores: scores.deletedCount,
+        // records: records.deletedCount,
       });
     } catch (error) {
       this.logger.error(this.clearDeletedContent.name);
