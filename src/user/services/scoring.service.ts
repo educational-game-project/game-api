@@ -84,7 +84,7 @@ export class ScoreService {
 
       let leaderboard = [];
       if (score?.length) {
-        score = score.filter(i => i?._id?.toString() == users?.school?.toString());
+        score = score.filter(i => i?._id?._id?.toString() == users?.school?.toString());
         leaderboard = score[0].scores.map(i => i.user._id.toString() == users._id.toString() ? { ...i, isCurrentUser: true } : { ...i, isCurrentUser: false })
       }
 
@@ -95,7 +95,7 @@ export class ScoreService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("score", 'get_leaderboard'), { game, leaderboard, });
+      return this.responseService.success(true, StringHelper.successResponse("score", 'get_leaderboard'), { game, leaderboard });
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.SCORE,
