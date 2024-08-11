@@ -49,7 +49,7 @@ export class SchoolAdminService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("schoool", "create"), school);
+      return this.responseService.success(true, StringHelper.successResponseAdmin("School", "Create"));
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
@@ -94,7 +94,7 @@ export class SchoolAdminService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("schoool", "edit"), school);
+      return this.responseService.success(true, StringHelper.successResponseAdmin("School", "Edit"));
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
@@ -130,7 +130,7 @@ export class SchoolAdminService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.paging(StringHelper.successResponse("schoool", "list"),
+      return this.responseService.paging(StringHelper.successResponseAdmin("School", "List"),
         schools,
         {
           totalData: Number(total[0]?.total) ?? 0,
@@ -175,7 +175,7 @@ export class SchoolAdminService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("school", "get_detail"), school);
+      return this.responseService.success(true, StringHelper.successResponseAdmin("School", "Get Detail"), school);
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
@@ -218,7 +218,7 @@ export class SchoolAdminService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("school", "delete"));
+      return this.responseService.success(true, StringHelper.successResponseAdmin("School", "Delete"));
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.SCHOOL,

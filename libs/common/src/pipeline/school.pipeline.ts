@@ -23,7 +23,7 @@ export function schoolPipeline(query: any, skip?: number, limit?: number): Pipel
       $project: {
         admins: 0,
         lastUpdatedBy: 0,
-        deleteBy: 0,
+        deletedBy: 0,
       },
     },
     {

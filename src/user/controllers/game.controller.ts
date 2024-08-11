@@ -130,7 +130,7 @@ export class GameController {
                       type: 'string',
                       example: '2022-05-01T00:00:00Z'
                     },
-                    editedAt: {
+                    updatedAt: {
                       type: 'string',
                       example: '2022-05-01T00:00:00Z'
                     },

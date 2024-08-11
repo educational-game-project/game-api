@@ -532,7 +532,7 @@ export class GameAdminController {
                       type: 'string',
                       example: '2022-05-01T00:00:00Z'
                     },
-                    editedAt: {
+                    updatedAt: {
                       type: 'string',
                       example: '2022-05-01T00:00:00Z'
                     },
@@ -609,7 +609,7 @@ export class GameAdminController {
                         type: 'string',
                         example: '2022-05-01T00:00:00Z'
                       },
-                      editedAt: {
+                      updatedAt: {
                         type: 'string',
                         example: '2022-05-01T00:00:00Z'
                       },
@@ -637,6 +637,22 @@ export class GameAdminController {
                     }
                   }
                 }
+              },
+              deletedAt: {
+                type: 'string',
+                example: null
+              },
+              createdAt: {
+                type: 'string',
+                example: '2022-05-01T00:00:00Z'
+              },
+              updatedAt: {
+                type: 'string',
+                example: '2022-05-01T00:00:00Z'
+              },
+              __v: {
+                type: 'number',
+                example: 0
               }
             }
           }
@@ -873,7 +889,7 @@ export class GameAdminController {
                     type: 'string',
                     example: '2022-05-01T00:00:00Z'
                   },
-                  editedAt: {
+                  updatedAt: {
                     type: 'string',
                     example: '2022-05-01T00:00:00Z'
                   },
@@ -950,7 +966,7 @@ export class GameAdminController {
                       type: 'string',
                       example: '2022-05-01T00:00:00Z'
                     },
-                    editedAt: {
+                    updatedAt: {
                       type: 'string',
                       example: '2022-05-01T00:00:00Z'
                     },
@@ -978,6 +994,22 @@ export class GameAdminController {
                   }
                 }
               }
+            },
+            deletedAt: {
+              type: 'string',
+              example: null
+            },
+            createdAt: {
+              type: 'string',
+              example: '2022-05-01T00:00:00Z'
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2022-05-01T00:00:00Z'
+            },
+            __v: {
+              type: 'number',
+              example: 0
             }
           }
         },

@@ -46,6 +46,56 @@ export class SchoolAdminController {
   })
   @ApiConsumes("multipart/form-data")
   @ApiBearerAuth('Authorization')
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+          nullable: false,
+          example: "School Name",
+        },
+        address: {
+          type: "string",
+          example: "123 Main St",
+          nullable: true,
+        },
+        media: {
+          type: "string",
+          format: "binary",
+          nullable: true,
+        },
+      }
+    }
+  })
+  @ApiOkResponse({
+    description: "School Added Successfully",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 200,
+        },
+        success: {
+          type: "boolean",
+          example: true,
+        },
+        status: {
+          type: "string",
+          example: "success",
+        },
+        message: {
+          type: "string",
+          example: "School Added Success!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      },
+    },
+  })
   @ApiBadRequestResponse({
     description: "Invalid Request Body",
     schema: {
@@ -157,6 +207,69 @@ export class SchoolAdminController {
   })
   @ApiConsumes("multipart/form-data")
   @ApiBearerAuth('Authorization')
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          nullable: false,
+          example: "5f8f8f8f8f8f8f8f8f8f8f8f",
+        },
+        name: {
+          type: "string",
+          nullable: false,
+          example: "School Name",
+        },
+        address: {
+          type: "string",
+          example: "123 Main St",
+          nullable: true,
+        },
+        mediaIds: {
+          type: "array",
+          items: {
+            type: "string",
+            example: "5f8f8f8f8f8f8f8f8f8f8f8f",
+          },
+          nullable: true,
+        },
+        media: {
+          type: "string",
+          format: "binary",
+          nullable: true,
+        },
+      }
+    }
+  })
+  @ApiOkResponse({
+    description: "School Edited Successfully",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 200,
+        },
+        success: {
+          type: "boolean",
+          example: true,
+        },
+        status: {
+          type: "string",
+          example: "success",
+        },
+        message: {
+          type: "string",
+          example: "School Edited Success!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      },
+    },
+  })
   @ApiBadRequestResponse({
     description: "Invalid Request Body",
     schema: {
@@ -285,6 +398,225 @@ export class SchoolAdminController {
     operationId: "Find-School",
   })
   @ApiBearerAuth('Authorization')
+  @ApiOkResponse({
+    description: "Schools Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 200,
+        },
+        success: {
+          type: "boolean",
+          example: true,
+        },
+        status: {
+          type: "string",
+          example: "success",
+        },
+        message: {
+          type: "string",
+          example: "Schools Found!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+        data: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              id: {
+                type: "string",
+                example: "1",
+              },
+              name: {
+                type: "string",
+                example: "School 1",
+              },
+              address: {
+                type: "string",
+                example: "School 1 Address",
+              },
+              studentsCount: {
+                type: "number",
+                example: 10,
+              },
+              adminsCount: {
+                type: "number",
+                example: 10,
+              },
+              images: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    _id: {
+                      type: 'string',
+                      example: '623f1d9d6f9b3d7e5d7b6c7c'
+                    },
+                    originalName: {
+                      type: 'string',
+                      example: 'image.jpg'
+                    },
+                    fileName: {
+                      type: 'string',
+                      example: 'image.jpg'
+                    },
+                    fileLink: {
+                      type: 'string',
+                      example: 'https://example.com/image.jpg'
+                    },
+                    mimetType: {
+                      type: 'string',
+                      example: 'image/jpeg'
+                    },
+                    size: {
+                      type: 'number',
+                      example: 100
+                    },
+                    isDefault: {
+                      type: 'boolean',
+                      example: true
+                    },
+                    deletedAt: {
+                      type: 'string',
+                      example: null
+                    },
+                    createdAt: {
+                      type: 'string',
+                      example: '2022-05-01T00:00:00Z'
+                    },
+                    updatedAt: {
+                      type: 'string',
+                      example: '2022-05-01T00:00:00Z'
+                    },
+                    __v: {
+                      type: 'number',
+                      example: 0
+                    }
+                  }
+                }
+              },
+              addedBy: {
+                type: 'object',
+                properties: {
+                  _id: {
+                    type: 'string',
+                    example: '623f1d9d6f9b3d7e5d7b6c7c'
+                  },
+                  name: {
+                    type: 'string',
+                    example: "User 1"
+                  },
+                  email: {
+                    type: 'string',
+                    example: "5sXKw@example.com"
+                  },
+                  role: {
+                    type: 'string',
+                    example: "ADMIN"
+                  },
+                  phoneNumber: {
+                    type: 'string',
+                    example: "+6288888888888"
+                  },
+                  isActive: {
+                    type: 'boolean',
+                    example: true
+                  },
+                  image: {
+                    type: 'object',
+                    properties: {
+                      _id: {
+                        type: 'string',
+                        example: '623f1d9d6f9b3d7e5d7b6c7c'
+                      },
+                      originalName: {
+                        type: 'string',
+                        example: 'image.jpg'
+                      },
+                      fileName: {
+                        type: 'string',
+                        example: 'image.jpg'
+                      },
+                      fileLink: {
+                        type: 'string',
+                        example: 'https://example.com/image.jpg'
+                      },
+                      mimetType: {
+                        type: 'string',
+                        example: 'image/jpeg'
+                      },
+                      size: {
+                        type: 'number',
+                        example: 100
+                      },
+                      isDefault: {
+                        type: 'boolean',
+                        example: true
+                      },
+                      deletedAt: {
+                        type: 'string',
+                        example: null
+                      },
+                      createdAt: {
+                        type: 'string',
+                        example: '2022-05-01T00:00:00Z'
+                      },
+                      updatedAt: {
+                        type: 'string',
+                        example: '2022-05-01T00:00:00Z'
+                      },
+                      __v: {
+                        type: 'number',
+                        example: 0
+                      }
+                    },
+                  },
+                  school: {
+                    type: 'object',
+                    properties: {
+                      _id: {
+                        type: 'string',
+                        example: '623f1d9d6f9b3d7e5d7b6c7c'
+                      },
+                      name: {
+                        type: 'string',
+                        example: "School 1"
+                      },
+                      address: {
+                        type: 'string',
+                        example: "street 1"
+                      },
+                    }
+                  }
+                }
+              },
+              deletedAt: {
+                type: 'string',
+                example: null
+              },
+              createdAt: {
+                type: 'string',
+                example: '2022-05-01T00:00:00Z'
+              },
+              updatedAt: {
+                type: 'string',
+                example: '2022-05-01T00:00:00Z'
+              },
+              __v: {
+                type: 'number',
+                example: 0
+              }
+            },
+          }
+        }
+      }
+    }
+  })
   @ApiBadRequestResponse({
     description: "Invalid Request Body",
     schema: {
@@ -371,6 +703,225 @@ export class SchoolAdminController {
     operationId: "Detail-School",
   })
   @ApiBearerAuth('Authorization')
+  @ApiOkResponse({
+    description: "Schools Found",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 200,
+        },
+        success: {
+          type: "boolean",
+          example: true,
+        },
+        status: {
+          type: "string",
+          example: "success",
+        },
+        message: {
+          type: "string",
+          example: "Schools Found!",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+        data: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              example: "1",
+            },
+            name: {
+              type: "string",
+              example: "School 1",
+            },
+            address: {
+              type: "string",
+              example: "School 1 Address",
+            },
+            studentsCount: {
+              type: "number",
+              example: 10,
+            },
+            adminsCount: {
+              type: "number",
+              example: 10,
+            },
+            images: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  _id: {
+                    type: 'string',
+                    example: '623f1d9d6f9b3d7e5d7b6c7c'
+                  },
+                  originalName: {
+                    type: 'string',
+                    example: 'image.jpg'
+                  },
+                  fileName: {
+                    type: 'string',
+                    example: 'image.jpg'
+                  },
+                  fileLink: {
+                    type: 'string',
+                    example: 'https://example.com/image.jpg'
+                  },
+                  mimetType: {
+                    type: 'string',
+                    example: 'image/jpeg'
+                  },
+                  size: {
+                    type: 'number',
+                    example: 100
+                  },
+                  isDefault: {
+                    type: 'boolean',
+                    example: true
+                  },
+                  deletedAt: {
+                    type: 'string',
+                    example: null
+                  },
+                  createdAt: {
+                    type: 'string',
+                    example: '2022-05-01T00:00:00Z'
+                  },
+                  updatedAt: {
+                    type: 'string',
+                    example: '2022-05-01T00:00:00Z'
+                  },
+                  __v: {
+                    type: 'number',
+                    example: 0
+                  }
+                }
+              }
+            },
+            admins: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  _id: {
+                    type: 'string',
+                    example: '623f1d9d6f9b3d7e5d7b6c7c'
+                  },
+                  name: {
+                    type: 'string',
+                    example: "User 1"
+                  },
+                  email: {
+                    type: 'string',
+                    example: "5sXKw@example.com"
+                  },
+                  role: {
+                    type: 'string',
+                    example: "ADMIN"
+                  },
+                  phoneNumber: {
+                    type: 'string',
+                    example: "+6288888888888"
+                  },
+                  isActive: {
+                    type: 'boolean',
+                    example: true
+                  },
+                  image: {
+                    type: 'object',
+                    properties: {
+                      _id: {
+                        type: 'string',
+                        example: '623f1d9d6f9b3d7e5d7b6c7c'
+                      },
+                      originalName: {
+                        type: 'string',
+                        example: 'image.jpg'
+                      },
+                      fileName: {
+                        type: 'string',
+                        example: 'image.jpg'
+                      },
+                      fileLink: {
+                        type: 'string',
+                        example: 'https://example.com/image.jpg'
+                      },
+                      mimetType: {
+                        type: 'string',
+                        example: 'image/jpeg'
+                      },
+                      size: {
+                        type: 'number',
+                        example: 100
+                      },
+                      isDefault: {
+                        type: 'boolean',
+                        example: true
+                      },
+                      deletedAt: {
+                        type: 'string',
+                        example: null
+                      },
+                      createdAt: {
+                        type: 'string',
+                        example: '2022-05-01T00:00:00Z'
+                      },
+                      updatedAt: {
+                        type: 'string',
+                        example: '2022-05-01T00:00:00Z'
+                      },
+                      __v: {
+                        type: 'number',
+                        example: 0
+                      }
+                    },
+                  },
+                  school: {
+                    type: 'object',
+                    properties: {
+                      _id: {
+                        type: 'string',
+                        example: '623f1d9d6f9b3d7e5d7b6c7c'
+                      },
+                      name: {
+                        type: 'string',
+                        example: "School 1"
+                      },
+                      address: {
+                        type: 'string',
+                        example: "street 1"
+                      },
+                    }
+                  }
+                }
+              }
+            },
+            deletedAt: {
+              type: 'string',
+              example: null
+            },
+            createdAt: {
+              type: 'string',
+              example: '2022-05-01T00:00:00Z'
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2022-05-01T00:00:00Z'
+            },
+            __v: {
+              type: 'number',
+              example: 0
+            }
+          },
+        }
+      }
+    }
+  })
   @ApiBadRequestResponse({
     description: "Invalid Request Body",
     schema: {
@@ -481,6 +1032,34 @@ export class SchoolAdminController {
     operationId: "Delete-School",
   })
   @ApiBearerAuth('Authorization')
+  @ApiOkResponse({
+    description: "Success",
+    schema: {
+      type: "object",
+      properties: {
+        statusCode: {
+          type: "number",
+          example: 200,
+        },
+        success: {
+          type: "boolean",
+          example: true,
+        },
+        status: {
+          type: "string",
+          example: "success",
+        },
+        message: {
+          type: "string",
+          example: "Success",
+        },
+        server_time: {
+          type: "string",
+          example: "2022-05-01T00:00:00Z",
+        },
+      }
+    }
+  })
   @ApiBadRequestResponse({
     description: "Invalid Request Body",
     schema: {
