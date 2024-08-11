@@ -19,6 +19,7 @@ export class ScoreAdminController {
     private scoreService: ScoreAdminService
   ) { }
 
+  // Not Yet
   @Post()
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
@@ -134,6 +135,7 @@ export class ScoreAdminController {
     return this.scoreService.getScores(userId, req);
   }
 
+  // Not Yet
   @Post('chart')
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
@@ -249,6 +251,7 @@ export class ScoreAdminController {
     return this.scoreService.getScoresChartData(userId, gameId, req);
   }
 
+  // Not Yet
   @Post('leaderboard')
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()

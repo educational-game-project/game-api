@@ -32,6 +32,7 @@ export class UserAdminController {
 
   //////////////////////////////////////////// ADMIN /////////////////////////////////////////////
 
+  // Not Yet
   @Post("admin")
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -168,6 +169,7 @@ export class UserAdminController {
     }
   }
 
+  // Not Yet
   @Put("admin")
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -304,6 +306,7 @@ export class UserAdminController {
     }
   }
 
+  // Not Yet
   @Post("admin/find")
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -415,6 +418,7 @@ export class UserAdminController {
     return this.userService.findAdmin(body, req);
   }
 
+  // Not Yet
   @Delete("admin")
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -526,6 +530,7 @@ export class UserAdminController {
     return this.userService.deleteAdmin(body, req);
   }
 
+  // Not Yet
   @Post("admin/detail")
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -637,6 +642,7 @@ export class UserAdminController {
     return this.userService.detailAdmin(body, req);
   }
 
+  // Not Yet
   @Get("profile")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -747,6 +753,7 @@ export class UserAdminController {
     return this.userService.getUserDetail(req);
   }
 
+  // Not Yet
   @Get("active")
   @Roles([UserRole.SUPER_ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -836,6 +843,7 @@ export class UserAdminController {
 
   //////////////////////////////////////////// STUDENT /////////////////////////////////////////////
 
+  // Not Yet
   @Post("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -972,6 +980,7 @@ export class UserAdminController {
     }
   }
 
+  // Not Yet
   @Put("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -1107,6 +1116,7 @@ export class UserAdminController {
     }
   }
 
+  // Not Yet
   @Post("student/find")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -1197,6 +1207,7 @@ export class UserAdminController {
     return this.studentsService.listStudents(body, req);
   }
 
+  // Not Yet
   @Delete("student")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -1311,6 +1322,7 @@ export class UserAdminController {
     return this.studentsService.deleteStudent(body, req);
   }
 
+  // Not Yet
   @Post("student/detail")
   @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
@@ -1425,6 +1437,7 @@ export class UserAdminController {
     return this.studentsService.detailStudent(body, req);
   }
 
+  // Not Yet
   @Get("student/active")
   @Roles([UserRole.ADMIN])
   @HttpCode(HttpStatus.OK)
