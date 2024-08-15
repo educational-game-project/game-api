@@ -17,7 +17,7 @@ async function bootstrap() {
 
   const options = new DocumentBuilder()
     .setTitle('Educational Game API')
-    .setDescription('API for educational games')
+    .setDescription('API for Educational Games')
     .setContact('Iwan Suryaningrat', 'https://iwansuryaningrat.tech', 'iwan.suryaningrat28@gmail.com')
     .addServer('localhost:3000', "Local Server",)
     .addServer('https://game-api.iwansuryaningrat.tech', "Production Server",)
