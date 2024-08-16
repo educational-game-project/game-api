@@ -4,9 +4,7 @@ import { addedByPipeline } from "./global.pipeline";
 
 export function gamePipeline(query: any, skip?: number, limit?: number): PipelineStage[] {
   let pipeline: any[] = [
-    {
-      $match: query,
-    },
+    { $match: query },
     skip && { $skip: skip },
     limit && { $limit: limit },
     ...addedByPipeline,
