@@ -75,7 +75,7 @@ export class LogService {
         deletedAt: null,
       }
 
-      if (body?.status !== undefined) searchOption.status = body.status
+      if (body?.status !== undefined) searchOption.success = body.status
 
       if (req?.user?.role === UserRole.ADMIN) {
         searchOption["actor.school._id"] = new Types.ObjectId(req?.user?.school)
