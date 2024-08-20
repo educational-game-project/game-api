@@ -11,6 +11,7 @@ import { Level } from "@app/common/model/schema/levels.schema";
 import { Score } from "@app/common/model/schema/scores.schema";
 import { Record } from "@app/common/model/schema/records.schema";
 import { TimeHelper } from "@app/common/helpers/time.helper";
+import { UserRole } from "@app/common/enums/role.enum";
 
 @Injectable()
 export class SchedulerService {
@@ -20,9 +21,6 @@ export class SchedulerService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(School.name) private schoolModel: Model<School>,
     @InjectModel(Game.name) private gameModel: Model<Game>,
-    @InjectModel(Level.name) private levelModel: Model<Level>,
-    @InjectModel(Score.name) private scoreModel: Model<Score>,
-    @InjectModel(Record.name) private recordModel: Model<Record>,
   ) { }
 
   private readonly logger = new Logger(SchedulerService.name);
@@ -87,6 +85,23 @@ export class SchedulerService {
       console.log("New Total Active User: ", users?.length);
     } catch (error) {
       this.logger.error(this.updateActiveUser.name);
+      console.log(error?.message);
+    }
+  }
+
+  @Cron(CronExpression.EVERY_HOUR)
+  async recountAdminAndStudent() {
+    try {
+      let schools = await this.schoolModel.find({ deletedAt: null });
+
+      if (schools?.length) await Promise.all(schools.map(async (school) => {
+        let users = await this.userModel.countDocuments({ school: school._id, deletedAt: null, role: UserRole.USER });
+        let admins = await this.userModel.countDocuments({ school: school._id, deletedAt: null, role: UserRole.ADMIN });
+
+        await this.schoolModel.updateOne({ _id: school._id }, { $set: { studentsCount: users, adminsCount: admins } });
+      }));
+    } catch (error) {
+      this.logger.error(this.recountAdminAndStudent.name);
       console.log(error?.message);
     }
   }

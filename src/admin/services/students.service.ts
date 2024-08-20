@@ -88,17 +88,21 @@ export class StudentsService {
       }
       if (users.role === UserRole.ADMIN && users?.school) query.school = users?.school;
 
-      let user = await this.userModel.findOne().populate('image')
+      let user = await this.userModel.findOne(query).populate('image')
       if (!user) throw new NotFoundException("User Not Found");
+
+      let school = user?.school ?? users?.school
+      if (!school) school = await this.schoolModel.findOne({ _id: new Types.ObjectId(body?.schoolId) });
 
       const check = await this.userModel.findOne({
         role: UserRole.USER,
         name: body.name,
-        school: user.school,
+        school: user?.school ?? school._id,
         _id: { $ne: user._id },
       });
       if (check) throw new BadRequestException("Student Name Already Exist");
 
+      user.school = school;
       user.$set(body)
       user.lastUpdatedBy = users
       if (media.length) {

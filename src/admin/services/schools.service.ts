@@ -206,10 +206,10 @@ export class SchoolAdminService {
 
       let users = await this.userModel.find({ school: school._id });
 
-      if (users.length > 0) users.forEach(async (item) => {
+      if (users?.length > 0) await Promise.all(users.map(async (item) => {
         item.school = null;
         await item.save();
-      });
+      }))
 
       await this.logService.logging({
         target: TargetLogEnum.SCHOOL,
