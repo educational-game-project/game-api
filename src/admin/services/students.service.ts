@@ -14,12 +14,21 @@ import { globalPopulate } from "@app/common/pipeline/global.populate";
 import { userPipeline } from "@app/common/pipeline/user.pipeline";
 import { LogService } from "./log.service";
 import { TargetLogEnum } from "@app/common/enums/log.enum";
+import { Level } from "@app/common/model/schema/levels.schema";
+import { Record } from "@app/common/model/schema/records.schema";
+import { Score } from "@app/common/model/schema/scores.schema";
+import { Log } from "@app/common/model/schema/log.schema";
 
 @Injectable()
 export class StudentsService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(School.name) private schoolModel: Model<School>,
+    @InjectModel(Level.name) private levelModel: Model<Level>,
+    @InjectModel(Record.name) private recordModel: Model<Record>,
+    @InjectModel(Score.name) private scoreModel: Model<Score>,
+    @InjectModel(Log.name) private logModel: Model<Log>,
+
     @Inject(ResponseService) private readonly responseService: ResponseService,
     @Inject(ImageService) private imageHelper: ImageService,
     @Inject(LogService) private readonly logService: LogService,
@@ -64,7 +73,7 @@ export class StudentsService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("user", "add_student"), student);
+      return this.responseService.success(true, StringHelper.successResponseAdmin("User", "Add Student"), student);
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.STUDENT,
@@ -118,7 +127,7 @@ export class StudentsService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("user", "edit_student"), user);
+      return this.responseService.success(true, StringHelper.successResponseAdmin("User", "Edit Student"), user);
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.STUDENT,
@@ -163,7 +172,7 @@ export class StudentsService {
       })
 
       return this.responseService.paging(
-        StringHelper.successResponse("student", "list"),
+        StringHelper.successResponseAdmin("Student", "List"),
         students,
         {
           totalData: Number(total[0]?.total) ?? 0,
@@ -210,9 +219,14 @@ export class StudentsService {
         description: `${users?.name} success delete student ${student?.name}`,
         success: true,
         summary: JSON.stringify(body),
-      })
+      });
 
-      return this.responseService.success(true, StringHelper.successResponse("student", "delete"));
+      await this.levelModel.updateMany({ user: student._id }, { $set: { deletedAt: new Date() } })
+      await this.recordModel.updateMany({ user: student._id }, { $set: { deletedAt: new Date() } })
+      await this.scoreModel.updateMany({ user: student._id }, { $set: { deletedAt: new Date() } })
+      await this.logModel.updateMany({ actor: student._id }, { $set: { deletedAt: new Date() } })
+
+      return this.responseService.success(true, StringHelper.successResponseAdmin("Student", "Delete"));
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.STUDENT,
@@ -247,7 +261,7 @@ export class StudentsService {
         summary: JSON.stringify(body),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("student", "detail"), student)
+      return this.responseService.success(true, StringHelper.successResponseAdmin("Student", "Detail"), student)
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.ADMIN,
@@ -273,7 +287,7 @@ export class StudentsService {
         success: true,
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("user", "get_active_user"), { activeAdmin, activeUser })
+      return this.responseService.success(true, StringHelper.successResponseAdmin("User", "Get Active User"), { activeAdmin, activeUser })
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.ADMIN,

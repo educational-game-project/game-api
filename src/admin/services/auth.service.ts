@@ -54,7 +54,7 @@ export class AuthAdminService {
         actor: user._id.toString(),
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("Auth", "Login"), { user, tokens });
+      return this.responseService.success(true, StringHelper.successResponseAdmin("Auth", "Login"), { user, tokens });
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.AUTH,

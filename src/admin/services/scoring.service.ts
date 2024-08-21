@@ -46,7 +46,7 @@ export class ScoreAdminService {
         summary: userId,
       })
 
-      return this.responseService.success(true, StringHelper.successResponse('get', 'score'), result);
+      return this.responseService.success(true, StringHelper.successResponseAdmin('Get', 'Score'), result);
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.SCORE,
@@ -99,7 +99,7 @@ export class ScoreAdminService {
         summary: gameId,
       })
 
-      return this.responseService.success(true, StringHelper.successResponse("score", 'get'), result);
+      return this.responseService.success(true, StringHelper.successResponseAdmin('Get', 'Leaderboard'), result);
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.SCORE,
@@ -122,7 +122,7 @@ export class ScoreAdminService {
       let result: any = await this.scoreModel.aggregate(scorePipeline(user._id));
 
       result = result.filter(i => i?._id?._id?.toString() === gameId)[0]
-      if (!result) return this.responseService.success(true, StringHelper.successResponse('get', 'score'), []);
+      if (!result) return this.responseService.success(true, StringHelper.successResponseAdmin('Get', 'Score'), []);
 
       result.game = result?._id;
       delete result?._id;
@@ -135,7 +135,7 @@ export class ScoreAdminService {
         summary: gameId,
       })
 
-      return this.responseService.success(true, StringHelper.successResponse('get', 'score'), result);
+      return this.responseService.success(true, StringHelper.successResponseAdmin('Get', 'Score'), result);
     } catch (error) {
       await this.logService.logging({
         target: TargetLogEnum.SCORE,
