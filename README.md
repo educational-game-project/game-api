@@ -37,7 +37,7 @@ Install game-api with yarn
 Clone the project
 
 ```bash
-  git clone https://github.com/sningratGames/game-api.git
+  git clone https://github.com/educational-game-project/game-api
 ```
 
 Go to the project directory

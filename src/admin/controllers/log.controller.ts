@@ -14,13 +14,13 @@ import { TargetLogEnum } from "@app/common/enums/log.enum";
 @ApiTags("Admin-Logs")
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Roles([UserRole.SUPER_ADMIN, UserRole.ADMIN])
-@Controller('admin/logs')
+@Controller('admin/log')
 export class LogsController {
   constructor(
     private readonly logService: LogService,
   ) { }
 
-  @Post()
+  @Post("find")
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @ApiOperation({

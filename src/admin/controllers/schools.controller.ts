@@ -19,7 +19,7 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConsumes, ApiInternal
 @ApiTags("Admin-Schools")
 @Roles([UserRole.SUPER_ADMIN])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
-@Controller("admin/schools")
+@Controller("admin/school")
 export class SchoolAdminController {
   constructor(
     private schoolService: SchoolAdminService,

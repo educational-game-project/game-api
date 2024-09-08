@@ -17,7 +17,7 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConsumes, ApiInternal
 
 @ApiTags("Admin-Games")
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
-@Controller("admin/games")
+@Controller("admin/game")
 export class GameAdminController {
   constructor(
     private readonly gameService: GameAdminService,

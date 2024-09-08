@@ -13,7 +13,7 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiInternalServerErrorResponse, A
 @ApiTags("Levels")
 @Roles([UserRole.USER])
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
-@Controller("levels")
+@Controller("level")
 export class LevelController {
   constructor(
     private readonly levelService: LevelService
@@ -486,7 +486,7 @@ export class LevelController {
     return this.levelService.initLevel(body, req);
   }
 
-  @Post("find")
+  @Post()
   @HttpCode(HttpStatus.OK)
   @ResponseStatusCode()
   @ApiOperation({
