@@ -3,6 +3,9 @@ import { AbstractDocument } from "./abstract.schema";
 
 @Schema({ timestamps: true })
 export class PortfolioVisitor extends AbstractDocument {
+  @Prop({ type: Number, default: 1 })
+  number: number;
+
   @Prop({ type: String, default: null })
   ipAddress: string;
 

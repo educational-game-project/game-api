@@ -16,15 +16,31 @@ export class PortfolioVisitorService {
 
   async recordVisitors(data: any) {
     try {
+      // get latest number
+      const latest = await this.portfolioVisitorsModel.find({}).sort({ number: -1 }).limit(1);
+
       await this.portfolioVisitorsModel.create({
         ...data,
         ipAddress: data.ip,
         date: new Date().toLocaleDateString(),
+        number: latest.length > 0 ? latest[0].number + 1 : 1
       });
 
       return this.responseService.success(true, StringHelper.successResponseAdmin("Visitor", "Record"));
     } catch (error) {
       this.logger.error(this.recordVisitors.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async getVisitors(number: number) {
+    try {
+      const data = await this.portfolioVisitorsModel.find({ number: { $gte: number } })
+
+      return this.responseService.success(true, StringHelper.successResponseAdmin("Visitor", "Get"), data);
+    } catch (error) {
+      this.logger.error(this.getVisitors.name);
       console.log(error?.message);
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
