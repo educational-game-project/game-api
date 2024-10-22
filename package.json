@@ -41,6 +41,7 @@
     "file-type": "^18.5.0",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.5.46",
     "mongoose": "^7.5.3",
     "nodemailer": "^6.9.6",
     "reflect-metadata": "^0.1.13",
