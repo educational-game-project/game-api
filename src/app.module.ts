@@ -38,6 +38,8 @@ import { MongooseModulesImport } from "@app/common/model/database.service";
 import { ScoreAdminController } from "./admin/controllers/scoring.controller";
 import { SchoolAdminController } from "./admin/controllers/schools.controller";
 import { DashboardController } from "./admin/controllers/dashboard.controller";
+import { VisitorController } from "./admin/controllers/portfolio.controller";
+import { PortfolioVisitorService } from "./admin/services/portfolio.service";
 
 @Module({
   imports: [
@@ -71,6 +73,7 @@ import { DashboardController } from "./admin/controllers/dashboard.controller";
     DashboardController,
     ScoreAdminController,
     SchoolAdminController,
+    VisitorController,
   ],
   providers: [
     AuthHelper,
@@ -93,6 +96,7 @@ import { DashboardController } from "./admin/controllers/dashboard.controller";
     ScoreAdminService,
     SchoolAdminService,
     ScoreCalculateHelper,
+    PortfolioVisitorService,
   ],
 })
 export class AppModule { }

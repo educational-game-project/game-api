@@ -6,6 +6,7 @@ import { User, UserSchema } from "./schema/users.schema";
 import { Level, LevelSchema } from "./schema/levels.schema";
 import { Game, GameSchema } from "./schema/game.schema";
 import { Log, LogSchema } from "./schema/log.schema";
+import { PortfolioVisitor, PortfolioVisitorSchema } from "./schema/visitors.schema";
 
 export const MongooseModulesImport = [
   { name: Game.name, schema: GameSchema },
@@ -16,4 +17,6 @@ export const MongooseModulesImport = [
   { name: School.name, schema: SchoolSchema },
   { name: Score.name, schema: ScoreSchema },
   { name: User.name, schema: UserSchema },
+
+  { name: PortfolioVisitor.name, schema: PortfolioVisitorSchema },
 ];
