@@ -4,7 +4,6 @@ import { ResponseService } from "@app/common/response/response.service";
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import moment from "moment-timezone";
 
 @Injectable()
 export class PortfolioVisitorService {
@@ -17,11 +16,10 @@ export class PortfolioVisitorService {
 
   async recordVisitors(data: any) {
     try {
-      let today = moment().tz("Asia/Jakarta").format("DD-MM-YYYY");
       await this.portfolioVisitorsModel.create({
         ...data,
         ipAddress: data.ip,
-        date: today,
+        date: new Date().toLocaleDateString(),
       });
 
       return this.responseService.success(true, StringHelper.successResponseAdmin("Visitor", "Record"));
