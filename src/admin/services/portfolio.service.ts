@@ -22,7 +22,7 @@ export class PortfolioVisitorService {
       await this.portfolioVisitorsModel.create({
         ...data,
         ipAddress: data.ip,
-        date: new Date().toLocaleDateString(),
+        date: new Date().toLocaleString(),
         number: latest.length > 0 ? latest[0].number + 1 : 1
       });
 
