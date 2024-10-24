@@ -18,4 +18,10 @@ export class VisitorController {
   async getVisitors(@Query() data: any) {
     return await this.portfolioVisitorService.getVisitors(data.start);
   }
+
+  @Get('count')
+  @HttpCode(HttpStatus.OK)
+  async getVisitorCount() {
+    return await this.portfolioVisitorService.getVisitorCount();
+  }
 }

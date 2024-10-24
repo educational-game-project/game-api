@@ -13,19 +13,34 @@ export class PortfolioVisitor extends AbstractDocument {
   city: string;
 
   @Prop({ type: String, default: null })
+  region: string;
+
+  @Prop({ type: String, default: null })
   country: string;
+
+  @Prop({ type: String, default: null })
+  continent: string;
 
   @Prop({ type: String, default: null })
   loc: string;
 
   @Prop({ type: String, default: null })
-  region: string;
-
-  @Prop({ type: String, default: null })
   timezone: string;
 
   @Prop({ type: String, default: null })
+  time: string;
+
+  @Prop({ type: String, default: null })
+  timeName: string;
+
+  @Prop({ type: String, default: null })
   date: string;
+
+  @Prop({ type: String, default: null })
+  user_agent: string;
+
+  @Prop({ type: String, default: null })
+  device: string;
 }
 
 export const PortfolioVisitorSchema = SchemaFactory.createForClass(PortfolioVisitor)

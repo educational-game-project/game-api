@@ -45,4 +45,17 @@ export class PortfolioVisitorService {
       throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  async getVisitorCount() {
+    try {
+      // get latest number
+      const latest = await this.portfolioVisitorsModel.find({}).sort({ number: -1 }).limit(1);
+
+      return this.responseService.success(true, StringHelper.successResponseAdmin("Visitor Count", "Get"), { count: latest.length > 0 ? latest[0].number + 1 : 0 });
+    } catch (error) {
+      this.logger.error(this.getVisitorCount.name);
+      console.log(error?.message);
+      throw new HttpException(error?.response ?? error?.message ?? error, error?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
