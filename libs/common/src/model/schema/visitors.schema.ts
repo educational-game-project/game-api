@@ -9,8 +9,14 @@ export class PortfolioVisitor extends AbstractDocument {
   @Prop({ type: String, default: null })
   ipAddress: string;
 
+  @Prop({ type: String, default: 'IPv4' })
+  ipType: string;
+
   @Prop({ type: String, default: null })
   city: string;
+
+  @Prop({ type: String, default: null })
+  postalCode: string;
 
   @Prop({ type: String, default: null })
   region: string;
