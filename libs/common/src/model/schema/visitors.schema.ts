@@ -47,6 +47,9 @@ export class PortfolioVisitor extends AbstractDocument {
 
   @Prop({ type: String, default: null })
   device: string;
+
+  @Prop({ type: Boolean, default: false })
+  isUpdated: boolean;
 }
 
 export const PortfolioVisitorSchema = SchemaFactory.createForClass(PortfolioVisitor)
