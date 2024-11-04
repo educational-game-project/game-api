@@ -23,7 +23,7 @@ export class PortfolioVisitorService {
         ...data,
         ipAddress: data.ip,
         date: new Date().toLocaleString(),
-        isUpdated: true,
+        isUpdated: !!data?.ipType,
         number: latest.length > 0 ? latest[0].number + 1 : 1
       });
 

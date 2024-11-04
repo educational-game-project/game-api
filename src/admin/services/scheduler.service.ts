@@ -7,11 +7,11 @@ import { Model } from "mongoose";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { School } from "@app/common/model/schema/schools.schema";
 import { Game } from "@app/common/model/schema/game.schema";
-import { Level } from "@app/common/model/schema/levels.schema";
-import { Score } from "@app/common/model/schema/scores.schema";
-import { Record } from "@app/common/model/schema/records.schema";
 import { TimeHelper } from "@app/common/helpers/time.helper";
 import { UserRole } from "@app/common/enums/role.enum";
+import { PortfolioVisitor } from "@app/common/model/schema/visitors.schema";
+import axios from "axios";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class SchedulerService {
@@ -21,7 +21,12 @@ export class SchedulerService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(School.name) private schoolModel: Model<School>,
     @InjectModel(Game.name) private gameModel: Model<Game>,
+    @InjectModel(PortfolioVisitor.name) private portfolioVisitorsModel: Model<PortfolioVisitor>,
+
+    private readonly configService: ConfigService,
   ) { }
+
+  private IPREGISTRY_API_KEY = this.configService.get<string>("IPREGISTRY_API_KEY");
 
   private readonly logger = new Logger(SchedulerService.name);
 
@@ -102,6 +107,43 @@ export class SchedulerService {
       }));
     } catch (error) {
       this.logger.error(this.recountAdminAndStudent.name);
+      console.log(error?.message);
+    }
+  }
+
+  @Cron(CronExpression.EVERY_HOUR)
+  async updateVisitorData() {
+    try {
+      let visitors = await this.portfolioVisitorsModel.find({ isUpdated: { $ne: true } });
+      let options = {
+        headers: { Authorization: "ApiKey " + this.IPREGISTRY_API_KEY },
+      };
+
+      if (visitors?.length) await Promise.all(visitors.map(async (visitor) => {
+        const response = await axios.get(
+          `https://api.ipregistry.co/${visitor.ipAddress}`,
+          options
+        );
+
+        if (response?.data) await this.portfolioVisitorsModel.updateOne({ _id: visitor._id }, {
+          $set: {
+            isUpdated: true,
+            ipType: response?.data?.type ?? null,
+            city: response?.data?.location?.city ?? null,
+            postalCode: response?.data?.location?.postal ?? null,
+            region: response?.data?.location?.region?.name ?? null,
+            country: response?.data?.location?.country?.name ?? response?.data?.location?.country?.code ?? null,
+            continent: response?.data?.location?.continent?.name ?? null,
+            loc: response?.data?.location?.latitude ? response?.data?.location?.latitude + ", " + response?.data?.location?.longitude : null,
+            timezone: response?.data?.time_zone?.id ?? null,
+            timeName: response?.data?.time_zone?.name ? response?.data?.time_zone?.name + " - " + response?.data?.time_zone?.abbreviation : null,
+          }
+        });
+      }));
+
+      console.log("Visitor Updated: ", visitors?.length);
+    } catch (error) {
+      this.logger.error(this.updateVisitorData.name);
       console.log(error?.message);
     }
   }
