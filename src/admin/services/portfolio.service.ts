@@ -43,7 +43,7 @@ export class PortfolioVisitorService {
 
   async getVisitors(number: number) {
     try {
-      const data = await this.portfolioVisitorsModel.find({ number: { $gte: number } }).sort({ number: 1 }).limit(10);
+      const data = await this.portfolioVisitorsModel.find({ number: { $gte: number } }).sort({ number: 1 });
 
       return this.responseService.success(true, StringHelper.successResponseAdmin("Visitor", "Get"), data);
     } catch (error) {
