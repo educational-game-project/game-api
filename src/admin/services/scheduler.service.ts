@@ -147,4 +147,61 @@ export class SchedulerService {
       console.log(error?.message);
     }
   }
+
+  @Cron(CronExpression.EVERY_HOUR)
+  async combineDuplicatesVisitorData() {
+    try {
+      // find duplicated ip address
+      let visitors = await this.portfolioVisitorsModel.aggregate([
+        { $match: { isUpdated: true } },
+        { $group: { _id: "$ipAddress", count: { $sum: 1 } } },
+        { $match: { count: { $gt: 1 } } },
+      ]);
+      console.log("Duplicated IP Address: ", visitors);
+
+      if (visitors?.length) {
+        await Promise.all(visitors.map(async (visitor) => {
+          let duplicatedVisitors = await this.portfolioVisitorsModel.find({ ipAddress: visitor._id }).sort({ createdAt: -1 });
+
+          if (duplicatedVisitors?.length > 1) {
+            let count = 0;
+            duplicatedVisitors.forEach((duplicatedVisitor) => count += duplicatedVisitor?.count ?? 0);
+
+            let combinedVisitor = {
+              count,
+              ipAddress: visitor._id,
+              ipType: duplicatedVisitors[0]?.ipType ?? null,
+              city: duplicatedVisitors[0]?.city ?? null,
+              postalCode: duplicatedVisitors[0]?.postalCode ?? null,
+              region: duplicatedVisitors[0]?.region ?? null,
+              country: duplicatedVisitors[0]?.country ?? null,
+              continent: duplicatedVisitors[0]?.continent ?? null,
+              loc: duplicatedVisitors[0]?.loc ?? null,
+              timezone: duplicatedVisitors[0]?.timezone ?? null,
+              time: duplicatedVisitors[0]?.time ?? null,
+              timeName: duplicatedVisitors[0]?.timeName ?? null,
+              date: duplicatedVisitors[0]?.date ?? null,
+              user_agent: duplicatedVisitors[0]?.user_agent ?? null,
+              device: duplicatedVisitors[0]?.device ?? null,
+              isUpdated: true,
+              createdAt: duplicatedVisitors[0]?.createdAt,
+              updatedAt: duplicatedVisitors[0]?.updatedAt,
+            };
+
+            await this.portfolioVisitorsModel.deleteMany({ ipAddress: visitor._id });
+            await this.portfolioVisitorsModel.create(combinedVisitor);
+          }
+        }));
+
+        // Update visitor number from 1
+        let visitors2 = await this.portfolioVisitorsModel.find({}).sort({ createdAt: 1 });
+        if (visitors2?.length) await Promise.all(visitors2.map(async (visitor, index) => {
+          await this.portfolioVisitorsModel.updateOne({ _id: visitor._id }, { $set: { number: index + 1 } });
+        }));
+      }
+    } catch (error) {
+      this.logger.error(this.combineDuplicatesVisitorData.name);
+      console.log(error?.message);
+    }
+  }
 }

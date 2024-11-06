@@ -16,16 +16,22 @@ export class PortfolioVisitorService {
 
   async recordVisitors(data: any) {
     try {
-      // get latest number
-      const latest = await this.portfolioVisitorsModel.find({}).sort({ number: -1 }).limit(1);
+      let ipRecord = await this.portfolioVisitorsModel.findOne({ ipAddress: data.ip });
 
-      await this.portfolioVisitorsModel.create({
-        ...data,
-        ipAddress: data.ip,
-        date: new Date().toLocaleString(),
-        isUpdated: !!data?.ipType,
-        number: latest.length > 0 ? latest[0].number + 1 : 1
-      });
+      if (ipRecord) {
+        await this.portfolioVisitorsModel.findOneAndUpdate({ _id: ipRecord._id }, { count: ipRecord?.count + 1 });
+      } else {
+        // get latest number
+        const latest = await this.portfolioVisitorsModel.find({}).sort({ number: -1 }).limit(1);
+
+        await this.portfolioVisitorsModel.create({
+          ...data,
+          ipAddress: data.ip,
+          date: new Date().toLocaleString(),
+          isUpdated: !!data?.ipType,
+          number: latest.length > 0 ? latest[0].number + 1 : 1
+        });
+      }
 
       return this.responseService.success(true, StringHelper.successResponseAdmin("Visitor", "Record"));
     } catch (error) {
