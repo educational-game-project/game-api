@@ -5,9 +5,6 @@ on:
     branches:
       - main
   workflow_dispatch:
-    branches:
-      - main
-      - backend
 
 jobs:
   Build-Image:
@@ -68,8 +65,22 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/private_key
           chmod 600 ~/.ssh/private_key
 
-      - name: Deploy in VM
+      - name: Deploy to Server
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${{ secrets.OFFICE_USER }}@${{ secrets.OFFICE_IP }} -p ${{ secrets.OFFICE_PORT }} '
-            ssh ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} './deploy-game.sh'
-          '
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+
+            set -e
+
+            echo "➡️ Pull latest image"
+            docker pull iwansuryaningrat/game-api:game-skripsi
+
+            echo "➡️ Restart container"
+            cd ~/game-deploy
+
+            docker compose down
+            docker compose up -d
+
+            echo "✅ Deploy success"
+
+          EOF

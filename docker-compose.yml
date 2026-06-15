@@ -1,0 +1,17 @@
+version: "3.9"
+
+networks:
+  game-network:
+    external: true
+
+services:
+  game-iwan:
+    image: iwansuryaningrat/game-api:game-skripsi
+    container_name: iwan-service
+    restart: unless-stopped
+    ports:
+      - "3020:3000"
+    networks:
+      - game-network
+    env_file:
+      - .env
