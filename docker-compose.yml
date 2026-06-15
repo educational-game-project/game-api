@@ -7,7 +7,7 @@ networks:
 services:
   game-iwan:
     image: iwansuryaningrat/game-api:game-skripsi
-    container_name: iwan-service
+    container_name: game-service
     restart: unless-stopped
     ports:
       - "3020:3000"

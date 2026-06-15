@@ -67,10 +67,13 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa \
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
 
             set -e
+
+            echo "➡️ Login to Docker Hub"
+            echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
             echo "➡️ Pull latest image"
             docker pull iwansuryaningrat/game-api:game-skripsi
